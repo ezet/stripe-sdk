@@ -1,12 +1,13 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:stripe_api/src/card_utils.dart';
 import 'package:stripe_api/src/stripe_network_utils.dart';
 import 'package:stripe_api/src/stripe_text_utils.dart';
+
 import 'model_utils.dart';
 import 'stripe_json_model.dart';
 import 'stripe_json_utils.dart';
 import 'stripe_payment_source.dart';
+
+//enum CardType { UNKNOWN, AMERICAN_EXPRESS, DISCOVER, JCB, DINERS_CLUB, VISA, MASTERCARD, UNIONPAY }
 
 class StripeCard extends StripeJsonModel implements StripePaymentSource {
   static const String AMERICAN_EXPRESS = "American Express";
@@ -137,10 +138,10 @@ class StripeCard extends StripeJsonModel implements StripePaymentSource {
   String tokenizationMethod;
 
   StripeCard({
-    @required this.number,
-    @required this.cvc,
-    @required this.expMonth,
-    @required this.expYear,
+    this.number,
+    this.cvc,
+    this.expMonth,
+    this.expYear,
     this.name,
     this.addressLine1,
     this.addressLine1Check,
@@ -199,39 +200,32 @@ class StripeCard extends StripeJsonModel implements StripePaymentSource {
     return _brand;
   }
 
-  /**
-   * Checks whether {@code this} represents a valid card.
-   *
-   * @return {@code true} if valid, {@code false} otherwise.
-   */
+  /// Checks whether {@code this} represents a valid card.
+  ///
+  /// @return {@code true} if valid, {@code false} otherwise.
+
   bool validateCard() {
     return _validateCard(DateTime.now());
   }
 
-  /**
-   * Checks whether or not the {@link #number} field is valid.
-   *
-   * @return {@code true} if valid, {@code false} otherwise.
-   */
+  /// Checks whether or not the {@link #number} field is valid.
+  ///
+  /// @return {@code true} if valid, {@code false} otherwise.
   bool validateNumber() {
     return isValidCardNumber(number);
   }
 
-  /**
-   * Checks whether or not the {@link #expMonth} and {@link #expYear} fields represent a valid
-   * expiry date.
-   *
-   * @return {@code true} if valid, {@code false} otherwise
-   */
+  /// Checks whether or not the {@link #expMonth} and {@link #expYear} fields represent a valid
+  /// expiry date.
+  ///
+  /// @return {@code true} if valid, {@code false} otherwise
   bool validateExpiryDate() {
     return _validateExpiryDate(DateTime.now());
   }
 
-  /**
-   * Checks whether or not the {@link #cvc} field is valid.
-   *
-   * @return {@code true} if valid, {@code false} otherwise
-   */
+  /// Checks whether or not the {@link #cvc} field is valid.
+  ///
+  /// @return {@code true} if valid, {@code false} otherwise
   bool validateCVC() {
     if (isBlank(cvc)) {
       return false;
@@ -245,20 +239,16 @@ class StripeCard extends StripeJsonModel implements StripePaymentSource {
     return ModelUtils.isWholePositiveNumber(cvcValue) && validLength;
   }
 
-  /**
-   * Checks whether or not the {@link #expMonth} field is valid.
-   *
-   * @return {@code true} if valid, {@code false} otherwise.
-   */
+  /// Checks whether or not the {@link #expMonth} field is valid.
+  ///
+  /// @return {@code true} if valid, {@code false} otherwise.
   bool validateExpMonth() {
     return expMonth != null && expMonth >= 1 && expMonth <= 12;
   }
 
-  /**
-   * Checks whether or not the {@link #expYear} field is valid.
-   *
-   * @return {@code true} if valid, {@code false} otherwise.
-   */
+  /// Checks whether or not the {@link #expYear} field is valid.
+  ///
+  /// @return {@code true} if valid, {@code false} otherwise.
   bool validateExpYear(DateTime now) {
     return expYear != null && !ModelUtils.hasYearPassed(expYear, now);
   }
@@ -312,12 +302,28 @@ class StripeCard extends StripeJsonModel implements StripePaymentSource {
     return map;
   }
 
-  /**
-   * Converts an unchecked String value to a {@link CardBrand} or {@code null}.
-   *
-   * @param possibleCardType a String that might match a {@link CardBrand} or be empty.
-   * @return {@code null} if the input is blank, else the appropriate {@link CardBrand}.
-   */
+  Map<String, dynamic> toPaymentMethod() {
+    Map<String, dynamic> map = {
+      'type': 'card',
+      'card': {
+        FIELD_NUMBER: number,
+        FIELD_CVC: cvc,
+        FIELD_EXP_MONTH: expMonth,
+        FIELD_EXP_YEAR: expYear,
+      },
+      'billing_details': {
+        FIELD_NAME: name,
+      }
+    };
+
+    removeNullAndEmptyParams(map);
+    return map;
+  }
+
+  /// Converts an unchecked String value to a {@link CardBrand} or {@code null}.
+  ///
+  /// @param possibleCardType a String that might match a {@link CardBrand} or be empty.
+  /// @return {@code null} if the input is blank, else the appropriate {@link CardBrand}.
   static String asCardBrand(String possibleCardType) {
     if (possibleCardType == null || possibleCardType.trim().isEmpty) {
       return null;
@@ -342,12 +348,10 @@ class StripeCard extends StripeJsonModel implements StripePaymentSource {
     }
   }
 
-  /**
-   * Converts an unchecked String value to a {@link FundingType} or {@code null}.
-   *
-   * @param possibleFundingType a String that might match a {@link FundingType} or be empty
-   * @return {@code null} if the input is blank, else the appropriate {@link FundingType}
-   */
+  /// Converts an unchecked String value to a {@link FundingType} or {@code null}.
+  ///
+  /// @param possibleFundingType a String that might match a {@link FundingType} or be empty
+  /// @return {@code null} if the input is blank, else the appropriate {@link FundingType}
   static String asFundingType(String possibleFundingType) {
     if (possibleFundingType == null || possibleFundingType.trim().isEmpty) {
       return null;

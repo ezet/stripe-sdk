@@ -3,6 +3,7 @@ import 'dart:convert' show json;
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:stripe_api/src/model/card.dart';
 import 'package:stripe_api/src/stripe_error.dart';
 
 import 'model/customer.dart';
@@ -66,6 +67,31 @@ class StripeApiHandler {
     final options = new RequestOptions(publishableApiKey: publishableKey);
     final params = {'customer': customerId, 'type': 'card'};
     return _getStripeResponse(RequestMethod.get, url, options, params: params);
+  }
+
+  Future<Map<String, dynamic>> createPaymentMethod(
+      String customerId, StripeCard card, String publishableKey) async {
+    final url = "$LIVE_API_PATH/payment_methods";
+    final options = new RequestOptions(publishableApiKey: publishableKey);
+    final params = card.toPaymentMethod();
+    final paymentMethod =
+        await _getStripeResponse(RequestMethod.post, url, options, params: params);
+    return attachPaymentMethod(customerId, paymentMethod, publishableKey);
+  }
+
+  Future<Map<String, dynamic>> attachPaymentMethod(
+      String customerId, Map<String, dynamic> paymentMethod, String publishableKey) async {
+    final url = "$LIVE_API_PATH/payment_methods/${paymentMethod['id']}/attach";
+    final options = new RequestOptions(publishableApiKey: publishableKey);
+    final params = {'customer': customerId};
+    return _getStripeResponse(RequestMethod.post, url, options, params: params);
+  }
+
+  Future<Map<String, dynamic>> detachPaymentMethod(
+      String customerId, String paymentMethodId, String publishableKey) async {
+    final url = "$LIVE_API_PATH/payment_methods/$paymentMethodId/detach";
+    final options = new RequestOptions(publishableApiKey: publishableKey);
+    return _getStripeResponse(RequestMethod.post, url, options);
   }
 
   ///

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:stripe_api/src/stripe_text_utils.dart';
 import 'package:stripe_api/src/text_utils.dart';
 
@@ -12,24 +13,21 @@ const int MAX_LENGTH_COMMON = 19;
 // because Diners Club has one more space, but one less digit.
 const int MAX_LENGTH_AMEX_DINERS = 17;
 
-/**
- * Checks the input string to see whether or not it is a valid card number, possibly
- * with groupings separated by spaces or hyphens.
- *
- * @param cardNumber a String that may or may not represent a valid card number
- * @return {@code true} if and only if the input value is a valid card number
- */
+/// Checks the input string to see whether or not it is a valid card number, possibly
+/// with groupings separated by spaces or hyphens.
+///
+/// @param cardNumber a String that may or may not represent a valid card number
+/// @return {@code true} if and only if the input value is a valid card number
 bool isValidCardNumber(String cardNumber) {
   String normalizedNumber = removeSpacesAndHyphens(cardNumber);
   return isValidLuhnNumber(normalizedNumber) && isValidCardLength(normalizedNumber);
 }
 
-/**
- * Checks the input string to see whether or not it is a valid Luhn number.
- *
- * @param cardNumber a String that may or may not represent a valid Luhn number
- * @return {@code true} if and only if the input value is a valid Luhn number
- */
+/// Checks the input string to see whether or not it is a valid Luhn number.
+///
+/// @param cardNumber a String that may or may not represent a valid Luhn number
+/// @return {@code true} if and only if the input value is a valid Luhn number
+
 bool isValidLuhnNumber(String cardNumber) {
   if (cardNumber == null || cardNumber.isEmpty) {
     return true;
@@ -63,14 +61,58 @@ bool isValidLuhnNumber(String cardNumber) {
   return valid;
 }
 
-/**
- * Checks to see whether the input number is of the correct length, given the assumed brand of
- * the card. This function does not perform a Luhn check.
- *
- * @param cardNumber the card number with no spaces or dashes
- * @param cardBrand a {@link CardBrand} used to get the correct size
- * @return {@code true} if the card number is the correct length for the assumed brand
- */
+Widget getCardTypeIcon(String cardNumber) {
+  Widget icon;
+  switch (getPossibleCardType(cardNumber)) {
+    case StripeCard.VISA:
+      icon = Image.asset(
+        'icons/visa.png',
+        height: 48,
+        width: 48,
+      );
+      break;
+
+    case StripeCard.AMERICAN_EXPRESS:
+      icon = Image.asset(
+        'icons/amex.png',
+        height: 48,
+        width: 48,
+      );
+      break;
+
+    case StripeCard.MASTERCARD:
+      icon = Image.asset(
+        'icons/mastercard.png',
+        height: 48,
+        width: 48,
+      );
+      break;
+
+    case StripeCard.DISCOVER:
+      icon = Image.asset(
+        'icons/discover.png',
+        height: 48,
+        width: 48,
+      );
+      break;
+
+    default:
+      icon = Container(
+        height: 48,
+        width: 48,
+      );
+      break;
+  }
+  return icon;
+}
+
+/// Checks to see whether the input number is of the correct length, given the assumed brand of
+/// the card. This function does not perform a Luhn check.
+///
+/// @param cardNumber the card number with no spaces or dashes
+/// @param cardBrand a {@link CardBrand} used to get the correct size
+/// @return {@code true} if the card number is the correct length for the assumed brand
+
 bool isValidCardLength(String cardNumber, {String cardBrand}) {
   if (cardBrand == null) {
     cardBrand = getPossibleCardType(cardNumber, shouldNormalize: false);
