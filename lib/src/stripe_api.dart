@@ -37,15 +37,16 @@ class Stripe {
 
   static Stripe get instance {
     if (_instance == null) {
-      throw new Exception("Attempted to get instance of Stripe without initialization");
+      throw new Exception(
+          "Attempted to get instance of Stripe without initialization");
     }
     return _instance;
   }
 
   Future<Token> createCardToken(StripeCard card) async {
     final cardMap = card.toMap();
-    final token =
-        await _apiHandler.createToken(<String, dynamic>{Token.TYPE_CARD: cardMap}, publishableKey);
+    final token = await _apiHandler.createToken(
+        <String, dynamic>{Token.TYPE_CARD: cardMap}, publishableKey);
     return token;
   }
 
@@ -86,7 +87,8 @@ class CustomerSession {
   ///
   static void initCustomerSession(EphemeralKeyProvider provider) {
     if (_instance == null) {
-      final manager = new EphemeralKeyManager(provider, KEY_REFRESH_BUFFER_IN_SECONDS);
+      final manager =
+          new EphemeralKeyManager(provider, KEY_REFRESH_BUFFER_IN_SECONDS);
       _instance = new CustomerSession._internal(manager);
     }
   }
@@ -103,7 +105,8 @@ class CustomerSession {
   ///
   static CustomerSession get instance {
     if (_instance == null) {
-      throw new Exception("Attempted to get instance of CustomerSession without initialization.");
+      throw new Exception(
+          "Attempted to get instance of CustomerSession without initialization.");
     }
     return _instance;
   }
@@ -113,8 +116,26 @@ class CustomerSession {
   ///
   Future<Customer> retrieveCurrentCustomer() async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final customer = await _apiHandler.retrieveCustomer(key.customerId, key.secret);
+    final customer =
+        await _apiHandler.retrieveCustomer(key.customerId, key.secret);
     return customer;
+  }
+
+  Future<Map<String, dynamic>> listPaymentMethods() async {
+    final key = await _keyManager.retrieveEphemeralKey();
+    return _apiHandler.listPaymentMethods(key.customerId, key.secret);
+  }
+
+  Future<Map<String, dynamic>> detachPaymentMethod(
+      String paymentMethodId) async {
+    final key = await _keyManager.retrieveEphemeralKey();
+    return _apiHandler.detachPaymentMethod(
+        key.customerId, paymentMethodId, key.secret);
+  }
+
+  Future<Map<String, dynamic>> createPaymentMethod(StripeCard card) async {
+    final key = await _keyManager.retrieveEphemeralKey();
+    return _apiHandler.createPaymentMethod(key.customerId, card, key.secret);
   }
 
   ///
@@ -122,7 +143,8 @@ class CustomerSession {
   ///
   Future<Source> addCustomerSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final source = await _apiHandler.addCustomerSource(key.customerId, sourceId, key.secret);
+    final source = await _apiHandler.addCustomerSource(
+        key.customerId, sourceId, key.secret);
     return source;
   }
 
@@ -131,7 +153,8 @@ class CustomerSession {
   ///
   Future<bool> deleteCustomerSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final deleted = await _apiHandler.deleteCustomerSource(key.customerId, sourceId, key.secret);
+    final deleted = await _apiHandler.deleteCustomerSource(
+        key.customerId, sourceId, key.secret);
     return deleted;
   }
 
@@ -140,15 +163,16 @@ class CustomerSession {
   ///
   Future<Customer> updateCustomerDefaultSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final customer =
-        await _apiHandler.updateCustomerDefaultSource(key.customerId, sourceId, key.secret);
+    final customer = await _apiHandler.updateCustomerDefaultSource(
+        key.customerId, sourceId, key.secret);
     return customer;
   }
 
   ///
   ///
   ///
-  Future<Customer> updateCustomerShippingInformation(ShippingInformation shippingInfo) async {
+  Future<Customer> updateCustomerShippingInformation(
+      ShippingInformation shippingInfo) async {
     final key = await _keyManager.retrieveEphemeralKey();
     final customer = await _apiHandler.updateCustomerShippingInformation(
         key.customerId, shippingInfo, key.secret);
