@@ -50,6 +50,10 @@ class Stripe {
     return token;
   }
 
+  Future<Map<String, dynamic>> retrievePaymentIntent(String clientSecret) {
+    return _apiHandler.retrievePaymentIntent(publishableKey, clientSecret);
+  }
+
   Future<Token> createBankAccountToken(StripeCard card) async {
     return null;
   }
