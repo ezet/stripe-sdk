@@ -55,6 +55,10 @@ class Stripe {
     return null;
   }
 
+  Future<Map<dynamic, dynamic>> retrievePaymentIntent(String intent, String clientSecret) async {
+    return _apiHandler.retrievePaymentIntent(publishableKey, intent, clientSecret);
+  }
+
   static void _validateKey(String publishableKey) {
     if (publishableKey == null || publishableKey.isEmpty) {
       throw new Exception("Invalid Publishable Key: " +
@@ -134,9 +138,9 @@ class CustomerSession {
     return _apiHandler.createPaymentMethod(key.customerId, card, key.secret);
   }
 
-  Future<Map<dynamic, dynamic>> retrievePaymentIntent(String clientSecret) async {
+  Future<Map<dynamic, dynamic>> retrievePaymentIntent(String intent, String clientSecret) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.retrievePaymentIntent(key.secret, clientSecret);
+    return _apiHandler.retrievePaymentIntent(key.secret, intent, clientSecret);
   }
 
   ///
