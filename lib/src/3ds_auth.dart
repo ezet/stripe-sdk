@@ -13,7 +13,7 @@ class ScaAuth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final channel = EventChannel('poc.3ds.glappen.io/events');
+    final channel = EventChannel('stripesdk.3ds.stripesdk.io/events');
     StreamSubscription sub;
     sub = channel.receiveBroadcastStream().listen((d) async {
       debugPrint(d.toString());

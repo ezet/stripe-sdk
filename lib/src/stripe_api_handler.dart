@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:stripe_api/src/model/card.dart';
 import 'package:stripe_api/src/stripe_error.dart';
 
+import '../stripe.dart';
 import 'model/customer.dart';
 import 'model/shipping_information.dart';
 import 'model/source.dart';
@@ -48,10 +49,12 @@ class StripeApiHandler {
   ///
   ///
   ///
-  Future<Token> createToken(Map<String, dynamic> params, String publishableKey) async {
+  Future<Token> createToken(
+      Map<String, dynamic> params, String publishableKey) async {
     final url = "$LIVE_API_PATH/tokens";
     final options = new RequestOptions(publishableApiKey: publishableKey);
-    final response = await _getStripeResponse(RequestMethod.post, url, options, params: params);
+    final response = await _getStripeResponse(RequestMethod.post, url, options,
+        params: params);
     final token = new Token(response);
     return token;
   }
@@ -64,7 +67,8 @@ class StripeApiHandler {
     return _getStripeResponse(RequestMethod.get, url, options, params: params);
   }
 
-  Future<Map<String, dynamic>> listPaymentMethods(String customerId, String publishableKey) async {
+  Future<Map<String, dynamic>> listPaymentMethods(
+      String customerId, String publishableKey) async {
     final url = "$LIVE_API_PATH/payment_methods";
     final options = new RequestOptions(publishableApiKey: publishableKey);
     final params = {'customer': customerId, 'type': 'card'};
@@ -72,19 +76,20 @@ class StripeApiHandler {
   }
 
   Future<Map<String, dynamic>> createPaymentMethod(
-      String customerId, StripeCard card, String publishableKey) async {
+      StripeCard card, String publishableKey) async {
     final url = "$LIVE_API_PATH/payment_methods";
     final options = new RequestOptions(publishableApiKey: publishableKey);
     final params = card.toPaymentMethod();
-    final paymentMethod =
-        await _getStripeResponse(RequestMethod.post, url, options, params: params);
-    return attachPaymentMethod(customerId, paymentMethod, publishableKey);
+    final paymentMethod = await _getStripeResponse(
+        RequestMethod.post, url, options,
+        params: params);
+    return paymentMethod;
   }
 
   Future<Map<String, dynamic>> attachPaymentMethod(
-      String customerId, Map<String, dynamic> paymentMethod, String publishableKey) async {
-    final url = "$LIVE_API_PATH/payment_methods/${paymentMethod['id']}/attach";
-    final options = new RequestOptions(publishableApiKey: publishableKey);
+      String customerId, String paymentMethodId, String secretKey) async {
+    final url = "$LIVE_API_PATH/payment_methods/$paymentMethodId/attach";
+    final options = new RequestOptions(publishableApiKey: secretKey);
     final params = {'customer': customerId};
     return _getStripeResponse(RequestMethod.post, url, options, params: params);
   }
@@ -110,7 +115,8 @@ class StripeApiHandler {
   ///
   ///
   ///
-  Future<Source> addCustomerSource(String customerId, String sourceId, String secret) async {
+  Future<Source> addCustomerSource(
+      String customerId, String sourceId, String secret) async {
     final String url = "$LIVE_API_PATH/customers/$customerId/sources";
     final options = new RequestOptions(publishableApiKey: secret);
     final response = await _getStripeResponse(
@@ -126,7 +132,8 @@ class StripeApiHandler {
   ///
   ///
   ///
-  Future<bool> deleteCustomerSource(String customerId, String sourceId, String secret) async {
+  Future<bool> deleteCustomerSource(
+      String customerId, String sourceId, String secret) async {
     final String url = "$LIVE_API_PATH/customers/$customerId/sources/$sourceId";
     final options = new RequestOptions(publishableApiKey: secret);
     final response = await _getStripeResponse(
@@ -158,8 +165,8 @@ class StripeApiHandler {
   ///
   ///
   ///
-  Future<Customer> updateCustomerShippingInformation(
-      String customerId, ShippingInformation shippingInfo, String secret) async {
+  Future<Customer> updateCustomerShippingInformation(String customerId,
+      ShippingInformation shippingInfo, String secret) async {
     final String url = "$LIVE_API_PATH/customers/$customerId";
     final options = new RequestOptions(publishableApiKey: secret);
     final response = await _getStripeResponse(
@@ -213,8 +220,8 @@ class StripeApiHandler {
     try {
       resp = json.decode(response.body);
     } catch (error) {
-      final stripeError =
-          StripeAPIError(requestId, {StripeAPIError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
+      final stripeError = StripeAPIError(requestId,
+          {StripeAPIError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
       throw new StripeAPIException(stripeError);
     }
 
@@ -270,7 +277,8 @@ class StripeApiHandler {
 
   static String _encodeMap(Map<String, dynamic> params) {
     return params.keys
-        .map((key) => '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
+        .map((key) =>
+            '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
         .join('&');
   }
 
