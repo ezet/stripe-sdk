@@ -25,7 +25,7 @@ class ScaAuth extends StatelessWidget {
       );
       Navigator.pop(context, {'id': intent['id'], 'status': intent['status']});
     });
-
+    debugPrint("url: $url");
     launch(url);
     return Container();
   }
