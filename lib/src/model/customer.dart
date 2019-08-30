@@ -1,4 +1,5 @@
-import 'package:stripe_api/src/stripe_network_utils.dart';
+import 'package:stripe_sdk/src/stripe_network_utils.dart';
+
 import 'customer_source.dart';
 import 'shipping_information.dart';
 import 'stripe_json_model.dart';

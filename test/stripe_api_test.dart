@@ -2,7 +2,7 @@
 /*
 import 'package:test/test.dart';
 
-import 'package:stripe_api/stripe_api.dart';
+import 'package:stripe_sdk/stripe_api.dart';
 
 void main() {
   test('adds one to input values', () {

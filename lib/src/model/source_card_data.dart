@@ -1,5 +1,6 @@
+import 'package:stripe_sdk/src/stripe_network_utils.dart';
+
 import 'stripe_source_type_model.dart';
-import 'package:stripe_api/src/stripe_network_utils.dart';
 
 class SourceCardData extends StripeSourceTypeModel {
   static const String REQUIRED = "required";

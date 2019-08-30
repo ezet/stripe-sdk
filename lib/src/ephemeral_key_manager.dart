@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert' show json;
 
+import 'package:stripe_sdk/src/stripe_api_handler.dart';
+import 'package:stripe_sdk/src/stripe_error.dart';
+
 import 'model/stripe_json_model.dart';
 import 'model/stripe_json_utils.dart';
-import 'package:stripe_api/src/stripe_api_handler.dart';
-import 'package:stripe_api/src/stripe_error.dart';
 
 ///
 ///

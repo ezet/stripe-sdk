@@ -1,7 +1,8 @@
+import 'package:stripe_sdk/src/stripe_network_utils.dart';
+
 import 'address.dart';
 import 'stripe_json_model.dart';
 import 'stripe_json_utils.dart';
-import 'package:stripe_api/src/stripe_network_utils.dart';
 
 class ShippingInformation extends StripeJsonModel {
   static const String FIELD_ADDRESS = "address";

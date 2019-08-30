@@ -1,6 +1,6 @@
-import 'package:stripe_api/src/card_utils.dart';
-import 'package:stripe_api/src/stripe_network_utils.dart';
-import 'package:stripe_api/src/stripe_text_utils.dart';
+import 'package:stripe_sdk/src/card_utils.dart';
+import 'package:stripe_sdk/src/stripe_network_utils.dart';
+import 'package:stripe_sdk/src/stripe_text_utils.dart';
 
 import 'model_utils.dart';
 import 'stripe_json_model.dart';

@@ -1,4 +1,4 @@
-import 'package:stripe_api/src/model/stripe_json_model.dart';
+import 'package:stripe_sdk/src/model/stripe_json_model.dart';
 
 class PaymentMethod extends StripeJsonModel {
   @override

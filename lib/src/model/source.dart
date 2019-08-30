@@ -6,7 +6,7 @@ import 'stripe_json_model.dart';
 import 'stripe_json_utils.dart';
 import 'stripe_payment_source.dart';
 import 'stripe_source_type_model.dart';
-import 'package:stripe_api/src/stripe_network_utils.dart';
+import 'package:stripe_sdk/src/stripe_network_utils.dart';
 
 class Source extends StripeJsonModel implements StripePaymentSource {
   static const String VALUE_SOURCE = "source";

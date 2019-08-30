@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stripe_api/src/stripe_text_utils.dart';
-import 'package:stripe_api/src/text_utils.dart';
+import 'package:stripe_sdk/src/stripe_text_utils.dart';
+import 'package:stripe_sdk/src/text_utils.dart';
 
 import 'model/card.dart';
 

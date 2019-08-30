@@ -1,5 +1,6 @@
+import 'package:stripe_sdk/src/stripe_network_utils.dart';
+
 import 'stripe_json_model.dart';
-import 'package:stripe_api/src/stripe_network_utils.dart';
 
 class SourceRedirect extends StripeJsonModel {
   static const String PENDING = "pending";
