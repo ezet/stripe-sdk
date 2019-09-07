@@ -35,7 +35,7 @@ class ScaAuth extends StatelessWidget {
   }
 }
 
-Future<Map<String, String>> launch3ds(Map<dynamic, dynamic> action) async {
+Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action) async {
   final url = action['redirect_to_url']['url'];
   final completer = Completer<Map<String, String>>();
   StreamSubscription sub;
