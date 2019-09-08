@@ -15,33 +15,21 @@ class ScaAuth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final channel = EventChannel('stripesdk.3ds.stripesdk.io/events');
-    StreamSubscription sub;
-    sub = channel.receiveBroadcastStream().listen((d) async {
-      debugPrint(d.toString());
-      sub.cancel();
-      final uri = Uri.parse(d);
-      final intent = await Stripe.instance.retrievePaymentIntent(
-        uri.queryParameters['payment_intent'],
-        uri.queryParameters['payment_intent_client_secret'],
-      );
-      Navigator.pop(context, {'id': intent['id'], 'status': intent['status']});
-    });
-    debugPrint("url: $url");
-    launch(url);
-    return Container(
-      color: Colors.transparent,
-    );
+    launch3ds(action).then((it) => Navigator.pop(context, it));
+    return Container();
   }
 }
 
-Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action) async {
+/// Launch 3DS in a new browser window.
+/// Returns a [Future] with the Stripe PaymentIntent when the user completes authentication.
+Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action,
+    {String scheme = 'stripesdk', String host = '3ds.stripesdk.io'}) async {
   final url = action['redirect_to_url']['url'];
   final completer = Completer<Map<String, String>>();
   StreamSubscription sub;
   sub = getUriLinksStream().listen((Uri uri) async {
     debugPrint(uri.toString());
-    if (uri.scheme == 'stripesdk' && uri.host == '3ds.stripesdk.io') {
+    if (uri.scheme == scheme && uri.host == host) {
       sub.cancel();
       final intent = await Stripe.instance.retrievePaymentIntent(
         uri.queryParameters['payment_intent'],
@@ -51,7 +39,7 @@ Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action) async {
     }
   });
 
-  debugPrint("url: $url");
+  debugPrint("Launching URL: $url");
   launch(url);
   return completer.future;
 }
