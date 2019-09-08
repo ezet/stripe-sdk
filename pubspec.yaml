@@ -1,5 +1,5 @@
 name: stripe_sdk
-description: A dart package for the Stripe API
+description: Stripe SDK is a native flutter package for communicating with the Stripe API.
 version: 0.0.1+2
 author: Lars-Kristian Dahl <lars.dahl@gmail.com>
 homepage: https://github.com/ezet/stripe_sdk

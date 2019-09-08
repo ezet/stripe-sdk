@@ -4,6 +4,7 @@
 
 * Add analysis_options.yaml
 * Fix dartanalyzer issues
+* Fix other misc packaging issues
 
 ## 0.0.1+1
 
