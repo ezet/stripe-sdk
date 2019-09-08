@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +29,7 @@ Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action,
   sub = getUriLinksStream().listen((Uri uri) async {
     debugPrint(uri.toString());
     if (uri.scheme == scheme && uri.host == host) {
-      sub.cancel();
+      await sub.cancel();
       final intent = await Stripe.instance.retrievePaymentIntent(
         uri.queryParameters['payment_intent'],
         uri.queryParameters['payment_intent_client_secret'],
@@ -40,6 +39,6 @@ Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action,
   });
 
   debugPrint("Launching URL: $url");
-  launch(url);
+  await launch(url);
   return completer.future;
 }

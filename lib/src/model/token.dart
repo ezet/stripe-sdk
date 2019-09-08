@@ -74,13 +74,11 @@ class Token implements StripePaymentSource {
     return token;
   }
 
-  /**
-   * Converts an unchecked String value to a {@link TokenType} or {@code null}.
-   *
-   * @param possibleTokenType a String that might match a {@link TokenType} or be empty
-   * @return {@code null} if the input is blank or otherwise does not match a {@link TokenType},
-   * else the appropriate {@link TokenType}.
-   */
+  /// Converts an unchecked String value to a {@link TokenType} or {@code null}.
+  ///
+  /// @param possibleTokenType a String that might match a {@link TokenType} or be empty
+  /// @return {@code null} if the input is blank or otherwise does not match a {@link TokenType},
+  /// else the appropriate {@link TokenType}.
   static String asTokenType(String possibleTokenType) {
     if (possibleTokenType == null || possibleTokenType.trim().isEmpty) {
       return null;

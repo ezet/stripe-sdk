@@ -1,4 +1,4 @@
-library stripe;
+library stripe_sdk;
 
 export 'package:stripe_sdk/src/3ds_auth.dart';
 export 'package:stripe_sdk/src/card_utils.dart';

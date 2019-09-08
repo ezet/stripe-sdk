@@ -1,6 +1,6 @@
 name: stripe_sdk
-description: A library to itegrate stripe payment gateway in flutter app
-version: 0.0.1
+description: A dart package for the Stripe API
+version: 0.0.1+2
 author: Lars-Kristian Dahl <lars.dahl@gmail.com>
 homepage: https://github.com/ezet/stripe_sdk
 

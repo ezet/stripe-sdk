@@ -1,8 +1,6 @@
-/**
- * Remove null values from a map. This helps with JSON conversion and validation.
- *
- * @param mapToEdit a {@link Map} from which to remove the keys that have {@code null} values
- */
+/// Remove null values from a map. This helps with JSON conversion and validation.
+///
+/// @param mapToEdit a {@link Map} from which to remove the keys that have {@code null} values
 void removeNullAndEmptyParams(Map<String, Object> mapToEdit) {
 // Remove all null values; they cause validation errors
   final keys = mapToEdit.keys.toList(growable: false);

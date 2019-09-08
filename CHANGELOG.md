@@ -1,26 +1,10 @@
-## 1.1.0
+# Stripe SDK Changelog
 
-* Updated 'http' package version
+## 0.0.1+2
 
-## 1.0.3
+* Add analysis_options.yaml
+* Fix dartanalyzer issues
 
-* CardNumberFormatter code refactored
-
-## 1.0.2
-
-* Fixed minor issue
-
-
-## 1.0.1
-
-* Completed CardNumberFormatter class
-
-
-## 1.0.0
-
-* Fixed publish --dry-run issues/warnings
-
-
-## 0.0.1
+## 0.0.1+1
 
 * Initial release

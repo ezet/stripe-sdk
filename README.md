@@ -1,13 +1,18 @@
-# Flutter Stripe API
-A flutter plugin to integrate stripe into flutter app. There are other pluging available but I tried a different approach. (This plugin not dependent on any other native stripe library)
-I start to follow the official Android stripe SDK and replicate it's code into Dart. So far I completed the basic functions which includes:
-- Start Customer Session
-- End Customer Session
-- Get Customer
-- Create Card Token
-- Add Customer Source
-- Remove Customer Source
-- Update Default Source
-- Update Customer Shipping Information (not tested)
+# Dart Stripe SDK
 
-This plugin is in very initial stage, I am using it in my personal app. Future plan is to complete all the remaining API. And completing the Example Project with proper UI. And also having a TextInputFormatter for card auto complete and validation.
+A native dart package for Stripe. There are various other flutter plugins that wrap existing Stripe libraries,
+but this package uses a different approach.
+It does not wrap existing Stripe libraries, but instead accesses the Stripe API directly.
+
+## Stripe SCA
+
+This library is currently the only library available for flutter that supports SCA.
+It handles SCA by launching the authentication flow in a native browser, and returns the result to the app.
+
+Features:
+
+- Customer session
+- PaymentIntent, with SCA
+- SetupIntent, with SCA
+- Manage customer
+- Manage cards

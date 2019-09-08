@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:stripe_sdk/src/model/card.dart';
 import 'package:stripe_sdk/src/stripe_error.dart';
 
-import '../stripe.dart';
 import 'model/customer.dart';
 import 'model/shipping_information.dart';
 import 'model/source.dart';
@@ -35,8 +34,6 @@ class StripeApiHandler {
 
   static const String MALFORMED_RESPONSE_MESSAGE =
       "An improperly formatted error response was found.";
-
-  static final StripeApiHandler _singleton = StripeApiHandler._internal();
 
   final http.Client _client = http.Client();
 
@@ -185,7 +182,7 @@ class StripeApiHandler {
     switch (method) {
       case RequestMethod.get:
         String fUrl = url;
-        if (params != null && params.length > 0) {
+        if (params != null && params.isNotEmpty) {
           fUrl = "$url?${_encodeMap(params)}";
         }
         response = await _client.get(fUrl, headers: headers);
