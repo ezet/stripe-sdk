@@ -3,13 +3,10 @@ import 'package:stripe_sdk/src/stripe_network_utils.dart';
 import 'package:stripe_sdk/src/stripe_text_utils.dart';
 
 import 'model_utils.dart';
-import 'stripe_json_model.dart';
-import 'stripe_json_utils.dart';
-import 'stripe_payment_source.dart';
 
 //enum CardType { UNKNOWN, AMERICAN_EXPRESS, DISCOVER, JCB, DINERS_CLUB, VISA, MASTERCARD, UNIONPAY }
 
-class StripeCard extends StripeJsonModel implements StripePaymentSource {
+class StripeCard {
   static const String AMERICAN_EXPRESS = "American Express";
   static const String DISCOVER = "Discover";
   static const String JCB = "JCB";
@@ -164,34 +161,6 @@ class StripeCard extends StripeJsonModel implements StripePaymentSource {
     this.tokenizationMethod,
   }) : _brand = brand;
 
-  StripeCard.fromJson(Map<String, dynamic> json) {
-    // Note that we'll never get the CVC or card number in JSON, so those values are null
-    number = optString(json, FIELD_NUMBER);
-    cvc = optString(json, FIELD_CVC);
-    expMonth = optInteger(json, FIELD_EXP_MONTH);
-    expYear = optInteger(json, FIELD_EXP_YEAR);
-    addressCity = optString(json, FIELD_ADDRESS_CITY);
-    addressLine1 = optString(json, FIELD_ADDRESS_LINE1);
-    addressLine1Check = optString(json, FIELD_ADDRESS_LINE1_CHECK);
-
-    addressLine2 = optString(json, FIELD_ADDRESS_LINE2);
-    addressCountry = optString(json, FIELD_ADDRESS_COUNTRY);
-    addressState = optString(json, FIELD_ADDRESS_STATE);
-    addressZip = optString(json, FIELD_ADDRESS_ZIP);
-    addressZipCheck = optString(json, FIELD_ADDRESS_ZIP_CHECK);
-    _brand = asCardBrand(optString(json, FIELD_BRAND));
-    country = optCountryCode(json, FIELD_COUNTRY);
-    customerId = optString(json, FIELD_CUSTOMER);
-    currency = optCurrency(json, FIELD_CURRENCY);
-    cvcCheck = optString(json, FIELD_CVC_CHECK);
-    funding = asFundingType(optString(json, FIELD_FUNDING));
-    fingerprint = optString(json, FIELD_FINGERPRINT);
-    id = optString(json, FIELD_ID);
-    last4 = optString(json, FIELD_LAST4);
-    name = optString(json, FIELD_NAME);
-    tokenizationMethod = optString(json, FIELD_TOKENIZATION_METHOD);
-  }
-
   String get brand {
     if (isBlank(_brand) && !isBlank(number)) {
       _brand = getPossibleCardType(number);
@@ -232,9 +201,10 @@ class StripeCard extends StripeJsonModel implements StripePaymentSource {
     }
     String cvcValue = cvc.trim();
     String updatedType = brand;
-    bool validLength = (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
-        (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
-        cvcValue.length == 3;
+    bool validLength =
+        (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
+            (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
+            cvcValue.length == 3;
 
     return ModelUtils.isWholePositiveNumber(cvcValue) && validLength;
   }

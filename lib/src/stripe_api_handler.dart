@@ -3,13 +3,7 @@ import 'dart:convert' show json;
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:stripe_sdk/src/model/card.dart';
 import 'package:stripe_sdk/src/stripe_error.dart';
-
-import 'model/customer.dart';
-import 'model/shipping_information.dart';
-import 'model/source.dart';
-import 'model/token.dart';
 
 const String API_VERSION = "2019-08-14 ";
 
@@ -43,135 +37,95 @@ class StripeApiHandler {
 
   StripeApiHandler._internal();
 
-  ///
-  ///
-  ///
-  Future<Token> createToken(Map<String, dynamic> params, String publishableKey) async {
+  Future<Map<String, dynamic>> createToken(
+      Map params, String publishableKey) async {
     final url = "$LIVE_API_PATH/tokens";
-    final options = new RequestOptions(publishableApiKey: publishableKey);
-    final response = await _getStripeResponse(RequestMethod.post, url, options, params: params);
-    final token = new Token(response);
-    return token;
+    final options = new RequestOptions(key: publishableKey);
+    return _getStripeResponse(RequestMethod.post, url, options, params: params);
   }
 
   Future<Map<String, dynamic>> retrievePaymentIntent(
       String publishableKey, String intent, String clientSecret) {
     final url = "$LIVE_API_PATH/payment_intents/$intent";
-    final options = new RequestOptions(publishableApiKey: publishableKey);
+    final options = new RequestOptions(key: publishableKey);
     final params = {'client_secret': clientSecret};
     return _getStripeResponse(RequestMethod.get, url, options, params: params);
   }
 
-  Future<Map<String, dynamic>> listPaymentMethods(String customerId, String publishableKey) async {
-    final url = "$LIVE_API_PATH/payment_methods";
-    final options = new RequestOptions(publishableApiKey: publishableKey);
-    final params = {'customer': customerId, 'type': 'card'};
+  /// Confirm a PaymentIntent.
+  /// Requires that the `confirmation_method` of the intent is set to `automatic`.
+  /// https://stripe.com/docs/api/payment_intents/confirm
+  Future<Map<String, dynamic>> confirmPaymentIntent(
+      String publishableKey, String intent, String clientSecret) {
+    final url = "$LIVE_API_PATH/payment_intents/$intent/confirm";
+    final options = new RequestOptions(key: publishableKey);
+    final params = {'client_secret': clientSecret};
     return _getStripeResponse(RequestMethod.get, url, options, params: params);
   }
 
-  Future<Map<String, dynamic>> createPaymentMethod(StripeCard card, String publishableKey) async {
+  Future<Map<String, dynamic>> createPaymentMethod(
+      String publishableKey, Map<String, dynamic> data) async {
     final url = "$LIVE_API_PATH/payment_methods";
-    final options = new RequestOptions(publishableApiKey: publishableKey);
-    final params = card.toPaymentMethod();
-    final paymentMethod =
-        await _getStripeResponse(RequestMethod.post, url, options, params: params);
-    return paymentMethod;
+    final options = new RequestOptions(key: publishableKey);
+    return _getStripeResponse(RequestMethod.post, url, options, params: data);
   }
 
   Future<Map<String, dynamic>> attachPaymentMethod(
-      String customerId, String paymentMethodId, String secretKey) async {
-    final url = "$LIVE_API_PATH/payment_methods/$paymentMethodId/attach";
-    final options = new RequestOptions(publishableApiKey: secretKey);
+      String customerId, String ephemeralKey, String paymentMethod) async {
+    final url = "$LIVE_API_PATH/payment_methods/$paymentMethod/attach";
+    final options = new RequestOptions(key: ephemeralKey);
     final params = {'customer': customerId};
     return _getStripeResponse(RequestMethod.post, url, options, params: params);
   }
 
+  Future<Map<String, dynamic>> listPaymentMethods(
+      String customerId, String ephemeralKey) async {
+    final url = "$LIVE_API_PATH/payment_methods";
+    final options = new RequestOptions(key: ephemeralKey);
+    final params = {'customer': customerId, 'type': 'card'};
+    return _getStripeResponse(RequestMethod.get, url, options, params: params);
+  }
+
   Future<Map<String, dynamic>> detachPaymentMethod(
-      String customerId, String paymentMethodId, String publishableKey) async {
+      String paymentMethodId, String ephemeralKey) async {
     final url = "$LIVE_API_PATH/payment_methods/$paymentMethodId/detach";
-    final options = new RequestOptions(publishableApiKey: publishableKey);
+    final options = new RequestOptions(key: ephemeralKey);
     return _getStripeResponse(RequestMethod.post, url, options);
   }
 
-  ///
-  ///
-  ///
-  Future<Customer> retrieveCustomer(String customerId, String secret) async {
+  Future<Map<String, dynamic>> retrieveCustomer(
+      String customerId, String ephemeralKey) async {
     final String url = "$LIVE_API_PATH/customers/$customerId";
-    final options = new RequestOptions(publishableApiKey: secret);
-    final response = await _getStripeResponse(RequestMethod.get, url, options);
-    final customer = Customer.fromJson(response);
-    return customer;
+    final options = new RequestOptions(key: ephemeralKey);
+    return _getStripeResponse(RequestMethod.get, url, options);
   }
 
-  ///
-  ///
-  ///
-  Future<Source> addCustomerSource(String customerId, String sourceId, String secret) async {
+  Future<Map<String, dynamic>> attachSource(
+      String customerId, String sourceId, String ephemeralKey) async {
     final String url = "$LIVE_API_PATH/customers/$customerId/sources";
-    final options = new RequestOptions(publishableApiKey: secret);
-    final response = await _getStripeResponse(
+    final options = new RequestOptions(key: ephemeralKey);
+    return await _getStripeResponse(
       RequestMethod.post,
       url,
       options,
       params: {FIELD_SOURCE: sourceId},
     );
-    final source = Source.fromJson(response);
-    return source;
   }
 
-  ///
-  ///
-  ///
-  Future<bool> deleteCustomerSource(String customerId, String sourceId, String secret) async {
+  Future<Map<String, dynamic>> detachSource(
+      String customerId, String sourceId, String ephemeralKey) async {
     final String url = "$LIVE_API_PATH/customers/$customerId/sources/$sourceId";
-    final options = new RequestOptions(publishableApiKey: secret);
-    final response = await _getStripeResponse(
-      RequestMethod.delete,
-      url,
-      options,
-    );
-    final bool deleted = response["deleted"];
-    return deleted;
+    final options = new RequestOptions(key: ephemeralKey);
+    return _getStripeResponse(RequestMethod.delete, url, options);
   }
 
-  ///
-  ///
-  ///
-  Future<Customer> updateCustomerDefaultSource(
-      String customerId, String sourceId, String secret) async {
+  Future<Map<String, dynamic>> updateCustomer(
+      String customerId, Map<String, dynamic> data, String ephemeralKey) async {
     final String url = "$LIVE_API_PATH/customers/$customerId";
-    final options = new RequestOptions(publishableApiKey: secret);
-    final response = await _getStripeResponse(
-      RequestMethod.post,
-      url,
-      options,
-      params: {"default_source": sourceId},
-    );
-    final customer = Customer.fromJson(response);
-    return customer;
+    final options = new RequestOptions(key: ephemeralKey);
+    return _getStripeResponse(RequestMethod.post, url, options, params: data);
   }
 
-  ///
-  ///
-  ///
-  Future<Customer> updateCustomerShippingInformation(
-      String customerId, ShippingInformation shippingInfo, String secret) async {
-    final String url = "$LIVE_API_PATH/customers/$customerId";
-    final options = new RequestOptions(publishableApiKey: secret);
-    final response = await _getStripeResponse(
-      RequestMethod.post,
-      url,
-      options,
-      params: {"shipping": shippingInfo.toMap()},
-    );
-    final customer = Customer.fromJson(response);
-    return customer;
-  }
-
-  ///
-  ///
-  ///
   Future<Map<String, dynamic>> _getStripeResponse(
       RequestMethod method, final String url, final RequestOptions options,
       {final Map<String, dynamic> params}) async {
@@ -210,8 +164,8 @@ class StripeApiHandler {
     try {
       resp = json.decode(response.body);
     } catch (error) {
-      final stripeError =
-          StripeAPIError(requestId, {StripeAPIError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
+      final stripeError = StripeAPIError(requestId,
+          {StripeAPIError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
       throw new StripeAPIException(stripeError);
     }
 
@@ -235,7 +189,7 @@ class StripeApiHandler {
     headers["User-Agent"] = "Stripe/v1 DartBindings/$VERSION_NAME";
 
     if (options != null) {
-      headers["Authorization"] = "Bearer ${options.publishableApiKey}";
+      headers["Authorization"] = "Bearer ${options.key}";
     }
 
     // debug headers
@@ -244,7 +198,7 @@ class StripeApiHandler {
     //propertyMap["os.version"] = String.valueOf(Build.VERSION.SDK_INT));
     propertyMap["bindings.version"] = VERSION_NAME;
     propertyMap["lang"] = "Dart";
-    propertyMap["publisher"] = "Vzotech";
+    propertyMap["publisher"] = "lars.dahl@gmail.com";
 
     headers["X-Stripe-Client-User-Agent"] = json.encode(propertyMap);
 
@@ -267,7 +221,8 @@ class StripeApiHandler {
 
   static String _encodeMap(Map<String, dynamic> params) {
     return params.keys
-        .map((key) => '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
+        .map((key) =>
+            '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
         .join('&');
   }
 
@@ -308,7 +263,7 @@ class RequestOptions {
   final String apiVersion;
   final String guid;
   final String idempotencyKey;
-  final String publishableApiKey;
+  final String key;
   final String requestType;
   final String stripeAccount;
 
@@ -316,7 +271,7 @@ class RequestOptions {
     this.apiVersion = API_VERSION,
     this.guid,
     this.idempotencyKey,
-    this.publishableApiKey,
+    this.key,
     this.requestType,
     this.stripeAccount,
   });

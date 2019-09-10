@@ -5,3 +5,4 @@ export 'package:stripe_sdk/src/card_utils.dart';
 export 'package:stripe_sdk/src/model/card.dart';
 export 'package:stripe_sdk/src/stripe_api.dart';
 export 'package:stripe_sdk/src/stripe_api_handler.dart';
+export 'package:stripe_sdk/src/card_number_formatter.dart';

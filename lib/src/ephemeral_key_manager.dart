@@ -4,7 +4,6 @@ import 'dart:convert' show json;
 import 'package:stripe_sdk/src/stripe_api_handler.dart';
 import 'package:stripe_sdk/src/stripe_error.dart';
 
-import 'model/stripe_json_model.dart';
 import 'model/stripe_json_utils.dart';
 
 ///
@@ -15,7 +14,7 @@ typedef Future<String> EphemeralKeyProvider(String apiVersion);
 ///
 ///
 ///
-class EphemeralKey extends StripeJsonModel {
+class EphemeralKey {
   static const String FIELD_CREATED = "created";
   static const String FIELD_EXPIRES = "expires";
   static const String FIELD_SECRET = "secret";
@@ -71,20 +70,6 @@ class EphemeralKey extends StripeJsonModel {
 
   DateTime get expiresAt => _expiresAt;
 
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      FIELD_CREATED: _created,
-      FIELD_EXPIRES: _expires,
-      FIELD_OBJECT: _object,
-      FIELD_ID: _id,
-      FIELD_SECRET: _secret,
-      FIELD_LIVEMODE: _liveMode,
-      FIELD_ASSOCIATED_OBJECTS: [
-        {FIELD_TYPE: _type, FIELD_ID: _customerId}
-      ]
-    };
-  }
 }
 
 ///

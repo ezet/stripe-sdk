@@ -1,24 +1,10 @@
-library flutter_stripe;
-
 import 'dart:async';
 
+import 'package:flutter/rendering.dart';
 import 'package:stripe_sdk/src/ephemeral_key_manager.dart';
 import 'package:stripe_sdk/src/stripe_api_handler.dart';
 
-import 'model/card.dart';
-import 'model/customer.dart';
-import 'model/shipping_information.dart';
-import 'model/source.dart';
-import 'model/token.dart';
 
-export 'package:stripe_sdk/src/card_number_formatter.dart';
-export 'package:stripe_sdk/src/card_utils.dart';
-
-export 'model/card.dart';
-export 'model/customer.dart';
-export 'model/shipping_information.dart';
-export 'model/source.dart';
-export 'model/token.dart';
 
 class Stripe {
   static Stripe _instance;
@@ -26,43 +12,46 @@ class Stripe {
   final StripeApiHandler _apiHandler = StripeApiHandler();
 
   final String publishableKey;
-  final String secretKey;
   String stripeAccount;
 
-  Stripe._internal(this.publishableKey, this.secretKey);
+  Stripe._internal(this.publishableKey);
 
-  static void init(String publishableKey, String secretKey) {
+  static void init(String publishableKey) {
     if (_instance == null) {
       _validateKey(publishableKey);
-      _instance = new Stripe._internal(publishableKey, secretKey);
+      _instance = new Stripe._internal(publishableKey);
     }
   }
 
   static Stripe get instance {
     if (_instance == null) {
-      throw new Exception("Attempted to get instance of Stripe without initialization");
+      throw new Exception(
+          "Attempted to get instance of Stripe without initialization");
     }
     return _instance;
   }
 
-  Future<Token> createCardToken(StripeCard card) async {
-    final cardMap = card.toMap();
-    final token =
-        await _apiHandler.createToken(<String, dynamic>{Token.TYPE_CARD: cardMap}, publishableKey);
+  /// Create a stripe Token
+  /// https://stripe.com/docs/api/tokens
+  Future<Map<String, dynamic>> createToken(Map data) async {
+    final token = await _apiHandler.createToken(data, publishableKey);
     return token;
   }
 
-  Future<Token> createBankAccountToken(StripeCard card) async {
-    return null;
+  /// Create a PaymenMethod.
+  /// https://stripe.com/docs/api/payment_methods/create
+  Future<Map<String, dynamic>> createPaymentMethod(
+      Map<String, dynamic> cardMap) async {
+    debugPrint(cardMap.toString());
+    return _apiHandler.createPaymentMethod(publishableKey, cardMap);
   }
 
-  // todo remove this method
-  Future<Map<String, dynamic>> createPaymentMethod(StripeCard card) async {
-    return _apiHandler.createPaymentMethod(card, secretKey);
-  }
-
-  Future<Map<dynamic, dynamic>> retrievePaymentIntent(String intent, String clientSecret) async {
-    return _apiHandler.retrievePaymentIntent(publishableKey, intent, clientSecret);
+  /// Retrieve a PaymentIntent.
+  /// https://stripe.com/docs/api/payment_intents/retrieve
+  Future<Map<dynamic, dynamic>> retrievePaymentIntent(
+      String intent, String clientSecret) async {
+    return _apiHandler.retrievePaymentIntent(
+        publishableKey, intent, clientSecret);
   }
 
   static void _validateKey(String publishableKey) {
@@ -90,100 +79,90 @@ class CustomerSession {
 
   final EphemeralKeyManager _keyManager;
 
-  ///
   CustomerSession._internal(this._keyManager);
 
-  ///
-  ///
-  ///
+  /// Initiate a new customer session
   static void initCustomerSession(EphemeralKeyProvider provider) {
     if (_instance == null) {
-      final manager = new EphemeralKeyManager(provider, KEY_REFRESH_BUFFER_IN_SECONDS);
+      final manager =
+          new EphemeralKeyManager(provider, KEY_REFRESH_BUFFER_IN_SECONDS);
       _instance = new CustomerSession._internal(manager);
     }
   }
 
-  ///
-  ///
-  ///
+  /// End the current active customer session
   static void endCustomerSession() {
     _instance = null;
   }
 
-  ///
-  ///
-  ///
+  /// Get the current customer session
   static CustomerSession get instance {
     if (_instance == null) {
-      throw new Exception("Attempted to get instance of CustomerSession without initialization.");
+      throw new Exception(
+          "Attempted to get instance of CustomerSession without initialization.");
     }
     return _instance;
   }
 
-  ///
-  ///
-  ///
-  Future<Customer> retrieveCurrentCustomer() async {
+  /// Retrieves the details for the current customer.
+  /// https://stripe.com/docs/api/customers/retrieve
+  Future<Map<String, dynamic>> retrieveCurrentCustomer() async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final customer = await _apiHandler.retrieveCustomer(key.customerId, key.secret);
-    return customer;
+    return _apiHandler.retrieveCustomer(key.customerId, key.secret);
   }
 
+  /// List a Customer's PaymentMethods.
+  /// https://stripe.com/docs/api/payment_methods/list
   Future<Map<String, dynamic>> listPaymentMethods() async {
     final key = await _keyManager.retrieveEphemeralKey();
     return _apiHandler.listPaymentMethods(key.customerId, key.secret);
   }
 
-  Future<Map<String, dynamic>> detachPaymentMethod(String paymentMethodId) async {
+  /// Attach a PaymenMethod.
+  /// https://stripe.com/docs/api/payment_methods/attach
+  Future<Map<String, dynamic>> attachPaymentMethod(
+      String paymentMethodId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.detachPaymentMethod(key.customerId, paymentMethodId, key.secret);
+    return _apiHandler.attachPaymentMethod(
+        key.customerId, key.secret, paymentMethodId);
   }
 
-  Future<Map<String, dynamic>> attachPaymentMethod(String paymentMethodId) async {
+  /// Detach a PaymentMethod.
+  /// https://stripe.com/docs/api/payment_methods/detach
+  Future<Map<String, dynamic>> detachPaymentMethod(
+      String paymentMethodId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.attachPaymentMethod(key.customerId, paymentMethodId, key.secret);
+    return _apiHandler.attachPaymentMethod(
+        key.customerId, paymentMethodId, key.secret);
   }
 
-  Future<Map<dynamic, dynamic>> retrievePaymentIntent(String intent, String clientSecret) async {
+  Future<Map<dynamic, dynamic>> retrievePaymentIntent(
+      String intent, String clientSecret) async {
     final key = await _keyManager.retrieveEphemeralKey();
     return _apiHandler.retrievePaymentIntent(key.secret, intent, clientSecret);
   }
 
-  ///
-  ///
-  ///
-  Future<Source> addCustomerSource(String sourceId) async {
+  /// Attaches a Source object to the Customer.
+  /// The source must be in a chargeable or pending state.
+  /// https://stripe.com/docs/api/sources/attach
+  Future<Map<String, dynamic>> attachSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final source = await _apiHandler.addCustomerSource(key.customerId, sourceId, key.secret);
-    return source;
+    return _apiHandler.attachSource(key.customerId, sourceId, key.secret);
   }
 
-  ///
-  ///
-  ///
-  Future<bool> deleteCustomerSource(String sourceId) async {
+  /// Detaches a Source object from a Customer.
+  /// The status of a source is changed to consumed when it is detached and it can no longer be used to create a charge.
+  /// https://stripe.com/docs/api/sources/detach
+  Future<Map<String, dynamic>> detachSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final deleted = await _apiHandler.deleteCustomerSource(key.customerId, sourceId, key.secret);
-    return deleted;
+    return _apiHandler.detachSource(key.customerId, sourceId, key.secret);
   }
 
-  ///
-  ///
-  ///
-  Future<Customer> updateCustomerDefaultSource(String sourceId) async {
+  /// Updates the specified customer by setting the values of the parameters passed.
+  /// https://stripe.com/docs/api/customers/update
+  Future<Map<String, dynamic>> updateCustomerDefaultSource(
+      Map<String, dynamic> data) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final customer =
-        await _apiHandler.updateCustomerDefaultSource(key.customerId, sourceId, key.secret);
-    return customer;
-  }
-
-  ///
-  ///
-  ///
-  Future<Customer> updateCustomerShippingInformation(ShippingInformation shippingInfo) async {
-    final key = await _keyManager.retrieveEphemeralKey();
-    final customer = await _apiHandler.updateCustomerShippingInformation(
-        key.customerId, shippingInfo, key.secret);
-    return customer;
+    return _apiHandler.updateCustomer(key.customerId, data, key.secret);
   }
 }
