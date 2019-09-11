@@ -241,7 +241,6 @@ class StripeCard {
     return !ModelUtils.hasMonthPassed(expYear, expMonth, now);
   }
 
-  @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       FIELD_NUMBER: number,

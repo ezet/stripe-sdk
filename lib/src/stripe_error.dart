@@ -38,7 +38,7 @@ class StripeAPIError {
     final message = optString(json, FIELD_MESSAGE);
     final param = optString(json, FIELD_PARAM);
 
-    return new StripeAPIError._internal(
+    return StripeAPIError._internal(
       requestId,
       type,
       charge,

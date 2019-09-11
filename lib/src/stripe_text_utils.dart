@@ -34,7 +34,7 @@ String removeSpacesAndHyphens(String cardNumberWithSpaces) {
   if (isBlank(cardNumberWithSpaces)) {
     return null;
   }
-  return cardNumberWithSpaces.replaceAll(new RegExp(r"\s+|\-+"), "");
+  return cardNumberWithSpaces.replaceAll(RegExp(r"\s+|\-+"), "");
 }
 
 /// Check to see if the input number has any of the given prefixes.

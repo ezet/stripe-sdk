@@ -4,8 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:stripe_sdk/src/ephemeral_key_manager.dart';
 import 'package:stripe_sdk/src/stripe_api_handler.dart';
 
-
-
 class Stripe {
   static Stripe _instance;
 
@@ -16,16 +14,18 @@ class Stripe {
 
   Stripe._internal(this.publishableKey);
 
-  static void init(String publishableKey) {
+  static void init(String publishableKey,
+      {String apiVersion = DEFAULT_API_VERSION}) {
     if (_instance == null) {
       _validateKey(publishableKey);
-      _instance = new Stripe._internal(publishableKey);
+      _instance = Stripe._internal(publishableKey);
     }
+    _instance._apiHandler.apiVersion = apiVersion;
   }
 
   static Stripe get instance {
     if (_instance == null) {
-      throw new Exception(
+      throw Exception(
           "Attempted to get instance of Stripe without initialization");
     }
     return _instance;
@@ -56,13 +56,13 @@ class Stripe {
 
   static void _validateKey(String publishableKey) {
     if (publishableKey == null || publishableKey.isEmpty) {
-      throw new Exception("Invalid Publishable Key: " +
+      throw Exception("Invalid Publishable Key: " +
           "You must use a valid publishable key to create a token.  " +
           "For more info, see https://stripe.com/docs/stripe.js.");
     }
 
     if (publishableKey.startsWith("sk_")) {
-      throw new Exception("Invalid Publishable Key: " +
+      throw Exception("Invalid Publishable Key: " +
           "You are using a secret key to create a token, " +
           "instead of the publishable one. For more info, " +
           "see https://stripe.com/docs/stripe.js");
@@ -75,7 +75,7 @@ class CustomerSession {
 
   static CustomerSession _instance;
 
-  final StripeApiHandler _apiHandler = new StripeApiHandler();
+  final StripeApiHandler _apiHandler = StripeApiHandler();
 
   final EphemeralKeyManager _keyManager;
 
@@ -85,8 +85,8 @@ class CustomerSession {
   static void initCustomerSession(EphemeralKeyProvider provider) {
     if (_instance == null) {
       final manager =
-          new EphemeralKeyManager(provider, KEY_REFRESH_BUFFER_IN_SECONDS);
-      _instance = new CustomerSession._internal(manager);
+          EphemeralKeyManager(provider, KEY_REFRESH_BUFFER_IN_SECONDS);
+      _instance = CustomerSession._internal(manager);
     }
   }
 
@@ -98,7 +98,7 @@ class CustomerSession {
   /// Get the current customer session
   static CustomerSession get instance {
     if (_instance == null) {
-      throw new Exception(
+      throw Exception(
           "Attempted to get instance of CustomerSession without initialization.");
     }
     return _instance;
@@ -164,5 +164,18 @@ class CustomerSession {
       Map<String, dynamic> data) async {
     final key = await _keyManager.retrieveEphemeralKey();
     return _apiHandler.updateCustomer(key.customerId, data, key.secret);
+  }
+
+  Future<Map<String, dynamic>> confirmPayment(
+      String paymentIntentClientSecret, String paymentMethodId) async {
+    // todo
+    // todo: assert that method is automatic
+    return Future.value(null);
+  }
+
+  Future<Map<String, dynamic>> authenticatePaymentIntent(
+      String paymentIntentClientSecret) async {
+    // todo
+    return Future.value(null);
   }
 }

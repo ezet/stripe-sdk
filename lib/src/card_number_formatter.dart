@@ -121,7 +121,7 @@ List<String> separateCardNumberGroups(
   List<String> numberGroups;
   //
   if (brand == StripeCard.AMERICAN_EXPRESS) {
-    numberGroups = new List(3);
+    numberGroups = List(3);
 
     int length = spacelessCardNumber.length;
     int lastUsedIndex = 0;

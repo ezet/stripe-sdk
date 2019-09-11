@@ -20,7 +20,7 @@ class ScaAuth extends StatelessWidget {
 }
 
 /// Launch 3DS in a new browser window.
-/// Returns a [Future] with the Stripe PaymentIntent when the user completes authentication.
+/// Returns a [Future] with the Stripe PaymentIntent when the user completes or cancels authentication.
 Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action,
     {String scheme = 'stripesdk', String host = '3ds.stripesdk.io'}) async {
   final url = action['redirect_to_url']['url'];

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:stripe_sdk/src/stripe_error.dart';
 
-const String API_VERSION = "2019-08-14 ";
+const String DEFAULT_API_VERSION = "2019-08-14 ";
 
 enum RequestMethod { get, post, put, delete, option }
 
@@ -26,6 +26,8 @@ class StripeApiHandler {
   static const String FIELD_ERROR = "error";
   static const String FIELD_SOURCE = "source";
 
+  String apiVersion = DEFAULT_API_VERSION;
+
   static const String MALFORMED_RESPONSE_MESSAGE =
       "An improperly formatted error response was found.";
 
@@ -40,14 +42,14 @@ class StripeApiHandler {
   Future<Map<String, dynamic>> createToken(
       Map params, String publishableKey) async {
     final url = "$LIVE_API_PATH/tokens";
-    final options = new RequestOptions(key: publishableKey);
+    final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
     return _getStripeResponse(RequestMethod.post, url, options, params: params);
   }
 
   Future<Map<String, dynamic>> retrievePaymentIntent(
       String publishableKey, String intent, String clientSecret) {
     final url = "$LIVE_API_PATH/payment_intents/$intent";
-    final options = new RequestOptions(key: publishableKey);
+    final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
     final params = {'client_secret': clientSecret};
     return _getStripeResponse(RequestMethod.get, url, options, params: params);
   }
@@ -58,7 +60,7 @@ class StripeApiHandler {
   Future<Map<String, dynamic>> confirmPaymentIntent(
       String publishableKey, String intent, String clientSecret) {
     final url = "$LIVE_API_PATH/payment_intents/$intent/confirm";
-    final options = new RequestOptions(key: publishableKey);
+    final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
     final params = {'client_secret': clientSecret};
     return _getStripeResponse(RequestMethod.get, url, options, params: params);
   }
@@ -66,14 +68,14 @@ class StripeApiHandler {
   Future<Map<String, dynamic>> createPaymentMethod(
       String publishableKey, Map<String, dynamic> data) async {
     final url = "$LIVE_API_PATH/payment_methods";
-    final options = new RequestOptions(key: publishableKey);
+    final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
     return _getStripeResponse(RequestMethod.post, url, options, params: data);
   }
 
   Future<Map<String, dynamic>> attachPaymentMethod(
       String customerId, String ephemeralKey, String paymentMethod) async {
     final url = "$LIVE_API_PATH/payment_methods/$paymentMethod/attach";
-    final options = new RequestOptions(key: ephemeralKey);
+    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
     final params = {'customer': customerId};
     return _getStripeResponse(RequestMethod.post, url, options, params: params);
   }
@@ -81,7 +83,7 @@ class StripeApiHandler {
   Future<Map<String, dynamic>> listPaymentMethods(
       String customerId, String ephemeralKey) async {
     final url = "$LIVE_API_PATH/payment_methods";
-    final options = new RequestOptions(key: ephemeralKey);
+    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
     final params = {'customer': customerId, 'type': 'card'};
     return _getStripeResponse(RequestMethod.get, url, options, params: params);
   }
@@ -89,21 +91,21 @@ class StripeApiHandler {
   Future<Map<String, dynamic>> detachPaymentMethod(
       String paymentMethodId, String ephemeralKey) async {
     final url = "$LIVE_API_PATH/payment_methods/$paymentMethodId/detach";
-    final options = new RequestOptions(key: ephemeralKey);
+    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
     return _getStripeResponse(RequestMethod.post, url, options);
   }
 
   Future<Map<String, dynamic>> retrieveCustomer(
       String customerId, String ephemeralKey) async {
     final String url = "$LIVE_API_PATH/customers/$customerId";
-    final options = new RequestOptions(key: ephemeralKey);
+    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
     return _getStripeResponse(RequestMethod.get, url, options);
   }
 
   Future<Map<String, dynamic>> attachSource(
       String customerId, String sourceId, String ephemeralKey) async {
     final String url = "$LIVE_API_PATH/customers/$customerId/sources";
-    final options = new RequestOptions(key: ephemeralKey);
+    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
     return await _getStripeResponse(
       RequestMethod.post,
       url,
@@ -115,14 +117,14 @@ class StripeApiHandler {
   Future<Map<String, dynamic>> detachSource(
       String customerId, String sourceId, String ephemeralKey) async {
     final String url = "$LIVE_API_PATH/customers/$customerId/sources/$sourceId";
-    final options = new RequestOptions(key: ephemeralKey);
+    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
     return _getStripeResponse(RequestMethod.delete, url, options);
   }
 
   Future<Map<String, dynamic>> updateCustomer(
       String customerId, Map<String, dynamic> data, String ephemeralKey) async {
     final String url = "$LIVE_API_PATH/customers/$customerId";
-    final options = new RequestOptions(key: ephemeralKey);
+    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
     return _getStripeResponse(RequestMethod.post, url, options, params: data);
   }
 
@@ -154,7 +156,7 @@ class StripeApiHandler {
         response = await _client.delete(url, headers: headers);
         break;
       default:
-        throw new Exception("Request Method: $method not implemented");
+        throw Exception("Request Method: $method not implemented");
     }
 
     final requestId = response.headers[HEADER_KEY_REQUEST_ID];
@@ -166,13 +168,13 @@ class StripeApiHandler {
     } catch (error) {
       final stripeError = StripeAPIError(requestId,
           {StripeAPIError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
-      throw new StripeAPIException(stripeError);
+      throw StripeAPIException(stripeError);
     }
 
     if (statusCode < 200 || statusCode >= 300) {
       final Map<String, dynamic> errBody = resp[FIELD_ERROR];
       final stripeError = StripeAPIError(requestId, errBody);
-      throw new StripeAPIException(stripeError);
+      throw StripeAPIException(stripeError);
     } else {
       return resp;
     }
@@ -182,7 +184,7 @@ class StripeApiHandler {
   ///
   ///
   static Map<String, String> _headers({RequestOptions options}) {
-    final Map<String, String> headers = new Map();
+    final Map<String, String> headers = Map();
     headers["Accept-Charset"] = CHARSET;
     headers["Accept"] = "application/json";
     headers["Content-Type"] = "application/x-www-form-urlencoded";
@@ -193,7 +195,7 @@ class StripeApiHandler {
     }
 
     // debug headers
-    Map<String, String> propertyMap = new Map();
+    Map<String, String> propertyMap = Map();
     propertyMap["os.name"] = defaultTargetPlatform.toString();
     //propertyMap["os.version"] = String.valueOf(Build.VERSION.SDK_INT));
     propertyMap["bindings.version"] = VERSION_NAME;
@@ -227,7 +229,7 @@ class StripeApiHandler {
   }
 
   static String _urlEncodeMap(dynamic data) {
-    StringBuffer urlData = new StringBuffer("");
+    StringBuffer urlData = StringBuffer("");
     bool first = true;
     void urlEncode(dynamic sub, String path) {
       if (sub is List) {
@@ -268,7 +270,7 @@ class RequestOptions {
   final String stripeAccount;
 
   RequestOptions({
-    this.apiVersion = API_VERSION,
+    @required this.apiVersion,
     this.guid,
     this.idempotencyKey,
     this.key,

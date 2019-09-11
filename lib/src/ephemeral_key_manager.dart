@@ -6,14 +6,10 @@ import 'package:stripe_sdk/src/stripe_error.dart';
 
 import 'model/stripe_json_utils.dart';
 
-///
-///
-///
+/// Function that takes a apiVersion and returns a Stripe ephemeral key response
 typedef Future<String> EphemeralKeyProvider(String apiVersion);
 
-///
-///
-///
+/// Represents a Stripe Ephemeral Key
 class EphemeralKey {
   static const String FIELD_CREATED = "created";
   static const String FIELD_EXPIRES = "expires";
@@ -46,8 +42,8 @@ class EphemeralKey {
     _type = json[FIELD_ASSOCIATED_OBJECTS][0][FIELD_TYPE];
     _object = optString(json, FIELD_OBJECT);
     _secret = optString(json, FIELD_SECRET);
-    _createdAt = new DateTime.fromMillisecondsSinceEpoch(_created);
-    _expiresAt = new DateTime.fromMillisecondsSinceEpoch(_expires);
+    _createdAt = DateTime.fromMillisecondsSinceEpoch(_created);
+    _expiresAt = DateTime.fromMillisecondsSinceEpoch(_expires);
   }
 
   String get id => _id;
@@ -69,12 +65,8 @@ class EphemeralKey {
   DateTime get createdAt => _createdAt;
 
   DateTime get expiresAt => _expiresAt;
-
 }
 
-///
-///
-///
 class EphemeralKeyManager {
   EphemeralKey _ephemeralKey;
   final EphemeralKeyProvider ephemeralKeyProvider;
@@ -82,30 +74,30 @@ class EphemeralKeyManager {
 
   EphemeralKeyManager(this.ephemeralKeyProvider, this.timeBufferInSeconds);
 
-  ///
-  ///
-  ///
+  /// Retrieve a ephemeral key.
+  /// Will fetch a new one using [EphemeralKeyProvider] if required.
   Future<EphemeralKey> retrieveEphemeralKey() async {
     if (_shouldRefreshKey()) {
       String key;
       try {
-        key = await ephemeralKeyProvider(API_VERSION);
+        key = await ephemeralKeyProvider(DEFAULT_API_VERSION);
       } catch (error) {
-        final e = new StripeAPIError(null, {
-          StripeAPIError.FIELD_MESSAGE: "Failed to retrive ephemeralKey from server",
+        final e = StripeAPIError(null, {
+          StripeAPIError.FIELD_MESSAGE:
+              "Failed to retrive ephemeralKey from server",
         });
-        throw new StripeAPIException(e);
+        throw StripeAPIException(e);
       }
 
       try {
         Map<String, dynamic> decodedKey = json.decode(key);
-        _ephemeralKey = new EphemeralKey.fromJson(decodedKey);
+        _ephemeralKey = EphemeralKey.fromJson(decodedKey);
       } catch (error) {
-        final e = new StripeAPIError(null, {
+        final e = StripeAPIError(null, {
           StripeAPIError.FIELD_MESSAGE:
               "Failed to parse Ephemeral Key, Please return the response as it is as you recieved from stripe server",
         });
-        throw new StripeAPIException(e);
+        throw StripeAPIException(e);
       }
 
       return _ephemeralKey;
@@ -114,9 +106,6 @@ class EphemeralKeyManager {
     }
   }
 
-  ///
-  ///
-  ///
   bool _shouldRefreshKey() {
     if (_ephemeralKey == null) {
       return true;
