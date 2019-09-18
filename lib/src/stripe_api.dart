@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/rendering.dart';
+import 'package:stripe_sdk/src/3ds_auth.dart';
 import 'package:stripe_sdk/src/ephemeral_key_manager.dart';
 import 'package:stripe_sdk/src/stripe_api_handler.dart';
 
@@ -48,10 +49,11 @@ class Stripe {
 
   /// Retrieve a PaymentIntent.
   /// https://stripe.com/docs/api/payment_intents/retrieve
-  Future<Map<dynamic, dynamic>> retrievePaymentIntent(
-      String intent, String clientSecret) async {
+  Future<Map<String, dynamic>> retrievePaymentIntent(
+      String clientSecret) async {
+    final intentId = _parseIdFromClientSecret(clientSecret);
     return _apiHandler.retrievePaymentIntent(
-        publishableKey, intent, clientSecret);
+        publishableKey, intentId, clientSecret);
   }
 
   static void _validateKey(String publishableKey) {
@@ -132,14 +134,17 @@ class CustomerSession {
   Future<Map<String, dynamic>> detachPaymentMethod(
       String paymentMethodId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.attachPaymentMethod(
-        key.customerId, paymentMethodId, key.secret);
+    return _apiHandler.detachPaymentMethod(paymentMethodId, key.secret);
   }
 
-  Future<Map<dynamic, dynamic>> retrievePaymentIntent(
-      String intent, String clientSecret) async {
+  /// Confirm a PaymentIntent
+  /// https://stripe.com/docs/api/payment_intents/confirm
+  Future<Map<String, dynamic>> confirmPaymentIntent(
+      String intent, String clientSecret,
+      {Map<String, dynamic> data = const {}}) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.retrievePaymentIntent(key.secret, intent, clientSecret);
+    data['client_secret'] = clientSecret;
+    return _apiHandler.confirmPaymentIntent(key.secret, intent, data);
   }
 
   /// Attaches a Source object to the Customer.
@@ -166,16 +171,40 @@ class CustomerSession {
     return _apiHandler.updateCustomer(key.customerId, data, key.secret);
   }
 
+  /// Confirm and authenticate a payment.
+  /// Returns the PaymentIntent.
+  /// https://stripe.com/docs/payments/payment-intents/android
   Future<Map<String, dynamic>> confirmPayment(
       String paymentIntentClientSecret, String paymentMethodId) async {
-    // todo
-    // todo: assert that method is automatic
-    return Future.value(null);
+    final paymentIntentId = _parseIdFromClientSecret(paymentIntentClientSecret);
+    final paymentIntent =
+        await confirmPaymentIntent(paymentIntentId, paymentIntentClientSecret);
+    if (paymentIntent['status'] == "requires_action") {
+      return launch3ds(paymentIntent['next_action']);
+    } else {
+      return Future.value(paymentIntent);
+    }
   }
 
-  Future<Map<String, dynamic>> authenticatePaymentIntent(
+  /// Authenticate a payment.
+  /// Returns the PaymentIntent.
+  /// https://stripe.com/docs/payments/payment-intents/android-manual
+  Future<Map<String, dynamic>> authenticatePayment(
       String paymentIntentClientSecret) async {
-    // todo
-    return Future.value(null);
+    final paymentIntent =
+        await Stripe.instance.retrievePaymentIntent(paymentIntentClientSecret);
+    if (paymentIntent['status'] == "requires_action") {
+      return launch3ds(paymentIntent['next_action']);
+    } else {
+      return Future.value(paymentIntent);
+    }
   }
+}
+
+String _parseIdFromClientSecret(String clientSecret) {
+  return clientSecret.split("_secret")[0];
+}
+
+String getRedirectUrl() {
+  return "stripesdk://paymentintent.3ds";
 }

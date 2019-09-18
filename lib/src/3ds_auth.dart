@@ -7,10 +7,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'stripe_api.dart';
 
 class ScaAuth extends StatelessWidget {
-  ScaAuth(this.action) : url = action['redirect_to_url']['url'];
+  ScaAuth(this.action)
+      : url = action['redirect_to_url']['url'],
+        returnUrl = action['redirect_to_url']['return_url'];
 
   final Map<dynamic, dynamic> action;
   final String url;
+  final String returnUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +24,19 @@ class ScaAuth extends StatelessWidget {
 
 /// Launch 3DS in a new browser window.
 /// Returns a [Future] with the Stripe PaymentIntent when the user completes or cancels authentication.
-Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action,
-    {String scheme = 'stripesdk', String host = '3ds.stripesdk.io'}) async {
+Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action) async {
   final url = action['redirect_to_url']['url'];
-  final completer = Completer<Map<String, String>>();
+  final returnUrl = Uri.parse(action['redirect_to_url']['return_url']);
+  final completer = Completer<Map<String, dynamic>>();
   StreamSubscription sub;
   sub = getUriLinksStream().listen((Uri uri) async {
     debugPrint(uri.toString());
-    if (uri.scheme == scheme && uri.host == host) {
+    if (uri.scheme == returnUrl.scheme && uri.host == returnUrl.host) {
       await sub.cancel();
       final intent = await Stripe.instance.retrievePaymentIntent(
-        uri.queryParameters['payment_intent'],
         uri.queryParameters['payment_intent_client_secret'],
       );
-      completer.complete({'id': intent['id'], 'status': intent['status']});
+      completer.complete(intent);
     }
   });
 

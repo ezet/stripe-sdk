@@ -54,15 +54,11 @@ class StripeApiHandler {
     return _getStripeResponse(RequestMethod.get, url, options, params: params);
   }
 
-  /// Confirm a PaymentIntent.
-  /// Requires that the `confirmation_method` of the intent is set to `automatic`.
-  /// https://stripe.com/docs/api/payment_intents/confirm
   Future<Map<String, dynamic>> confirmPaymentIntent(
-      String publishableKey, String intent, String clientSecret) {
+      String publishableKey, String intent, Map<String, dynamic> data) {
     final url = "$LIVE_API_PATH/payment_intents/$intent/confirm";
     final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
-    final params = {'client_secret': clientSecret};
-    return _getStripeResponse(RequestMethod.get, url, options, params: params);
+    return _getStripeResponse(RequestMethod.get, url, options, params: data);
   }
 
   Future<Map<String, dynamic>> createPaymentMethod(

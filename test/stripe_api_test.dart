@@ -1,16 +1,17 @@
-// TODO:: Need to add test cases
-/*
-import 'package:test/test.dart';
+// import 'package:flutter_test/flutter_test.dart';
+// import 'package:stripe_sdk/stripe_sdk.dart';
 
-import 'package:stripe_sdk/stripe_api.dart';
+// void main() {
+//   setUpAll(() {
+//     Stripe.init('pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47');    
+//   });
 
-void main() {
-  test('adds one to input values', () {
-    //final calculator = new Calculator();
-    //expect(calculator.addOne(2), 3);
-    //expect(calculator.addOne(-7), -6);
-    //expect(calculator.addOne(0), 1);
-    //expect(() => calculator.addOne(null), throwsNoSuchMethodError);
-  });
-}
-*/
+//   test('Get payment intent', () {
+//     Stripe.instance.retrievePaymentIntent(clientSecret)
+//     //final calculator = new Calculator();
+//     //expect(calculator.addOne(2), 3);
+//     //expect(calculator.addOne(-7), -6);
+//     //expect(calculator.addOne(0), 1);
+//     //expect(() => calculator.addOne(null), throwsNoSuchMethodError);
+//   });
+// }
