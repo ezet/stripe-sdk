@@ -24,11 +24,11 @@ Future<String> _fetchEphemeralKeyFromMyServer(String apiVersion) {
   return Future.value("raw-http-body");
 }
 
-
 /// This method supports the default payment flow as documented by Stripe.
 /// https://stripe.com/docs/payments/payment-intents/android
 exampleConfirmPayment() async {
-  final paymentIntentClientSecret = await _createPaymentIntent(Stripe.getReturnUrl());
+  final paymentIntentClientSecret =
+      await _createPaymentIntent(Stripe.getReturnUrl());
   final paymentIntent = await CustomerSession.instance
       .confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
   if (paymentIntent['status'] == 'success') {
@@ -45,11 +45,11 @@ Future<String> _createPaymentIntent(String returnUrl) {
   return Future.value("client_secret");
 }
 
-
 /// This method supports the manual payment flow as documented by Stripe.
 /// https://stripe.com/docs/payments/payment-intents/android-manual
 exampleAuthenticatePayment() async {
-  final paymentIntentClientSecret = await _createAndConfirmPaymentIntent(Stripe.getReturnUrl());
+  final paymentIntentClientSecret =
+      await _createAndConfirmPaymentIntent(Stripe.getReturnUrl());
   final paymentIntent = await CustomerSession.instance
       .authenticatePayment(paymentIntentClientSecret);
   if (paymentIntent['status'] == "success") {

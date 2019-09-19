@@ -3,7 +3,7 @@
 
 // void main() {
 //   setUpAll(() {
-//     Stripe.init('pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47');    
+//     Stripe.init('pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47');
 //   });
 
 //   test('Get payment intent', () {

@@ -1,5 +1,12 @@
 # Stripe SDK Changelog
 
+## 1.0.1
+
+* Support multiple simultaneous authentication flows
+* Improve documentation and examples
+* Allow specifying apiVersion for CustomerSession
+* Allow multiple instances of Stripe and CustomerSession
+
 ## 1.0.0+1
 
 * Improve examples

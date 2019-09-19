@@ -20,7 +20,8 @@ const int MAX_LENGTH_AMEX_DINERS = 17;
 /// @return {@code true} if and only if the input value is a valid card number
 bool isValidCardNumber(String cardNumber) {
   String normalizedNumber = removeSpacesAndHyphens(cardNumber);
-  return isValidLuhnNumber(normalizedNumber) && isValidCardLength(normalizedNumber);
+  return isValidLuhnNumber(normalizedNumber) &&
+      isValidCardLength(normalizedNumber);
 }
 
 /// Checks the input string to see whether or not it is a valid Luhn number.
@@ -148,11 +149,13 @@ String getPossibleCardType(String cardNumber, {bool shouldNormalize = true}) {
     return StripeCard.DISCOVER;
   } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_JCB)) {
     return StripeCard.JCB;
-  } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_DINERS_CLUB)) {
+  } else if (hasAnyPrefix(
+      spacelessCardNumber, StripeCard.PREFIXES_DINERS_CLUB)) {
     return StripeCard.DINERS_CLUB;
   } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_VISA)) {
     return StripeCard.VISA;
-  } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_MASTERCARD)) {
+  } else if (hasAnyPrefix(
+      spacelessCardNumber, StripeCard.PREFIXES_MASTERCARD)) {
     return StripeCard.MASTERCARD;
   } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_UNIONPAY)) {
     return StripeCard.UNIONPAY;
@@ -162,7 +165,8 @@ String getPossibleCardType(String cardNumber, {bool shouldNormalize = true}) {
 }
 
 int getLengthForBrand(String cardBrand) {
-  if (StripeCard.AMERICAN_EXPRESS == cardBrand || StripeCard.DINERS_CLUB == cardBrand) {
+  if (StripeCard.AMERICAN_EXPRESS == cardBrand ||
+      StripeCard.DINERS_CLUB == cardBrand) {
     return MAX_LENGTH_AMEX_DINERS;
   } else {
     return MAX_LENGTH_COMMON;
