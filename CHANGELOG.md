@@ -1,9 +1,13 @@
 # Stripe SDK Changelog
 
+## 1.0.0+1
+
+* Improve examples
+
 ## 1.0.0
 
-Improve API for SCA-related features
-Improve examples
+* Improve API for SCA-related features
+* Improve examples
 
 ## 0.0.2
 

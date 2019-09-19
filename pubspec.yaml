@@ -1,6 +1,6 @@
 name: stripe_sdk
 description: A simple and flexible Stripe API client with complete support for SCA and PSD2.
-version: 1.0.0
+version: 1.0.0+1
 author: Lars-Kristian Dahl <lars.dahl@gmail.com>
 homepage: https://github.com/ezet/stripe_sdk
 
