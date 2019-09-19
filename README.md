@@ -50,25 +50,24 @@ For iOS you need to declare the scheme in
 under URL Types):
 
 ```xml
-<?xml ...>
 <!-- ... other tags -->
 <plist>
-<dict>
-  <!-- ... other tags -->
-  <key>CFBundleURLTypes</key>
-  <array>
     <dict>
-      <key>CFBundleTypeRole</key>
-      <string>Editor</string>
-      <key>CFBundleURLName</key>
-      <string>3ds.stripesdk.io</string>
-      <key>CFBundleURLSchemes</key>
-      <array>
-        <string>stripesdk</string>
-      </array>
+    <!-- ... other tags -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <string>3ds.stripesdk.io</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>stripesdk</string>
+        </array>
+        </dict>
+    </array>
+    <!-- ... other tags -->
     </dict>
-  </array>
-  <!-- ... other tags -->
-</dict>
 </plist>
 ```
