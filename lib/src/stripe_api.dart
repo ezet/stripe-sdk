@@ -14,21 +14,24 @@ class Stripe {
   final String publishableKey;
   String stripeAccount;
 
-  Stripe._internal(this.publishableKey);
+  /// Create a new instance, which can be used with e.g. dependency injection.
+  Stripe(this.publishableKey, {String apiVersion = DEFAULT_API_VERSION}) {
+      _validateKey(publishableKey);
+    _apiHandler.apiVersion = apiVersion;
+  }
 
+  /// Initialize the managed singleton instance.
   static void init(String publishableKey,
       {String apiVersion = DEFAULT_API_VERSION}) {
     if (_instance == null) {
-      _validateKey(publishableKey);
-      _instance = Stripe._internal(publishableKey);
+      _instance = Stripe(publishableKey, apiVersion: apiVersion);
     }
-    _instance._apiHandler.apiVersion = apiVersion;
   }
 
   static Stripe get instance {
     if (_instance == null) {
       throw Exception(
-          "Attempted to get instance of Stripe without initialization");
+          "Attempted to get singleton instance of Stripe without initialization");
     }
     return _instance;
   }
