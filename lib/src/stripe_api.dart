@@ -92,11 +92,12 @@ class CustomerSession {
 
   final EphemeralKeyManager _keyManager;
 
+  /// Create a new CustomerSession instance. Use this if you prefer to manage your own instances.
   CustomerSession(this._keyManager, {String apiVersion = DEFAULT_API_VERSION}) {
     _apiHandler.apiVersion = apiVersion;
   }
 
-  /// Initiate a new customer session
+  /// Initiate the customer session singleton instance.
   static void initCustomerSession(EphemeralKeyProvider provider,
       {String apiVersion = DEFAULT_API_VERSION}) {
     if (_instance == null) {
@@ -106,7 +107,7 @@ class CustomerSession {
     }
   }
 
-  /// End the current active customer session
+  /// End the managed singleton customer session.
   static void endCustomerSession() {
     _instance = null;
   }
@@ -115,7 +116,7 @@ class CustomerSession {
   static CustomerSession get instance {
     if (_instance == null) {
       throw Exception(
-          "Attempted to get instance of CustomerSession without initialization.");
+          "Attempted to get singleton instance of CustomerSession without initialization.");
     }
     return _instance;
   }

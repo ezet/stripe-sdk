@@ -4,13 +4,28 @@ A native dart package for Stripe. There are various other flutter plugins that w
 but this package uses a different approach.
 It does not wrap existing Stripe libraries, but instead accesses the Stripe API directly.
 
-## Feature
+See *examples* for additional examples.
+
+## Features
 
 - Customer session
 - PaymentIntent, with SCA
 - SetupIntent, with SCA
 - Manage customer
-- Manage cards
+- Manage cards and sources
+
+## Basic use
+
+The library offers two main API surfaces:
+
+- `Stripe` for generic, non-customer specific APIs.
+- `CustomerSession` for customer-specific APIs.
+
+## Initialization
+
+Both classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
+
+Regular instances can also be created using the constructor, which allows them to be managed by e.g. dependency injection instead.
 
 ## SCA/PSD2
 
@@ -33,7 +48,6 @@ You need to declare this intent filter in `android/app/src/main/AndroidManifest.
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
         <data
           android:scheme="stripesdk"
           android:host="3ds.stripesdk.io" />
