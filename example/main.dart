@@ -5,7 +5,7 @@ import 'package:stripe_sdk/stripe_sdk.dart';
 const publishableKey = "my-key";
 
 /// Stripe provides access to general APIs
-setupStripe() async {
+exampleSetupStripe() async {
   Stripe.init(publishableKey);
   // See Stripe API documentation for details
   final cardData = {};
@@ -13,7 +13,7 @@ setupStripe() async {
 }
 
 /// CustomerSession provides access to customer specific APIs
-setupSession() {
+exampleSetupSession() {
   CustomerSession.initCustomerSession(
       (apiVersion) => _fetchEphemeralKeyFromMyServer(apiVersion));
   CustomerSession.instance.listPaymentMethods();
@@ -24,9 +24,11 @@ Future<String> _fetchEphemeralKeyFromMyServer(String apiVersion) {
   return Future.value("raw-http-body");
 }
 
+
+/// This method supports the default payment flow as documented by Stripe.
 /// https://stripe.com/docs/payments/payment-intents/android
-confirmPayment() async {
-  final paymentIntentClientSecret = await _createPaymentIntent();
+exampleConfirmPayment() async {
+  final paymentIntentClientSecret = await _createPaymentIntent(Stripe.getReturnUrl());
   final paymentIntent = await CustomerSession.instance
       .confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
   if (paymentIntent['status'] == 'success') {
@@ -36,16 +38,18 @@ confirmPayment() async {
   }
 }
 
-
-/// Create payment intent with automatic confirmation and return the client secret.
-/// The `return_url` must be set to `stripesdk://3ds.stripesdk.io`
-Future<String> _createPaymentIntent() {
+/// Create payment intent and return the client secret.
+/// The `return_url` must be set on the PaymentIntent.
+/// https://stripe.com/docs/payments/payment-intents/android#create-payment-intent
+Future<String> _createPaymentIntent(String returnUrl) {
   return Future.value("client_secret");
 }
 
+
+/// This method supports the manual payment flow as documented by Stripe.
 /// https://stripe.com/docs/payments/payment-intents/android-manual
-authenticatePayment() async {
-  final paymentIntentClientSecret = await _createAndConfirmPaymentIntent();
+exampleAuthenticatePayment() async {
+  final paymentIntentClientSecret = await _createAndConfirmPaymentIntent(Stripe.getReturnUrl());
   final paymentIntent = await CustomerSession.instance
       .authenticatePayment(paymentIntentClientSecret);
   if (paymentIntent['status'] == "success") {
@@ -55,10 +59,10 @@ authenticatePayment() async {
   }
 }
 
-
 /// Create and confirm a payment intent on your server.
-/// The `return_url` must be set to `stripesdk://3ds.stripesdk.io`
+/// The `returnUrl` must be set on the PaymentIntent by your server.
 /// Return the payment intent client secret.
-Future<String> _createAndConfirmPaymentIntent() {
+/// https://stripe.com/docs/payments/payment-intents/android-manual#create-and-confirm-payment-intent-manual
+Future<String> _createAndConfirmPaymentIntent(String returnUrl) {
   return Future.value("client_secret");
 }

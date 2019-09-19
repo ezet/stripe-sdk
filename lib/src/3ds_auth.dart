@@ -31,7 +31,10 @@ Future<Map<String, dynamic>> launch3ds(Map<dynamic, dynamic> action) async {
   StreamSubscription sub;
   sub = getUriLinksStream().listen((Uri uri) async {
     debugPrint(uri.toString());
-    if (uri.scheme == returnUrl.scheme && uri.host == returnUrl.host) {
+    if (uri.scheme == returnUrl.scheme &&
+        uri.host == returnUrl.host &&
+        uri.queryParameters['requestId'] ==
+            returnUrl.queryParameters['requestId']) {
       await sub.cancel();
       final intent = await Stripe.instance.retrievePaymentIntent(
         uri.queryParameters['payment_intent_client_secret'],

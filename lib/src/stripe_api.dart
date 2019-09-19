@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/rendering.dart';
 import 'package:stripe_sdk/src/3ds_auth.dart';
@@ -69,6 +70,13 @@ class Stripe {
           "instead of the publishable one. For more info, " +
           "see https://stripe.com/docs/stripe.js");
     }
+  }
+
+  /// Creates a return URL that can be used to authenticate a single PaymentIntent.
+  /// This should be set on the intent before attempting to authenticate it.
+  static String getReturnUrl() {
+    final requestId = Random.secure().nextInt(99999999);
+    return "stripesdk://3ds.stripesdk.io?requestId=$requestId";
   }
 }
 
