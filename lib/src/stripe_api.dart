@@ -16,7 +16,7 @@ class Stripe {
 
   /// Create a new instance, which can be used with e.g. dependency injection.
   Stripe(this.publishableKey, {String apiVersion = DEFAULT_API_VERSION}) {
-      _validateKey(publishableKey);
+    _validateKey(publishableKey);
     _apiHandler.apiVersion = apiVersion;
   }
 
@@ -92,14 +92,17 @@ class CustomerSession {
 
   final EphemeralKeyManager _keyManager;
 
-  CustomerSession._internal(this._keyManager);
+  CustomerSession(this._keyManager, {String apiVersion = DEFAULT_API_VERSION}) {
+    _apiHandler.apiVersion = apiVersion;
+  }
 
   /// Initiate a new customer session
-  static void initCustomerSession(EphemeralKeyProvider provider) {
+  static void initCustomerSession(EphemeralKeyProvider provider,
+      {String apiVersion = DEFAULT_API_VERSION}) {
     if (_instance == null) {
       final manager =
           EphemeralKeyManager(provider, KEY_REFRESH_BUFFER_IN_SECONDS);
-      _instance = CustomerSession._internal(manager);
+      _instance = CustomerSession(manager, apiVersion: apiVersion);
     }
   }
 
