@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/rendering.dart';
 import 'package:stripe_sdk/src/3ds_auth.dart';
 import 'package:stripe_sdk/src/ephemeral_key_manager.dart';
 import 'package:stripe_sdk/src/stripe_api_handler.dart';
@@ -14,8 +13,10 @@ class Stripe {
   final String publishableKey;
   String stripeAccount;
 
+  final String apiVersion;
+
   /// Create a new instance, which can be used with e.g. dependency injection.
-  Stripe(this.publishableKey, {String apiVersion = DEFAULT_API_VERSION}) {
+  Stripe(this.publishableKey, {this.apiVersion = DEFAULT_API_VERSION}) {
     _validateKey(publishableKey);
     _apiHandler.apiVersion = apiVersion;
   }
@@ -38,26 +39,45 @@ class Stripe {
 
   /// Create a stripe Token
   /// https://stripe.com/docs/api/tokens
-  Future<Map<String, dynamic>> createToken(Map data) async {
-    final token = await _apiHandler.createToken(data, publishableKey);
-    return token;
+  Future<Map<String, dynamic>> createToken(Map<String, dynamic> data) async {
+    final path = "/tokens";
+    return _apiHandler.request(
+        RequestMethod.post, path, publishableKey, apiVersion,
+        params: data);
   }
 
   /// Create a PaymenMethod.
   /// https://stripe.com/docs/api/payment_methods/create
   Future<Map<String, dynamic>> createPaymentMethod(
-      Map<String, dynamic> cardMap) async {
-    debugPrint(cardMap.toString());
-    return _apiHandler.createPaymentMethod(publishableKey, cardMap);
+      Map<String, dynamic> data) async {
+    final path = "/payment_methods";
+    return _apiHandler.request(
+        RequestMethod.post, path, publishableKey, apiVersion,
+        params: data);
   }
 
   /// Retrieve a PaymentIntent.
   /// https://stripe.com/docs/api/payment_intents/retrieve
-  Future<Map<String, dynamic>> retrievePaymentIntent(
-      String clientSecret) async {
+  Future<Map<String, dynamic>> retrievePaymentIntent(String clientSecret,
+      {String apiVersion}) async {
     final intentId = _parseIdFromClientSecret(clientSecret);
-    return _apiHandler.retrievePaymentIntent(
-        publishableKey, intentId, clientSecret);
+    final path = "/payment_intents/$intentId";
+    final params = {'client_secret': clientSecret};
+    return _apiHandler.request(
+        RequestMethod.get, path, publishableKey, apiVersion,
+        params: params);
+  }
+
+  /// Retrieve a SetupIntent.
+  /// https://stripe.com/docs/api/setup_intents/retrieve
+  Future<Map<String, dynamic>> retrieveSetupIntent(String clientSecret,
+      {String apiVersion}) async {
+    final intentId = _parseIdFromClientSecret(clientSecret);
+    final path = "/setup_intents/$intentId";
+    final params = {'client_secret': clientSecret};
+    return _apiHandler.request(
+        RequestMethod.get, path, publishableKey, apiVersion,
+        params: params);
   }
 
   static void _validateKey(String publishableKey) {
@@ -91,9 +111,10 @@ class CustomerSession {
   final StripeApiHandler _apiHandler = StripeApiHandler();
 
   final EphemeralKeyManager _keyManager;
+  final String apiVersion;
 
   /// Create a new CustomerSession instance. Use this if you prefer to manage your own instances.
-  CustomerSession(this._keyManager, {String apiVersion = DEFAULT_API_VERSION}) {
+  CustomerSession(this._keyManager, {this.apiVersion = DEFAULT_API_VERSION}) {
     _apiHandler.apiVersion = apiVersion;
   }
 
@@ -125,14 +146,18 @@ class CustomerSession {
   /// https://stripe.com/docs/api/customers/retrieve
   Future<Map<String, dynamic>> retrieveCurrentCustomer() async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.retrieveCustomer(key.customerId, key.secret);
+    final String url = "/customers/${key.customerId}";
+    return _apiHandler.request(RequestMethod.get, url, key.secret, apiVersion);
   }
 
   /// List a Customer's PaymentMethods.
   /// https://stripe.com/docs/api/payment_methods/list
   Future<Map<String, dynamic>> listPaymentMethods() async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.listPaymentMethods(key.customerId, key.secret);
+    final path = "/payment_methods";
+    final params = {'customer': key.customerId, 'type': 'card'};
+    return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion,
+        params: params);
   }
 
   /// Attach a PaymenMethod.
@@ -140,8 +165,10 @@ class CustomerSession {
   Future<Map<String, dynamic>> attachPaymentMethod(
       String paymentMethodId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.attachPaymentMethod(
-        key.customerId, key.secret, paymentMethodId);
+    final path = "/payment_methods/$paymentMethodId/attach";
+    final params = {'customer': key.customerId};
+    return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion,
+        params: params);
   }
 
   /// Detach a PaymentMethod.
@@ -149,17 +176,33 @@ class CustomerSession {
   Future<Map<String, dynamic>> detachPaymentMethod(
       String paymentMethodId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.detachPaymentMethod(paymentMethodId, key.secret);
+    final path = "/payment_methods/$paymentMethodId/detach";
+    return _apiHandler.request(
+        RequestMethod.post, path, key.secret, apiVersion);
   }
 
   /// Confirm a PaymentIntent
   /// https://stripe.com/docs/api/payment_intents/confirm
-  Future<Map<String, dynamic>> confirmPaymentIntent(
-      String intent, String clientSecret,
+  Future<Map<String, dynamic>> confirmPaymentIntent(String clientSecret,
       {Map<String, dynamic> data = const {}}) async {
     final key = await _keyManager.retrieveEphemeralKey();
+    final intent = _parseIdFromClientSecret(clientSecret);
     data['client_secret'] = clientSecret;
-    return _apiHandler.confirmPaymentIntent(key.secret, intent, data);
+    final path = "/payment_intents/$intent/confirm";
+    return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion,
+        params: data);
+  }
+
+  /// Confirm a SetupIntent
+  /// https://stripe.com/docs/api/setup_intents/confirm
+  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret,
+      {Map<String, dynamic> data = const {}}) async {
+    final key = await _keyManager.retrieveEphemeralKey();
+    final intent = _parseIdFromClientSecret(clientSecret);
+    data['client_secret'] = clientSecret;
+    final path = "/setup_intents/$intent/confirm";
+    return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion,
+        params: data);
   }
 
   /// Attaches a Source object to the Customer.
@@ -167,7 +210,10 @@ class CustomerSession {
   /// https://stripe.com/docs/api/sources/attach
   Future<Map<String, dynamic>> attachSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.attachSource(key.customerId, sourceId, key.secret);
+    final String url = "/customers/${key.customerId}/sources";
+    final params = {'source': sourceId};
+    return _apiHandler.request(RequestMethod.post, url, key.secret, apiVersion,
+        params: params);
   }
 
   /// Detaches a Source object from a Customer.
@@ -175,15 +221,18 @@ class CustomerSession {
   /// https://stripe.com/docs/api/sources/detach
   Future<Map<String, dynamic>> detachSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.detachSource(key.customerId, sourceId, key.secret);
+    final String url = "/customers/${key.customerId}/sources/$sourceId";
+    return _apiHandler.request(
+        RequestMethod.delete, url, key.secret, apiVersion);
   }
 
   /// Updates the specified customer by setting the values of the parameters passed.
   /// https://stripe.com/docs/api/customers/update
-  Future<Map<String, dynamic>> updateCustomerDefaultSource(
-      Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> updateCustomer(Map<String, dynamic> data) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    return _apiHandler.updateCustomer(key.customerId, data, key.secret);
+    final String url = "/customers/${key.customerId}";
+    return _apiHandler.request(RequestMethod.post, url, key.secret, apiVersion,
+        params: data);
   }
 
   /// Confirm and authenticate a payment.
@@ -191,9 +240,7 @@ class CustomerSession {
   /// https://stripe.com/docs/payments/payment-intents/android
   Future<Map<String, dynamic>> confirmPayment(
       String paymentIntentClientSecret, String paymentMethodId) async {
-    final paymentIntentId = _parseIdFromClientSecret(paymentIntentClientSecret);
-    final paymentIntent =
-        await confirmPaymentIntent(paymentIntentId, paymentIntentClientSecret);
+    final paymentIntent = await confirmPaymentIntent(paymentIntentClientSecret);
     if (paymentIntent['status'] == "requires_action") {
       return launch3ds(paymentIntent['next_action']);
     } else {
@@ -218,8 +265,4 @@ class CustomerSession {
 
 String _parseIdFromClientSecret(String clientSecret) {
   return clientSecret.split("_secret")[0];
-}
-
-String getRedirectUrl() {
-  return "stripesdk://paymentintent.3ds";
 }

@@ -39,89 +39,12 @@ class StripeApiHandler {
 
   StripeApiHandler._internal();
 
-  Future<Map<String, dynamic>> createToken(
-      Map params, String publishableKey) async {
-    final url = "$LIVE_API_PATH/tokens";
-    final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
-    return _getStripeResponse(RequestMethod.post, url, options, params: params);
-  }
-
-  Future<Map<String, dynamic>> retrievePaymentIntent(
-      String publishableKey, String intent, String clientSecret) {
-    final url = "$LIVE_API_PATH/payment_intents/$intent";
-    final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
-    final params = {'client_secret': clientSecret};
-    return _getStripeResponse(RequestMethod.get, url, options, params: params);
-  }
-
-  Future<Map<String, dynamic>> confirmPaymentIntent(
-      String publishableKey, String intent, Map<String, dynamic> data) {
-    final url = "$LIVE_API_PATH/payment_intents/$intent/confirm";
-    final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
-    return _getStripeResponse(RequestMethod.get, url, options, params: data);
-  }
-
-  Future<Map<String, dynamic>> createPaymentMethod(
-      String publishableKey, Map<String, dynamic> data) async {
-    final url = "$LIVE_API_PATH/payment_methods";
-    final options = RequestOptions(key: publishableKey, apiVersion: apiVersion);
-    return _getStripeResponse(RequestMethod.post, url, options, params: data);
-  }
-
-  Future<Map<String, dynamic>> attachPaymentMethod(
-      String customerId, String ephemeralKey, String paymentMethod) async {
-    final url = "$LIVE_API_PATH/payment_methods/$paymentMethod/attach";
-    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
-    final params = {'customer': customerId};
-    return _getStripeResponse(RequestMethod.post, url, options, params: params);
-  }
-
-  Future<Map<String, dynamic>> listPaymentMethods(
-      String customerId, String ephemeralKey) async {
-    final url = "$LIVE_API_PATH/payment_methods";
-    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
-    final params = {'customer': customerId, 'type': 'card'};
-    return _getStripeResponse(RequestMethod.get, url, options, params: params);
-  }
-
-  Future<Map<String, dynamic>> detachPaymentMethod(
-      String paymentMethodId, String ephemeralKey) async {
-    final url = "$LIVE_API_PATH/payment_methods/$paymentMethodId/detach";
-    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
-    return _getStripeResponse(RequestMethod.post, url, options);
-  }
-
-  Future<Map<String, dynamic>> retrieveCustomer(
-      String customerId, String ephemeralKey) async {
-    final String url = "$LIVE_API_PATH/customers/$customerId";
-    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
-    return _getStripeResponse(RequestMethod.get, url, options);
-  }
-
-  Future<Map<String, dynamic>> attachSource(
-      String customerId, String sourceId, String ephemeralKey) async {
-    final String url = "$LIVE_API_PATH/customers/$customerId/sources";
-    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
-    return await _getStripeResponse(
-      RequestMethod.post,
-      url,
-      options,
-      params: {FIELD_SOURCE: sourceId},
-    );
-  }
-
-  Future<Map<String, dynamic>> detachSource(
-      String customerId, String sourceId, String ephemeralKey) async {
-    final String url = "$LIVE_API_PATH/customers/$customerId/sources/$sourceId";
-    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
-    return _getStripeResponse(RequestMethod.delete, url, options);
-  }
-
-  Future<Map<String, dynamic>> updateCustomer(
-      String customerId, Map<String, dynamic> data, String ephemeralKey) async {
-    final String url = "$LIVE_API_PATH/customers/$customerId";
-    final options = RequestOptions(key: ephemeralKey, apiVersion: apiVersion);
-    return _getStripeResponse(RequestMethod.post, url, options, params: data);
+  Future<Map<String, dynamic>> request(
+      RequestMethod method, String path, String key, String apiVersion,
+      {final Map<String, dynamic> params}) {
+    final options = RequestOptions(key: key, apiVersion: apiVersion);
+    return _getStripeResponse(method, LIVE_API_PATH + path, options,
+        params: params);
   }
 
   Future<Map<String, dynamic>> _getStripeResponse(
