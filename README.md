@@ -10,7 +10,7 @@ See *examples* for additional examples.
 
 The library offers two main API surfaces:
 
-- `Stripe` for generic, non-customer specific APIs.
+- `Stripe` for generic, non-customer specific APIs, using publishable keys.
 - `CustomerSession` for customer-specific APIs, using stripe ephemeral keys.
 
 ### Planned features
