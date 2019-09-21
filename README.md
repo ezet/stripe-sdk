@@ -35,7 +35,7 @@ The library offers two main API surfaces:
 Both classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
 Regular instances can also be created using the constructor, which allows them to be managed by e.g. dependency injection instead.
 
-### `Stripe`
+### Stripe
 
 ```dart
 Stripe.init("pk_xxx");
@@ -43,7 +43,7 @@ Stripe.init("pk_xxx");
 final stripe = Stripe("pk_xxx);
 ```
 
-### `CustomerSession`
+### CustomerSession
 
 ```dart
 CustomerSession.init((apiVersion) => server.getEphemeralKeyFromServer(apiVersion));
@@ -51,7 +51,9 @@ CustomerSession.init((apiVersion) => server.getEphemeralKeyFromServer(apiVersion
 final session = CustomerSession((apiVersion) => server.getEphemeralKeyFromServer(apiVersion))
 ```
 
-## Use
+## Usage
+
+<https://stripe.com/docs/api>
 
 - Library methods map to a Stripe API call with the same name.
 - Additional parameters can be provided as an optional argument.

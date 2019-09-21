@@ -104,7 +104,7 @@ class Stripe {
 }
 
 class CustomerSession {
-  static final int KEY_REFRESH_BUFFER_IN_SECONDS = 30;
+   static final int keyRefreshBufferInSeconds = 30;
 
   static CustomerSession _instance;
 
@@ -123,7 +123,7 @@ class CustomerSession {
       {String apiVersion = DEFAULT_API_VERSION}) {
     if (_instance == null) {
       final manager =
-          EphemeralKeyManager(provider, KEY_REFRESH_BUFFER_IN_SECONDS);
+          EphemeralKeyManager(provider, keyRefreshBufferInSeconds);
       _instance = CustomerSession(manager, apiVersion: apiVersion);
     }
   }

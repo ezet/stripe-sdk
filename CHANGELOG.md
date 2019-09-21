@@ -1,5 +1,8 @@
 # Stripe SDK Changelog
 
+## 1.1.1
+
+
 ## 1.1.0
 
 * Complete support for SetupIntent with SCA
