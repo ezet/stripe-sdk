@@ -1,5 +1,11 @@
 # Stripe SDK Changelog
 
+## 1.1.0
+
+* Complete support for SetupIntent with SCA
+* Fix bug with confirmPayment
+* Internal refactoring
+
 ## 1.0.1
 
 * Support multiple simultaneous authentication flows
