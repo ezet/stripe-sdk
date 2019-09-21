@@ -8,29 +8,65 @@ See *examples* for additional examples.
 
 ## Features
 
-- Customer session
-- PaymentIntent, with SCA
-- SetupIntent, with SCA
-- Manage customer
-- Manage cards and sources
-
-## Basic use
-
 The library offers two main API surfaces:
 
 - `Stripe` for generic, non-customer specific APIs.
-- `CustomerSession` for customer-specific APIs.
+- `CustomerSession` for customer-specific APIs, using stripe ephemeral keys.
+
+### Planned features
+
+- Improve UI widgets
+- Support for additional APIs
+- Offer complete UI flow for adding payment method
+- Offer complete UI flow for checout
+
+### Supported APIs
+
+- Tokens
+- PaymentIntent, with SCA
+- SetupIntent, with SCA
+- PaymentMethod
+- Customer
+- Cards
+- Sources
 
 ## Initialization
 
 Both classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
-
 Regular instances can also be created using the constructor, which allows them to be managed by e.g. dependency injection instead.
+
+### `Stripe`
+
+```dart
+Stripe.init("pk_xxx");
+// or, to manage your own instances
+final stripe = Stripe("pk_xxx);
+```
+
+### `CustomerSession`
+
+```dart
+CustomerSession.init((apiVersion) => server.getEphemeralKeyFromServer(apiVersion));
+// or, to manage your own instances
+final session = CustomerSession((apiVersion) => server.getEphemeralKeyFromServer(apiVersion))
+```
+
+## Use
+
+- Library methods map to a Stripe API call with the same name.
+- Additional parameters can be provided as an optional argument.
+- The return type for each function is `Future<Map<String, dynamic>>`, where the value depends on the stripe API version.
 
 ## SCA/PSD2
 
-The library offers complete support for SCA.
-It handles SCA by launching the authentication flow in a native browser, and returns the result to the app.
+The library offers complete support for SCA on iOS and Android.
+It handles SCA by launching the authentication flow in a web browser, and returns the result to the app.
+
+```dart
+CustomerSession.initCustomerSession((apiVersion) => server.getEphemeralKeyFromMyServer(apiVersion));
+final clientSecret = await server.createPaymentIntent(Stripe.getReturnUrl(), ...);
+final paymentIntent = await CustomerSession.instance.confirmPayment(clientSecret, "pm_card_visa");
+```
 
 ### Android
 
