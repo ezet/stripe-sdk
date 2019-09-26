@@ -1,7 +1,6 @@
-import 'package:stripe_sdk/src/card_utils.dart';
-import 'package:stripe_sdk/src/stripe_network_utils.dart';
-import 'package:stripe_sdk/src/stripe_text_utils.dart';
-
+import '../card_utils.dart';
+import '../stripe_network_utils.dart';
+import '../stripe_text_utils.dart';
 import 'model_utils.dart';
 
 //enum CardType { UNKNOWN, AMERICAN_EXPRESS, DISCOVER, JCB, DINERS_CLUB, VISA, MASTERCARD, UNIONPAY }

@@ -4,12 +4,12 @@ import 'package:stripe_sdk/stripe_sdk.dart';
 
 const publishableKey = "my-key";
 
-/// Stripe provides access to general APIs
-exampleSetupStripe() async {
-  Stripe.init(publishableKey);
+/// StripeApi provides direct access to Stripe REST API
+exampleSetupStripeApi() async {
+  StripeApi.init(publishableKey);
   // See Stripe API documentation for details
   final cardData = {};
-  await Stripe.instance.createPaymentMethod(cardData);
+  await StripeApi.instance.createPaymentMethod(cardData);
 }
 
 /// CustomerSession provides access to customer specific APIs
@@ -27,9 +27,10 @@ Future<String> _fetchEphemeralKeyFromMyServer(String apiVersion) {
 /// This method supports the default payment flow as documented by Stripe.
 /// https://stripe.com/docs/payments/payment-intents/android
 exampleConfirmPayment() async {
+  Stripe.init(publishableKey);
   final paymentIntentClientSecret =
       await _createPaymentIntent(Stripe.getReturnUrl());
-  final paymentIntent = await CustomerSession.instance
+  final paymentIntent = await Stripe.instance
       .confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
   if (paymentIntent['status'] == 'success') {
     // Confirmation successfull
@@ -48,10 +49,11 @@ Future<String> _createPaymentIntent(String returnUrl) {
 /// This method supports the manual payment flow as documented by Stripe.
 /// https://stripe.com/docs/payments/payment-intents/android-manual
 exampleAuthenticatePayment() async {
+  Stripe.init(publishableKey);
   final paymentIntentClientSecret =
       await _createAndConfirmPaymentIntent(Stripe.getReturnUrl());
-  final paymentIntent = await CustomerSession.instance
-      .authenticatePayment(paymentIntentClientSecret);
+  final paymentIntent =
+      await Stripe.instance.authenticatePayment(paymentIntentClientSecret);
   if (paymentIntent['status'] == "success") {
     // Authentication was successfull
   } else {

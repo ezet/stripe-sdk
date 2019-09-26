@@ -3,7 +3,7 @@ import 'dart:convert' show json;
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:stripe_sdk/src/stripe_error.dart';
+import 'stripe_error.dart';
 
 const String DEFAULT_API_VERSION = "2019-08-14 ";
 

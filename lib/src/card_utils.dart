@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:stripe_sdk/src/stripe_text_utils.dart';
-import 'package:stripe_sdk/src/text_utils.dart';
 
 import 'model/card.dart';
+import 'stripe_text_utils.dart';
+import 'text_utils.dart';
 
 const int LENGTH_COMMON_CARD = 16;
 const int LENGTH_AMERICAN_EXPRESS = 15;

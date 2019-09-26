@@ -30,9 +30,43 @@ The library offers two main API surfaces:
 - Cards
 - Sources
 
+## Overview
+
+- The return type for each function is `Future<Map<String, dynamic>>`, where the value depends on the stripe API version.
+
+The library API is split into three separate classes, described below.
+
+### Stripe
+
+- <https://stripe.dev/stripe-android/index.html?com/stripe/android/Stripe.html>
+
+Aims to provide high-level functionality similar to the official mobile Stripe SDKs.
+
+### CustomerSession
+
+_Requires a Stripe ephemeral key._
+
+- <https://stripe.com/docs/mobile/android/customer-information#customer-session-no-ui>
+- <https://stripe.com/docs/mobile/android/standard#creating-ephemeral-keys>
+
+Provides functionality similar to CustomerSession in the Stripe Android SDK.
+
+### StripeApi
+
+- <https://stripe.com/docs/api>
+
+Provides basic low-level methods to access the Stripe REST API. 
+
+- Limited to the APIs that can be used with a public key or ephemeral key.
+- Library methods map to a Stripe API call with the same name.
+- Additional parameters can be provided as an optional argument.
+
+
+ _`Stripe` and `CustomerSession` use this internally._
+
 ## Initialization
 
-Both classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
+All classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
 Regular instances can also be created using the constructor, which allows them to be managed by e.g. dependency injection instead.
 
 ### Stripe
@@ -51,13 +85,13 @@ CustomerSession.init((apiVersion) => server.getEphemeralKeyFromServer(apiVersion
 final session = CustomerSession((apiVersion) => server.getEphemeralKeyFromServer(apiVersion))
 ```
 
-## Usage
+### StripeApi
 
-<https://stripe.com/docs/api>
-
-- Library methods map to a Stripe API call with the same name.
-- Additional parameters can be provided as an optional argument.
-- The return type for each function is `Future<Map<String, dynamic>>`, where the value depends on the stripe API version.
+```dart
+StripeApi.init("pk_xxx");
+// or, to manage your own instances
+final stripeApi = StripeApi("pk_xxx);
+```
 
 ## SCA/PSD2
 
@@ -65,9 +99,9 @@ The library offers complete support for SCA on iOS and Android.
 It handles SCA by launching the authentication flow in a web browser, and returns the result to the app.
 
 ```dart
-CustomerSession.initCustomerSession((apiVersion) => server.getEphemeralKeyFromMyServer(apiVersion));
-final clientSecret = await server.createPaymentIntent(Stripe.getReturnUrl(), ...);
-final paymentIntent = await CustomerSession.instance.confirmPayment(clientSecret, "pm_card_visa");
+Stripe.init("pk_xxx");
+final clientSecret = await server.createPaymentIntent(Stripe.getReturnUrl());
+final paymentIntent = await Stripe.instance.confirmPayment(clientSecret, "pm_card_visa");
 ```
 
 ### Android

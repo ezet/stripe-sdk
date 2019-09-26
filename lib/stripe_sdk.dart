@@ -1,8 +1,9 @@
 library stripe_sdk;
 
-export 'package:stripe_sdk/src/3ds_auth.dart';
-export 'package:stripe_sdk/src/card_utils.dart';
-export 'package:stripe_sdk/src/model/card.dart';
-export 'package:stripe_sdk/src/stripe_api.dart';
-export 'package:stripe_sdk/src/stripe_api_handler.dart';
-export 'package:stripe_sdk/src/card_number_formatter.dart';
+export './src/stripe.dart';
+export './src/stripe_api.dart';
+export './src/customer_session.dart';
+export './src/card_utils.dart';
+export './src/model/card.dart';
+export './src/stripe_api_handler.dart';
+export './src/card_number_formatter.dart';

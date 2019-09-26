@@ -1,7 +1,19 @@
 # Stripe SDK Changelog
 
+## 2.0.0
+
+* Rewrite of internal API
+* Fixed several issues and bugs
+* Restructured public API with breaking changes
+  * Split `Stripe` into `StripeApi` and `Stripe`
+  * SCA related features moved to `Stripe`
+  * Moved basic Stripe API requests to `StripeApi`
+
+See README and examples for further details details.
+
 ## 1.1.1
 
+* Misc minor updates and fixes
 
 ## 1.1.0
 

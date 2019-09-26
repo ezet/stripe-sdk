@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:stripe_sdk/src/card_utils.dart';
-import 'package:stripe_sdk/src/stripe_text_utils.dart';
 
+import 'card_utils.dart';
 import 'model/card.dart';
+import 'stripe_text_utils.dart';
 
 class CardNumberFormatter extends TextInputFormatter {
   final ValueChanged<String> onCardBrandChanged;
