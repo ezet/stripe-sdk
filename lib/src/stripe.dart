@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'stripe_api.dart';
 
-
 class Stripe {
   Stripe(String publishableKey) : _stripeApi = StripeApi(publishableKey);
 
@@ -37,6 +36,19 @@ class Stripe {
   Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret) async {
     final intent = await _stripeApi
         .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrl()});
+    if (intent['status'] == 'requires_action') {
+      return handleSetupIntent(intent['next_action']);
+    } else {
+      return Future.value(intent);
+    }
+  }
+
+  /// Confirm a SetupIntent with a PaymentMethod
+  /// https://stripe.com/docs/api/setup_intents/confirm
+  Future<Map<String, dynamic>> confirmSetupIntentWithPaymentMethod(
+      String clientSecret, String paymentMethod) async {
+    final intent = await _stripeApi.confirmSetupIntent(clientSecret,
+        data: {'return_url': getReturnUrl(), 'payment_method': paymentMethod});
     if (intent['status'] == 'requires_action') {
       return handleSetupIntent(intent['next_action']);
     } else {
@@ -76,7 +88,7 @@ class Stripe {
   }
 
   /// Launch 3DS in a new browser window.
-  /// Returns a [Future] with the Stripe SetupIntent when the user completes or cancels authentication.
+  /// Returns a [Future] with the Stripe PaymentIntent when the user completes or cancels authentication.
   Future<Map<String, dynamic>> handlePaymentIntent(
       Map<dynamic, dynamic> action) async {
     return _authenticateIntent(
@@ -97,8 +109,6 @@ class Stripe {
             ));
   }
 
-  /// Launch 3DS in a new browser window.
-  /// Returns a [Future] with the Stripe SetupIntent when the user completes or cancels authentication.
   Future<Map<String, dynamic>> _authenticateIntent(
       Map<dynamic, dynamic> action, IntentProvider callback) async {
     final url = action['redirect_to_url']['url'];
