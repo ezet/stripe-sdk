@@ -89,8 +89,7 @@ class Stripe {
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe PaymentIntent when the user completes or cancels authentication.
-  Future<Map<String, dynamic>> handlePaymentIntent(
-      Map<dynamic, dynamic> action) async {
+  Future<Map<String, dynamic>> handlePaymentIntent(Map action) async {
     return _authenticateIntent(
         action,
         (uri) => _stripeApi.retrievePaymentIntent(
@@ -100,8 +99,7 @@ class Stripe {
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe SetupIntent when the user completes or cancels authentication.
-  Future<Map<String, dynamic>> handleSetupIntent(
-      Map<dynamic, dynamic> action) async {
+  Future<Map<String, dynamic>> handleSetupIntent(Map action) async {
     return _authenticateIntent(
         action,
         (uri) => _stripeApi.retrieveSetupIntent(
@@ -110,7 +108,7 @@ class Stripe {
   }
 
   Future<Map<String, dynamic>> _authenticateIntent(
-      Map<dynamic, dynamic> action, IntentProvider callback) async {
+      Map action, IntentProvider callback) async {
     final url = action['redirect_to_url']['url'];
     final returnUrl = Uri.parse(action['redirect_to_url']['return_url']);
     final completer = Completer<Map<String, dynamic>>();

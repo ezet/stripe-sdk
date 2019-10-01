@@ -1,5 +1,7 @@
 # Flutter Stripe SDK
 
+<https://pub.dev/packages/stripe_sdk>
+
 A native dart package for Stripe. There are various other flutter plugins that wrap existing Stripe libraries,
 but this package uses a different approach.
 It does not wrap existing Stripe libraries, but instead accesses the Stripe API directly.

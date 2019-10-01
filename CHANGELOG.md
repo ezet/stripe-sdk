@@ -1,5 +1,9 @@
 # Stripe SDK Changelog
 
+## 2.1.0
+
+* Add Stripe.confirmSetupIntentWithPaymentMethod
+
 ## 2.0.0
 
 * Rewrite of internal API

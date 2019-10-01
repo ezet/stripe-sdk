@@ -1,6 +1,6 @@
 name: stripe_sdk
-description: A simple and flexible Stripe API client with complete support for SCA and PSD2.
-version: 2.0.0
+description: A simple and flexible Stripe API client with complete support for SCA and PSD2. Implemented as a native dart/flutter library.
+version: 2.1.0
 author: Lars-Kristian Dahl <lars.dahl@gmail.com>
 homepage: https://github.com/ezet/stripe_sdk
 
