@@ -9,7 +9,6 @@ class StripeApi {
   final StripeApiHandler _apiHandler = StripeApiHandler();
 
   final String publishableKey;
-  String stripeAccount;
 
   final String apiVersion;
 
