@@ -1,5 +1,9 @@
 # Stripe SDK Changelog
 
+## 2.1.1
+
+* Remove unused stripeAccount property on `StripeApi`
+
 ## 2.1.0
 
 * Add Stripe.confirmSetupIntentWithPaymentMethod

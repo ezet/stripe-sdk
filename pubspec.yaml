@@ -1,6 +1,6 @@
 name: stripe_sdk
 description: A simple and flexible Stripe library for Flutter. Has complete support for SCA/PSD2, and is implemented as a native dart library.
-version: 2.1.0
+version: 2.1.1
 author: Lars-Kristian Dahl <lars.dahl@gmail.com>
 homepage: https://github.com/ezet/stripe_sdk
 
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.12.0
+  http: ^0.12.0 
   url_launcher: ^5.1.2
   uni_links: ^0.2.0
 
