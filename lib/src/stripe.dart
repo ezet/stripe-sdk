@@ -21,7 +21,7 @@ class Stripe {
     return _instance;
   }
 
-  static void init(String publishableKey, String stripeAccount) {
+  static void init(String publishableKey, {String stripeAccount}) {
     _instance = Stripe(publishableKey, stripeAccount: stripeAccount);
   }
 
