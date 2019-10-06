@@ -8,23 +8,25 @@ class CustomerSession {
 
   static CustomerSession _instance;
 
-  final StripeApiHandler _apiHandler = StripeApiHandler();
+  final StripeApiHandler _apiHandler;
 
   final EphemeralKeyManager _keyManager;
   final String apiVersion;
 
   /// Create a new CustomerSession instance. Use this if you prefer to manage your own instances.
   CustomerSession(EphemeralKeyProvider provider,
-      {this.apiVersion = DEFAULT_API_VERSION})
-      : _keyManager = EphemeralKeyManager(provider, keyRefreshBufferInSeconds) {
+      {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
+      : _keyManager = EphemeralKeyManager(provider, keyRefreshBufferInSeconds),
+        _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _apiHandler.apiVersion = apiVersion;
   }
 
   /// Initiate the customer session singleton instance.
   static void initCustomerSession(EphemeralKeyProvider provider,
-      {String apiVersion = DEFAULT_API_VERSION}) {
+      {String apiVersion = DEFAULT_API_VERSION, String stripeAccount}) {
     if (_instance == null) {
-      _instance = CustomerSession(provider, apiVersion: apiVersion);
+      _instance = CustomerSession(provider,
+          apiVersion: apiVersion, stripeAccount: stripeAccount);
     }
   }
 

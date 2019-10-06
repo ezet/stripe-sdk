@@ -6,23 +6,26 @@ typedef Future<Map<String, dynamic>> IntentProvider(Uri uri);
 class StripeApi {
   static StripeApi _instance;
 
-  final StripeApiHandler _apiHandler = StripeApiHandler();
+  final StripeApiHandler _apiHandler;
 
   final String publishableKey;
 
   final String apiVersion;
 
   /// Create a new instance, which can be used with e.g. dependency injection.
-  StripeApi(this.publishableKey, {this.apiVersion = DEFAULT_API_VERSION}) {
+  StripeApi(this.publishableKey,
+      {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
+      : _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _validateKey(publishableKey);
     _apiHandler.apiVersion = apiVersion;
   }
 
   /// Initialize the managed singleton instance.
   static void init(String publishableKey,
-      {String apiVersion = DEFAULT_API_VERSION}) {
+      {String apiVersion = DEFAULT_API_VERSION, String stripeAccount}) {
     if (_instance == null) {
-      _instance = StripeApi(publishableKey, apiVersion: apiVersion);
+      _instance = StripeApi(publishableKey,
+          apiVersion: apiVersion, stripeAccount: stripeAccount);
     }
   }
 

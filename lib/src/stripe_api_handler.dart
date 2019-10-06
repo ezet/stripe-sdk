@@ -33,16 +33,15 @@ class StripeApiHandler {
 
   final http.Client _client = http.Client();
 
-  factory StripeApiHandler() {
-    return StripeApiHandler._internal();
-  }
+  final String stripeAccount;
 
-  StripeApiHandler._internal();
+  StripeApiHandler({this.stripeAccount});
 
   Future<Map<String, dynamic>> request(
       RequestMethod method, String path, String key, String apiVersion,
       {final Map<String, dynamic> params}) {
-    final options = RequestOptions(key: key, apiVersion: apiVersion);
+    final options = RequestOptions(
+        key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
     return _getStripeResponse(method, LIVE_API_PATH + path, options,
         params: params);
   }

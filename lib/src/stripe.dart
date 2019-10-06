@@ -7,7 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'stripe_api.dart';
 
 class Stripe {
-  Stripe(String publishableKey) : _stripeApi = StripeApi(publishableKey);
+  Stripe(String publishableKey, {String stripeAccount})
+      : _stripeApi = StripeApi(publishableKey, stripeAccount: stripeAccount);
 
   final StripeApi _stripeApi;
   static Stripe _instance;
@@ -20,8 +21,8 @@ class Stripe {
     return _instance;
   }
 
-  static void init(String publishableKey) {
-    _instance = Stripe(publishableKey);
+  static void init(String publishableKey, String stripeAccount) {
+    _instance = Stripe(publishableKey, stripeAccount: stripeAccount);
   }
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
