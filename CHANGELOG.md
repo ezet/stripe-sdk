@@ -1,5 +1,10 @@
 # Stripe SDK Changelog
 
+## 2.2.0
+
+* Add support for connected accounts
+  * Add optional constructor parameter `stripeAccount` for all APIs
+
 ## 2.1.1
 
 * Remove unused stripeAccount property on `StripeApi`
