@@ -7,3 +7,4 @@ export './src/card_utils.dart';
 export './src/model/card.dart';
 export './src/stripe_api_handler.dart';
 export './src/card_number_formatter.dart';
+export './src/widgets/card_number_widget.dart';
