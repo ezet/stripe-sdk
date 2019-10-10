@@ -1,3 +1,4 @@
+import '../../stripe_sdk.dart';
 import '../card_utils.dart';
 import '../stripe_network_utils.dart';
 import '../stripe_text_utils.dart';
@@ -173,7 +174,7 @@ class StripeCard {
   /// @return {@code true} if valid, {@code false} otherwise.
 
   bool validateCard() {
-    return _validateCard(DateTime.now());
+    return _validateCard();
   }
 
   /// Checks whether or not the {@link #number} field is valid.
@@ -187,8 +188,8 @@ class StripeCard {
   /// expiry date.
   ///
   /// @return {@code true} if valid, {@code false} otherwise
-  bool validateExpiryDate() {
-    return _validateExpiryDate(DateTime.now());
+  bool validateDate() {
+    return validateExpiryDate(expMonth, expYear);
   }
 
   /// Checks whether or not the {@link #cvc} field is valid.
@@ -208,36 +209,12 @@ class StripeCard {
     return ModelUtils.isWholePositiveNumber(cvcValue) && validLength;
   }
 
-  /// Checks whether or not the {@link #expMonth} field is valid.
-  ///
-  /// @return {@code true} if valid, {@code false} otherwise.
-  bool validateExpMonth() {
-    return expMonth != null && expMonth >= 1 && expMonth <= 12;
-  }
-
-  /// Checks whether or not the {@link #expYear} field is valid.
-  ///
-  /// @return {@code true} if valid, {@code false} otherwise.
-  bool validateExpYear(DateTime now) {
-    return expYear != null && !ModelUtils.hasYearPassed(expYear, now);
-  }
-
-  bool _validateCard(DateTime now) {
+  bool _validateCard() {
     if (cvc == null) {
-      return validateNumber() && _validateExpiryDate(now);
+      return validateNumber() && validateDate();
     } else {
-      return validateNumber() && _validateExpiryDate(now) && validateCVC();
+      return validateNumber() && validateDate() && validateCVC();
     }
-  }
-
-  bool _validateExpiryDate(DateTime now) {
-    if (!validateExpMonth()) {
-      return false;
-    }
-    if (!validateExpYear(now)) {
-      return false;
-    }
-    return !ModelUtils.hasMonthPassed(expYear, expMonth, now);
   }
 
   Map<String, dynamic> toMap() {
