@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stripe_sdk/src/widgets/masked_text_controller.dart';
 
-import '../card_utils.dart';
-
 /// Form field to edit a credit card number, with validation.
 class CardNumberFormField extends StatelessWidget {
   const CardNumberFormField(
