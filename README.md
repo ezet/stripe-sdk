@@ -95,6 +95,24 @@ StripeApi.init("pk_xxx");
 final stripeApi = StripeApi("pk_xxx);
 ```
 
+## UI
+
+Use `CardForm` to add or edit credit card details, or build your own form using the pre-built FormFields.
+
+```dart
+final formKey = GlobalKey<FormState>();
+final card = StripeCard();
+...
+CardForm(card:card, formKey: formKey);
+...
+onPressed: () async {
+                if (formKey.currentState.validate()) {
+                  formKey.currentState.save();
+                }
+}
+
+```
+
 ## SCA/PSD2
 
 The library offers complete support for SCA on iOS and Android.

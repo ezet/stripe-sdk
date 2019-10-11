@@ -1,5 +1,12 @@
 # Stripe SDK Changelog
 
+## 2.3.0
+
+* Add CardForm widget, which can be used to add or edit credit cards.
+  * Complete validation for card number, expiration date and CVC
+  * Individual FormField widgets can be used to create a custom form
+* Fix bug in Stripe.authenticatePayment
+
 ## 2.2.0
 
 * Add support for connected accounts
