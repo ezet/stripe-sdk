@@ -3,10 +3,11 @@ import 'package:stripe_sdk/src/widgets/masked_text_controller.dart';
 
 import '../card_utils.dart';
 
+/// Form field to edit a credit card number, with validation.
 class CardNumberFormField extends StatelessWidget {
   const CardNumberFormField(
       {Key key,
-      this.initialText,
+      this.initialValue,
       @required this.onSaved,
       @required this.onChanged,
       @required this.validator})
@@ -15,20 +16,20 @@ class CardNumberFormField extends StatelessWidget {
   final void Function(String) onSaved;
   final void Function(String) onChanged;
   final String Function(String) validator;
-  final String initialText;
+  final String initialValue;
 
   @override
   Widget build(BuildContext context) {
-    final controller = MaskedTextController(mask: '0000 0000 0000 0000');
-    controller.text = initialText;
+    final controller = MaskedTextController(text: initialValue, mask: '0000 0000 0000 0000');
     return Container(
       child: TextFormField(
         controller: controller,
-        autovalidate: true,
+        autovalidate: false,
         onSaved: onSaved,
         validator: validator,
+        onChanged: onChanged,
         decoration: InputDecoration(
-          prefixIcon: getCardTypeIcon(controller.text),
+          // prefixIcon: getCardTypeIcon(controller.text),
           border: OutlineInputBorder(),
           labelText: 'Card number',
           hintText: 'xxxx xxxx xxxx xxxx',

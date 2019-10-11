@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'masked_text_controller.dart';
+
+/// Form field to edit a credit card CVC code, with validation
 class CardCvcFormField extends StatelessWidget {
   CardCvcFormField(
       {Key key,
@@ -16,11 +19,11 @@ class CardCvcFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = MaskedTextController(text: initialValue, mask: '0000');
     return Container(
       child: TextFormField(
-        initialValue: initialValue,
-        onChanged: onSaved,
-//                  focusNode: cvvFocusNode,
+        controller: controller,
+        onChanged: onChanged,
         validator: validator,
         onSaved: onSaved,
         decoration: InputDecoration(

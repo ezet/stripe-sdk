@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'model/card.dart';
 import 'stripe_api_handler.dart';
 
 typedef Future<Map<String, dynamic>> IntentProvider(Uri uri);
@@ -54,6 +55,11 @@ class StripeApi {
     return _apiHandler.request(
         RequestMethod.post, path, publishableKey, apiVersion,
         params: data);
+  }
+
+  Future<Map<String, dynamic>> createPaymentMethodFromCard(
+      StripeCard card) async {
+    return createPaymentMethod(card.toPaymentMethod());
   }
 
   /// Retrieve a PaymentIntent.
