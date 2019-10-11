@@ -79,8 +79,8 @@ class Stripe {
   /// https://stripe.com/docs/payments/payment-intents/android-manual
   Future<Map<String, dynamic>> authenticatePayment(
       String paymentIntentClientSecret) async {
-    final paymentIntent = await StripeApi.instance
-        .retrievePaymentIntent(paymentIntentClientSecret);
+    final paymentIntent =
+        await _stripeApi.retrievePaymentIntent(paymentIntentClientSecret);
     if (paymentIntent['status'] == "requires_action") {
       return handlePaymentIntent(paymentIntent['next_action']);
     } else {
