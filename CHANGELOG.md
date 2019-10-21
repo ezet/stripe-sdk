@@ -1,5 +1,16 @@
 # Stripe SDK Changelog
 
+## 2.4.0
+
+* Minor breaking change: Split package into two separate sub-libraries:
+  * stripe_sdk: API related functionality
+  * stripe_sdk_ui: UI widgets and utilities
+
+* Replaced ListView with Column inside the CardForm
+* Updated dependencies
+
+
+
 ## 2.3.0
 
 * Add CardForm widget, which can be used to add or edit credit cards.
