@@ -28,7 +28,7 @@ class _CardFormState extends State<CardForm> {
   Widget build(BuildContext context) {
     return Form(
       key: widget.formKey,
-      child: ListView(
+      child: Column(
         children: <Widget>[
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
