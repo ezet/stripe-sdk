@@ -4,11 +4,7 @@ import 'package:stripe_sdk/src/widgets/masked_text_controller.dart';
 /// Form field to edit a credit card number, with validation.
 class CardNumberFormField extends StatelessWidget {
   const CardNumberFormField(
-      {Key key,
-      this.initialValue,
-      @required this.onSaved,
-      @required this.onChanged,
-      @required this.validator})
+      {Key key, this.initialValue, @required this.onSaved, @required this.onChanged, @required this.validator})
       : super(key: key);
 
   final void Function(String) onSaved;

@@ -1,4 +1,3 @@
-
 import '../text_utils.dart';
 
 class ModelUtils {

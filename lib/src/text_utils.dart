@@ -15,4 +15,3 @@ bool isDigitsOnly(String s) {
 int getNumericValue(String s) {
   return int.tryParse(s);
 }
-
