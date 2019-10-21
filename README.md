@@ -8,35 +8,46 @@ It does not wrap existing Stripe libraries, but instead accesses the Stripe API 
 
 See *examples* for additional examples.
 
+
 ## Features
 
-The library offers two main API surfaces:
+* Supports all types of SCA, including 3DS, 3DS2, BankID and others.
+* Handle payments with complete SCA support.
+* Add, remove and update payment methods, sources and cards, optionally with SCA.
+* Manage customer information.
+* Create all types of Stripe tokens.
+* Forms, widgets and utilities to use directly, or create your own UI!
 
-- `Stripe` for generic, non-customer specific APIs, using publishable keys.
-- `CustomerSession` for customer-specific APIs, using stripe ephemeral keys.
-
-### Planned features
-
-- Improve UI widgets
-- Support for additional APIs
-- Offer complete UI flow for adding payment method
-- Offer complete UI flow for checout
 
 ### Supported APIs
 
-- Tokens
 - PaymentIntent, with SCA
 - SetupIntent, with SCA
 - PaymentMethod
 - Customer
 - Cards
 - Sources
+- Tokens
+
+
+### Planned features
+
+- Add additional UI widgets
+- Support for additional APIs
+- Offer complete UI flow for adding payment method
+- Offer complete UI flow for checkout
+
 
 ## Overview
 
 - The return type for each function is `Future<Map<String, dynamic>>`, where the value depends on the stripe API version.
 
-The library API is split into three separate classes, described below.
+The library has three classes to access the Stripe API:
+
+- `Stripe` for generic, non-customer specific APIs, using publishable keys.
+- `CustomerSession` for customer-specific APIs, using stripe ephemeral keys.
+- `StripeApi` enables raw REST calls against the Stripe API.
+
 
 ### Stripe
 
@@ -116,6 +127,7 @@ onPressed: () async {
 ## SCA/PSD2
 
 The library offers complete support for SCA on iOS and Android.
+It handles all types of SCA, including 3DS, 3DS2, BankID and others.
 It handles SCA by launching the authentication flow in a web browser, and returns the result to the app.
 
 ```dart
