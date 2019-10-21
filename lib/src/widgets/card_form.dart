@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../stripe_sdk.dart';
+import '../model/card.dart';
+import 'card_cvc_form_field.dart';
+import 'card_expiry_form_field.dart';
 import 'card_number_form_field.dart';
 
 /// Basic form to add or edit a credit card, with complete validation.
 class CardForm extends StatefulWidget {
-  CardForm({Key key, @required this.formKey, @required this.card})
-      : super(key: key);
+  CardForm({Key key, @required this.formKey, @required this.card}) : super(key: key);
 
   final GlobalKey<FormState> formKey;
   final StripeCard card;
@@ -35,8 +36,7 @@ class _CardFormState extends State<CardForm> {
             child: CardNumberFormField(
               initialValue: _validationModel.number ?? widget.card.number,
               onChanged: (number) => _validationModel.number = number,
-              validator: (text) =>
-                  _validationModel.validateNumber() ? null : "Invalid number",
+              validator: (text) => _validationModel.validateNumber() ? null : "Invalid number",
               onSaved: (text) => widget.card.number = text,
             ),
           ),
@@ -54,8 +54,7 @@ class _CardFormState extends State<CardForm> {
                   widget.card.expMonth = month;
                   widget.card.expYear = year;
                 },
-                validator: (text) =>
-                    _validationModel.validateDate() ? null : "Invalid Date",
+                validator: (text) => _validationModel.validateDate() ? null : "Invalid Date",
               )),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -64,8 +63,7 @@ class _CardFormState extends State<CardForm> {
               initialValue: _validationModel.cvc ?? widget.card.cvc,
               onChanged: (text) => _validationModel.cvc = text,
               onSaved: (text) => widget.card.cvc = text,
-              validator: (text) =>
-                  _validationModel.validateCVC() ? null : "Invalid CVC",
+              validator: (text) => _validationModel.validateCVC() ? null : "Invalid CVC",
             ),
           ),
         ],

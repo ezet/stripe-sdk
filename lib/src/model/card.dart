@@ -1,7 +1,7 @@
-import '../../stripe_sdk.dart';
 import '../card_utils.dart';
 import '../stripe_network_utils.dart';
 import '../stripe_text_utils.dart';
+import '../utils/card_utils.dart';
 import 'model_utils.dart';
 
 //enum CardType { UNKNOWN, AMERICAN_EXPRESS, DISCOVER, JCB, DINERS_CLUB, VISA, MASTERCARD, UNIONPAY }
@@ -29,18 +29,7 @@ class StripeCard {
   static const List<String> PREFIXES_AMERICAN_EXPRESS = ["34", "37"];
   static const List<String> PREFIXES_DISCOVER = ["60", "64", "65"];
   static const List<String> PREFIXES_JCB = ["35"];
-  static const List<String> PREFIXES_DINERS_CLUB = [
-    "300",
-    "301",
-    "302",
-    "303",
-    "304",
-    "305",
-    "309",
-    "36",
-    "38",
-    "39"
-  ];
+  static const List<String> PREFIXES_DINERS_CLUB = ["300", "301", "302", "303", "304", "305", "309", "36", "38", "39"];
   static const List<String> PREFIXES_VISA = ["4"];
   static const List<String> PREFIXES_MASTERCARD = [
     "2221",
@@ -201,10 +190,9 @@ class StripeCard {
     }
     String cvcValue = cvc.trim();
     String updatedType = brand;
-    bool validLength =
-        (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
-            (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
-            cvcValue.length == 3;
+    bool validLength = (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
+        (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
+        cvcValue.length == 3;
 
     return ModelUtils.isWholePositiveNumber(cvcValue) && validLength;
   }
