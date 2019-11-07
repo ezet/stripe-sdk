@@ -4,25 +4,28 @@ import 'masked_text_controller.dart';
 
 /// Form field to edit a credit card expiration date, with validation.
 class CardExpiryFormField extends StatelessWidget {
-  const CardExpiryFormField(
-      {Key key,
-      this.initialMonth,
-      this.initialYear,
-      @required this.onSaved,
-      @required this.validator,
-      @required this.onChanged})
-      : super(key: key);
+  const CardExpiryFormField({
+    Key key,
+    this.initialMonth,
+    this.initialYear,
+    @required this.onSaved,
+    @required this.validator,
+    @required this.onChanged,
+    this.labelText = "Expiry Date",
+    this.hintText = "MM/YY",
+  }) : super(key: key);
 
   final int initialMonth;
   final int initialYear;
+  final String labelText;
+  final String hintText;
   final void Function(int, int) onSaved;
   final void Function(int, int) onChanged;
   final String Function(String) validator;
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        MaskedTextController(text: "$initialMonth/$initialYear", mask: '00/00');
+    final controller = MaskedTextController(text: "$initialMonth/$initialYear", mask: '00/00');
     return Container(
       child: TextFormField(
         validator: validator,
@@ -39,10 +42,7 @@ class CardExpiryFormField extends StatelessWidget {
           onSaved(month, year);
         },
         controller: controller,
-        decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Expiry Date',
-            hintText: 'MM/YY'),
+        decoration: InputDecoration(border: OutlineInputBorder(), labelText: this.labelText, hintText: this.hintText),
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
       ),
