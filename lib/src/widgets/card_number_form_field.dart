@@ -9,16 +9,23 @@ class CardNumberFormField extends StatelessWidget {
       @required this.onSaved,
       @required this.onChanged,
       @required this.validator,
-      this.labelText = 'Card number',
-      this.hintText = 'xxxx xxxx xxxx xxxx'})
+      this.decoration = defaultDecoration})
       : super(key: key);
 
   final void Function(String) onSaved;
   final void Function(String) onChanged;
   final String Function(String) validator;
   final String initialValue;
-  final String labelText;
-  final String hintText;
+  final InputDecoration decoration;
+
+  static const defaultLabelText = 'Card number';
+  static const defaultHintText = 'xxxx xxxx xxxx xxxx';
+
+  static const defaultDecoration = InputDecoration(
+    border: OutlineInputBorder(),
+    labelText: defaultLabelText,
+    hintText: defaultHintText,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +37,7 @@ class CardNumberFormField extends StatelessWidget {
         onSaved: onSaved,
         validator: validator,
         onChanged: onChanged,
-        decoration: InputDecoration(
-          // prefixIcon: getCardTypeIcon(controller.text),
-          border: OutlineInputBorder(),
-          labelText: this.labelText,
-          hintText: this.hintText,
-        ),
+        decoration: decoration,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
       ),

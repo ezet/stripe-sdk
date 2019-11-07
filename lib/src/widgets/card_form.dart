@@ -7,10 +7,20 @@ import 'card_number_form_field.dart';
 
 /// Basic form to add or edit a credit card, with complete validation.
 class CardForm extends StatefulWidget {
-  CardForm({Key key, @required this.formKey, @required this.card}) : super(key: key);
+  CardForm({
+    Key key,
+    @required this.formKey,
+    @required this.card,
+    this.cardNumberDecoration,
+    this.cardExpiryDecoration,
+    this.cardCvcDecoration,
+  }) : super(key: key);
 
   final GlobalKey<FormState> formKey;
   final StripeCard card;
+  final InputDecoration cardNumberDecoration;
+  final InputDecoration cardExpiryDecoration;
+  final InputDecoration cardCvcDecoration;
 
   @override
   _CardFormState createState() => _CardFormState();
@@ -38,6 +48,7 @@ class _CardFormState extends State<CardForm> {
               onChanged: (number) => _validationModel.number = number,
               validator: (text) => _validationModel.validateNumber() ? null : "Invalid number",
               onSaved: (text) => widget.card.number = text,
+              decoration: widget.cardNumberDecoration ?? CardNumberFormField.defaultDecoration,
             ),
           ),
           Container(
@@ -55,6 +66,7 @@ class _CardFormState extends State<CardForm> {
                   widget.card.expYear = year;
                 },
                 validator: (text) => _validationModel.validateDate() ? null : "Invalid Date",
+                decoration: widget.cardExpiryDecoration ?? CardExpiryFormField.defaultDecoration,
               )),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -64,6 +76,7 @@ class _CardFormState extends State<CardForm> {
               onChanged: (text) => _validationModel.cvc = text,
               onSaved: (text) => widget.card.cvc = text,
               validator: (text) => _validationModel.validateCVC() ? null : "Invalid CVC",
+              decoration: widget.cardCvcDecoration ?? CardCvcFormField.defaultDecoration,
             ),
           ),
         ],
