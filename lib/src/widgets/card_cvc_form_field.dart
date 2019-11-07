@@ -9,10 +9,14 @@ class CardCvcFormField extends StatelessWidget {
       this.initialValue,
       @required this.onSaved,
       @required this.validator,
-      @required this.onChanged})
+      @required this.onChanged,
+      this.labelText = "CVV",
+      this.hintText = "XXXX"})
       : super(key: key);
 
   final String initialValue;
+  final String labelText;
+  final String hintText;
   final void Function(String) onSaved;
   final void Function(String) onChanged;
   final String Function(String) validator;
@@ -28,8 +32,8 @@ class CardCvcFormField extends StatelessWidget {
         onSaved: onSaved,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'CVV',
-          hintText: 'XXXX',
+          labelText: this.labelText,
+          hintText: this.hintText,
         ),
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.done,
