@@ -19,7 +19,8 @@ class CardCvcFormField extends StatelessWidget {
   final void Function(String) onChanged;
   final String Function(String) validator;
 
-  static const defaultDecoration = InputDecoration(border: OutlineInputBorder(), labelText: "CVV", hintText: "XXX");
+  static const defaultDecoration = InputDecoration(
+      border: OutlineInputBorder(), labelText: "CVV", hintText: "XXX");
 
   @override
   Widget build(BuildContext context) {

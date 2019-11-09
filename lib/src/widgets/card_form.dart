@@ -46,9 +46,11 @@ class _CardFormState extends State<CardForm> {
             child: CardNumberFormField(
               initialValue: _validationModel.number ?? widget.card.number,
               onChanged: (number) => _validationModel.number = number,
-              validator: (text) => _validationModel.validateNumber() ? null : "Invalid number",
+              validator: (text) =>
+                  _validationModel.validateNumber() ? null : "Invalid number",
               onSaved: (text) => widget.card.number = text,
-              decoration: widget.cardNumberDecoration ?? CardNumberFormField.defaultDecoration,
+              decoration: widget.cardNumberDecoration ??
+                  CardNumberFormField.defaultDecoration,
             ),
           ),
           Container(
@@ -65,8 +67,10 @@ class _CardFormState extends State<CardForm> {
                   widget.card.expMonth = month;
                   widget.card.expYear = year;
                 },
-                validator: (text) => _validationModel.validateDate() ? null : "Invalid Date",
-                decoration: widget.cardExpiryDecoration ?? CardExpiryFormField.defaultDecoration,
+                validator: (text) =>
+                    _validationModel.validateDate() ? null : "Invalid Date",
+                decoration: widget.cardExpiryDecoration ??
+                    CardExpiryFormField.defaultDecoration,
               )),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -75,8 +79,10 @@ class _CardFormState extends State<CardForm> {
               initialValue: _validationModel.cvc ?? widget.card.cvc,
               onChanged: (text) => _validationModel.cvc = text,
               onSaved: (text) => widget.card.cvc = text,
-              validator: (text) => _validationModel.validateCVC() ? null : "Invalid CVC",
-              decoration: widget.cardCvcDecoration ?? CardCvcFormField.defaultDecoration,
+              validator: (text) =>
+                  _validationModel.validateCVC() ? null : "Invalid CVC",
+              decoration: widget.cardCvcDecoration ??
+                  CardCvcFormField.defaultDecoration,
             ),
           ),
         ],

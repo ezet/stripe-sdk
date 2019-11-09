@@ -24,12 +24,15 @@ class CardExpiryFormField extends StatelessWidget {
   static const defaultLabelText = "Expiry Date";
   static const defaultHintText = "MM/YY";
 
-  static const defaultDecoration =
-      InputDecoration(border: OutlineInputBorder(), labelText: defaultLabelText, hintText: defaultHintText);
+  static const defaultDecoration = InputDecoration(
+      border: OutlineInputBorder(),
+      labelText: defaultLabelText,
+      hintText: defaultHintText);
 
   @override
   Widget build(BuildContext context) {
-    final controller = MaskedTextController(text: "$initialMonth/$initialYear", mask: '00/00');
+    final controller =
+        MaskedTextController(text: "$initialMonth/$initialYear", mask: '00/00');
 
     return Container(
       child: TextFormField(

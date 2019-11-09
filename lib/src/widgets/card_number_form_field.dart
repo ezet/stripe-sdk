@@ -29,7 +29,8 @@ class CardNumberFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = MaskedTextController(text: initialValue, mask: '0000 0000 0000 0000');
+    final controller =
+        MaskedTextController(text: initialValue, mask: '0000 0000 0000 0000');
     return Container(
       child: TextFormField(
         controller: controller,
