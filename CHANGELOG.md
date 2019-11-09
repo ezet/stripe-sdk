@@ -1,5 +1,9 @@
 # Stripe SDK Changelog
 
+## 2.4.1
+
+* Add support for custom input decorators on card form and form fields
+
 ## 2.4.0
 
 * Minor breaking change: Split package into two separate sub-libraries:
