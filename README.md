@@ -125,7 +125,7 @@ onPressed: () async {
 
 ```
 
-![](docs/cardform.png =250px)         
+<img src="./docs/cardform.png" width="300">
 
 ## SCA/PSD2
 
