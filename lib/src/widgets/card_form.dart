@@ -14,6 +14,9 @@ class CardForm extends StatefulWidget {
     this.cardNumberDecoration,
     this.cardExpiryDecoration,
     this.cardCvcDecoration,
+    this.cardNumberError,
+    this.cardExpirationError,
+    this.cardCvcError,
   }) : super(key: key);
 
   final GlobalKey<FormState> formKey;
@@ -21,6 +24,13 @@ class CardForm extends StatefulWidget {
   final InputDecoration cardNumberDecoration;
   final InputDecoration cardExpiryDecoration;
   final InputDecoration cardCvcDecoration;
+  final String cardNumberError;
+  final String cardExpirationError;
+  final String cardCvcError;
+
+  static const defaultCardNumberError = 'Invalid number';
+  static const defaultCardExpirationError = 'Invalid Date';
+  static const defaultCardCvcError = 'Invalid CVC';
 
   @override
   _CardFormState createState() => _CardFormState();
@@ -46,8 +56,10 @@ class _CardFormState extends State<CardForm> {
             child: CardNumberFormField(
               initialValue: _validationModel.number ?? widget.card.number,
               onChanged: (number) => _validationModel.number = number,
-              validator: (text) =>
-                  _validationModel.validateNumber() ? null : "Invalid number",
+              validator: (text) => {
+                if(_validationModel.validateNumber()) return null;
+                return widget.cardNumberError ?? defaultCardNumberError;
+              },
               onSaved: (text) => widget.card.number = text,
               decoration: widget.cardNumberDecoration ??
                   CardNumberFormField.defaultDecoration,
@@ -67,8 +79,10 @@ class _CardFormState extends State<CardForm> {
                   widget.card.expMonth = month;
                   widget.card.expYear = year;
                 },
-                validator: (text) =>
-                    _validationModel.validateDate() ? null : "Invalid Date",
+                validator: (text) => {
+                  if(_validationModel.validateDate()) return null;
+                  return widget.cardExpirationError ?? defaultCardExpirationError;
+                },
                 decoration: widget.cardExpiryDecoration ??
                     CardExpiryFormField.defaultDecoration,
               )),
@@ -79,8 +93,10 @@ class _CardFormState extends State<CardForm> {
               initialValue: _validationModel.cvc ?? widget.card.cvc,
               onChanged: (text) => _validationModel.cvc = text,
               onSaved: (text) => widget.card.cvc = text,
-              validator: (text) =>
-                  _validationModel.validateCVC() ? null : "Invalid CVC",
+              validator: (text) => {
+                if(_validationModel.validateCVC()) return null;
+                return widget.cardCvcError ?? defaultCardCvcError;
+              },
               decoration: widget.cardCvcDecoration ??
                   CardCvcFormField.defaultDecoration,
             ),
