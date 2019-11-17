@@ -20,6 +20,7 @@ class CardNumberFormField extends StatelessWidget {
 
   static const defaultLabelText = 'Card number';
   static const defaultHintText = 'xxxx xxxx xxxx xxxx';
+  static const defaultErrorText = 'Invalid card number';
 
   static const defaultDecoration = InputDecoration(
     border: OutlineInputBorder(),

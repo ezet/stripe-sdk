@@ -14,6 +14,9 @@ class CardForm extends StatefulWidget {
     this.cardNumberDecoration,
     this.cardExpiryDecoration,
     this.cardCvcDecoration,
+    this.cardNumberError,
+    this.cardExpiryError,
+    this.cardCvcError,
   }) : super(key: key);
 
   final GlobalKey<FormState> formKey;
@@ -21,6 +24,9 @@ class CardForm extends StatefulWidget {
   final InputDecoration cardNumberDecoration;
   final InputDecoration cardExpiryDecoration;
   final InputDecoration cardCvcDecoration;
+  final String cardNumberError;
+  final String cardExpiryError;
+  final String cardCvcError;
 
   @override
   _CardFormState createState() => _CardFormState();
@@ -46,8 +52,8 @@ class _CardFormState extends State<CardForm> {
             child: CardNumberFormField(
               initialValue: _validationModel.number ?? widget.card.number,
               onChanged: (number) => _validationModel.number = number,
-              validator: (text) =>
-                  _validationModel.validateNumber() ? null : "Invalid number",
+              validator: (text) => _validationModel.validateNumber() ? null
+                  : widget.cardNumberError ?? CardNumberFormField.defaultErrorText,
               onSaved: (text) => widget.card.number = text,
               decoration: widget.cardNumberDecoration ??
                   CardNumberFormField.defaultDecoration,
@@ -67,8 +73,8 @@ class _CardFormState extends State<CardForm> {
                   widget.card.expMonth = month;
                   widget.card.expYear = year;
                 },
-                validator: (text) =>
-                    _validationModel.validateDate() ? null : "Invalid Date",
+                validator: (text) => _validationModel.validateDate() ? null
+                    : widget.cardExpiryError ?? CardExpiryFormField.defaultErrorText,
                 decoration: widget.cardExpiryDecoration ??
                     CardExpiryFormField.defaultDecoration,
               )),
@@ -79,8 +85,8 @@ class _CardFormState extends State<CardForm> {
               initialValue: _validationModel.cvc ?? widget.card.cvc,
               onChanged: (text) => _validationModel.cvc = text,
               onSaved: (text) => widget.card.cvc = text,
-              validator: (text) =>
-                  _validationModel.validateCVC() ? null : "Invalid CVC",
+              validator: (text) => _validationModel.validateCVC() ? null
+                  : widget.cardCvcError ?? CardCvcFormField.defaultErrorText,
               decoration: widget.cardCvcDecoration ??
                   CardCvcFormField.defaultDecoration,
             ),
