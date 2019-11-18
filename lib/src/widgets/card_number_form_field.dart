@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stripe_sdk/src/widgets/masked_text_controller.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 /// Form field to edit a credit card number, with validation.
 class CardNumberFormField extends StatelessWidget {
@@ -29,11 +29,12 @@ class CardNumberFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        MaskedTextController(text: initialValue, mask: '0000 0000 0000 0000');
+    var maskFormatter = MaskTextInputFormatter(mask: '#### #### #### ####');
     return Container(
       child: TextFormField(
-        controller: controller,
+        initialValue: initialValue,
+//        controller: controller,
+        inputFormatters: [maskFormatter],
         autovalidate: false,
         onSaved: onSaved,
         validator: validator,
