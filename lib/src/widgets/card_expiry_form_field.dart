@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'masked_text_controller.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 /// Form field to edit a credit card expiration date, with validation.
 class CardExpiryFormField extends StatelessWidget {
@@ -25,15 +24,12 @@ class CardExpiryFormField extends StatelessWidget {
   static const defaultHintText = "MM/YY";
   static const defaultErrorText = "Invalid expiry date";
 
-  static const defaultDecoration = InputDecoration(
-      border: OutlineInputBorder(),
-      labelText: defaultLabelText,
-      hintText: defaultHintText);
+  static const defaultDecoration =
+      InputDecoration(border: OutlineInputBorder(), labelText: defaultLabelText, hintText: defaultHintText);
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        MaskedTextController(text: "$initialMonth/$initialYear", mask: '00/00');
+    var maskFormatter = MaskTextInputFormatter(mask: '##/##');
 
     return Container(
       child: TextFormField(
@@ -50,7 +46,7 @@ class CardExpiryFormField extends StatelessWidget {
           final year = int.tryParse(arr[1]);
           onSaved(month, year);
         },
-        controller: controller,
+        inputFormatters: [maskFormatter],
         decoration: decoration,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,

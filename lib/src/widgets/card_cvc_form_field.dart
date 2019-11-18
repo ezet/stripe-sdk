@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'masked_text_controller.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 /// Form field to edit a credit card CVC code, with validation
 class CardCvcFormField extends StatelessWidget {
@@ -20,16 +19,16 @@ class CardCvcFormField extends StatelessWidget {
   final String Function(String) validator;
 
   static const defaultErrorText = "Invalid CVV";
-  static const defaultDecoration = InputDecoration(
-      border: OutlineInputBorder(), labelText: "CVV", hintText: "XXX");
+  static const defaultDecoration = InputDecoration(border: OutlineInputBorder(), labelText: "CVV", hintText: "XXX");
 
   @override
   Widget build(BuildContext context) {
-    final controller = MaskedTextController(text: initialValue, mask: '0000');
-    ;
+    var maskFormatter = MaskTextInputFormatter(mask: '####');
+
     return Container(
       child: TextFormField(
-        controller: controller,
+        initialValue: initialValue,
+        inputFormatters: [maskFormatter],
         onChanged: onChanged,
         validator: validator,
         onSaved: onSaved,
