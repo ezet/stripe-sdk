@@ -22,6 +22,7 @@ class CardExpiryFormField extends StatelessWidget {
 
   static const defaultLabelText = "Expiry Date";
   static const defaultHintText = "MM/YY";
+  static const defaultErrorText = "Invalid expiry date";
 
   static const defaultDecoration =
       InputDecoration(border: OutlineInputBorder(), labelText: defaultLabelText, hintText: defaultHintText);
