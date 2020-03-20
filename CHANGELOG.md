@@ -1,6 +1,6 @@
 # Stripe SDK Changelog
 
-## 2.4.2
+## 2.4.3
 
 * Add support for custom text style on card form and form fields
 * Added examples for card form and form fields
