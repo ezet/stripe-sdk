@@ -1,9 +1,15 @@
 # Stripe SDK Changelog
 
+## 2.4.3
+
+* Add support for custom text style on card form and form fields
+* Added examples for card form and form fields
+
 ## 2.4.2
 
 * Allow custom form field error text
 * Fix bug where card number input field would allow more than 16 digits
+
 
 ## 2.4.1
 

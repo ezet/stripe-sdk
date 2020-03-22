@@ -9,11 +9,13 @@ class CardCvcFormField extends StatelessWidget {
       @required this.onSaved,
       @required this.validator,
       @required this.onChanged,
-      this.decoration = defaultDecoration})
+      this.decoration = defaultDecoration,
+      this.textStyle = defaultTextStyle})
       : super(key: key);
 
   final String initialValue;
   final InputDecoration decoration;
+  final TextStyle textStyle;
   final void Function(String) onSaved;
   final void Function(String) onChanged;
   final String Function(String) validator;
@@ -21,6 +23,7 @@ class CardCvcFormField extends StatelessWidget {
   static const defaultErrorText = "Invalid CVV";
   static const defaultDecoration = InputDecoration(
       border: OutlineInputBorder(), labelText: "CVV", hintText: "XXX");
+  static const defaultTextStyle = TextStyle(color: Colors.black);
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,7 @@ class CardCvcFormField extends StatelessWidget {
         onChanged: onChanged,
         validator: validator,
         onSaved: onSaved,
+        style: textStyle,
         decoration: decoration,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.done,

@@ -12,8 +12,11 @@ class CardForm extends StatefulWidget {
     @required this.formKey,
     @required this.card,
     this.cardNumberDecoration,
+    this.cardNumberTextStyle,
     this.cardExpiryDecoration,
+    this.cardExpiryTextStyle,
     this.cardCvcDecoration,
+    this.cardCvcTextStyle,
     this.cardNumberErrorText,
     this.cardExpiryErrorText,
     this.cardCvcErrorText,
@@ -22,8 +25,11 @@ class CardForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final StripeCard card;
   final InputDecoration cardNumberDecoration;
+  final TextStyle cardNumberTextStyle;
   final InputDecoration cardExpiryDecoration;
+  final TextStyle cardExpiryTextStyle;
   final InputDecoration cardCvcDecoration;
+  final TextStyle cardCvcTextStyle;
   final String cardNumberErrorText;
   final String cardExpiryErrorText;
   final String cardCvcErrorText;
@@ -54,8 +60,8 @@ class _CardFormState extends State<CardForm> {
               onChanged: (number) => _validationModel.number = number,
               validator: (text) => _validationModel.validateNumber()
                   ? null
-                  : widget.cardNumberErrorText ??
-                      CardNumberFormField.defaultErrorText,
+                  : widget.cardNumberErrorText ?? CardNumberFormField.defaultErrorText,
+              textStyle: widget.cardNumberTextStyle ?? CardNumberFormField.defaultTextStyle,
               onSaved: (text) => widget.card.number = text,
               decoration: widget.cardNumberDecoration ??
                   CardNumberFormField.defaultDecoration,
@@ -77,10 +83,9 @@ class _CardFormState extends State<CardForm> {
                 },
                 validator: (text) => _validationModel.validateDate()
                     ? null
-                    : widget.cardExpiryErrorText ??
-                        CardExpiryFormField.defaultErrorText,
-                decoration: widget.cardExpiryDecoration ??
-                    CardExpiryFormField.defaultDecoration,
+                    : widget.cardExpiryErrorText ?? CardExpiryFormField.defaultErrorText,
+                textStyle: widget.cardExpiryTextStyle ?? CardExpiryFormField.defaultTextStyle,
+                decoration: widget.cardExpiryDecoration ?? CardExpiryFormField.defaultDecoration,
               )),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -89,12 +94,10 @@ class _CardFormState extends State<CardForm> {
               initialValue: _validationModel.cvc ?? widget.card.cvc,
               onChanged: (text) => _validationModel.cvc = text,
               onSaved: (text) => widget.card.cvc = text,
-              validator: (text) => _validationModel.validateCVC()
-                  ? null
-                  : widget.cardCvcErrorText ??
-                      CardCvcFormField.defaultErrorText,
-              decoration: widget.cardCvcDecoration ??
-                  CardCvcFormField.defaultDecoration,
+              validator: (text) =>
+                  _validationModel.validateCVC() ? null : widget.cardCvcErrorText ?? CardCvcFormField.defaultErrorText,
+              textStyle: widget.cardCvcTextStyle ?? CardCvcFormField.defaultTextStyle,
+              decoration: widget.cardCvcDecoration ?? CardCvcFormField.defaultDecoration,
             ),
           ),
         ],
