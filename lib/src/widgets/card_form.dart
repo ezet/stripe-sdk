@@ -63,7 +63,8 @@ class _CardFormState extends State<CardForm> {
                   : widget.cardNumberErrorText ?? CardNumberFormField.defaultErrorText,
               textStyle: widget.cardNumberTextStyle ?? CardNumberFormField.defaultTextStyle,
               onSaved: (text) => widget.card.number = text,
-              decoration: widget.cardNumberDecoration ?? CardNumberFormField.defaultDecoration,
+              decoration: widget.cardNumberDecoration ??
+                  CardNumberFormField.defaultDecoration,
             ),
           ),
           Container(
