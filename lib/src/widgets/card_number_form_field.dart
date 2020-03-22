@@ -9,6 +9,7 @@ class CardNumberFormField extends StatelessWidget {
       @required this.onSaved,
       @required this.onChanged,
       @required this.validator,
+      this.inputFormatter,
       this.decoration = defaultDecoration,
       this.textStyle = defaultTextStyle})
       : super(key: key);
@@ -18,6 +19,7 @@ class CardNumberFormField extends StatelessWidget {
   final String Function(String) validator;
   final String initialValue;
   final InputDecoration decoration;
+  final InputFormatter inputFormatter;
   final TextStyle textStyle;
 
   static const defaultLabelText = 'Card number';
@@ -38,7 +40,7 @@ class CardNumberFormField extends StatelessWidget {
       child: TextFormField(
         initialValue: initialValue,
 //        controller: controller,
-        inputFormatters: [maskFormatter],
+        inputFormatters: [maskFormatter, widget.inputFormatter],
         autovalidate: false,
         onSaved: onSaved,
         validator: validator,
