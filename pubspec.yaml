@@ -25,4 +25,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - icons/visa.png
+    - icons/mastercard.png
+    - icons/amex.png
+    - icons/discover.png
 
