@@ -40,7 +40,7 @@ class CardNumberFormField extends StatelessWidget {
       child: TextFormField(
         initialValue: initialValue,
 //        controller: controller,
-        inputFormatters: [maskFormatter, widget.inputFormatter],
+        inputFormatters: [maskFormatter, inputFormatter],
         autovalidate: false,
         onSaved: onSaved,
         validator: validator,
