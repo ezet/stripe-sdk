@@ -62,6 +62,51 @@ bool isValidLuhnNumber(String cardNumber) {
   return valid;
 }
 
+Widget getCardTypeIconFromBrand(String brand) {
+  Widget icon;
+  switch (brand) {
+    case StripeCard.VISA:
+      icon = Image.asset(
+        'icons/visa.png',
+        height: 48,
+        width: 48,
+      );
+      break;
+
+    case StripeCard.AMERICAN_EXPRESS:
+      icon = Image.asset(
+        'icons/amex.png',
+        height: 48,
+        width: 48,
+      );
+      break;
+
+    case StripeCard.MASTERCARD:
+      icon = Image.asset(
+        'icons/mastercard.png',
+        height: 48,
+        width: 48,
+      );
+      break;
+
+    case StripeCard.DISCOVER:
+      icon = Image.asset(
+        'icons/discover.png',
+        height: 48,
+        width: 48,
+      );
+      break;
+
+    default:
+      icon = Container(
+        height: 48,
+        width: 48,
+      );
+      break;
+  }
+  return icon;
+}
+
 Widget getCardTypeIcon(String cardNumber) {
   Widget icon;
   switch (getPossibleCardType(cardNumber)) {
