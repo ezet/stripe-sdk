@@ -32,6 +32,25 @@ class CardExpiryFormField extends StatelessWidget {
       hintText: defaultHintText);
   static const defaultTextStyle = TextStyle(color: Colors.black);
 
+    String _formatInitialValue() {
+    String month = '';
+    String year = '';
+
+    if (initialMonth != null && initialYear != null) {
+      if (initialMonth < 10) {
+        month = '0' + initialMonth.toString();
+      } else {
+        month = initialMonth.toString();
+      }
+
+      final String initialYearString = initialYear.toString();
+
+      year = initialYearString.substring(initialYearString.length - 2, initialYearString.length);
+    }
+
+    return month + year;
+  }
+
   @override
   Widget build(BuildContext context) {
     var maskFormatter = MaskTextInputFormatter(mask: '##/##');
@@ -39,6 +58,7 @@ class CardExpiryFormField extends StatelessWidget {
     return Container(
       child: TextFormField(
         validator: validator,
+        initialValue: _formatInitialValue(),
         onChanged: (text) {
           final arr = text.split("/");
           final month = int.tryParse(arr[0]);
