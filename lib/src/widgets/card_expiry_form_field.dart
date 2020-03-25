@@ -10,17 +10,21 @@ class CardExpiryFormField extends StatelessWidget {
       @required this.onSaved,
       @required this.validator,
       @required this.onChanged,
+      this.focusNode,
+      this.onFieldSubmitted,
       this.decoration = defaultDecoration,
       this.textStyle = defaultTextStyle})
       : super(key: key);
 
   final int initialMonth;
   final int initialYear;
+  final void Function(int, int) onSaved;
+  final String Function(String) validator;
+  final void Function(int, int) onChanged;
+  final FocusNode focusNode;
+  final void Function(String) onFieldSubmitted;
   final InputDecoration decoration;
   final TextStyle textStyle;
-  final void Function(int, int) onSaved;
-  final void Function(int, int) onChanged;
-  final String Function(String) validator;
 
   static const defaultLabelText = "Expiry Date";
   static const defaultHintText = "MM/YY";
@@ -54,6 +58,8 @@ class CardExpiryFormField extends StatelessWidget {
         inputFormatters: [maskFormatter],
         style: textStyle,
         decoration: decoration,
+        focusNode: focusNode,
+        onFieldSubmitted: onFieldSubmitted,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
       ),

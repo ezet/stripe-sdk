@@ -9,14 +9,18 @@ class CardNumberFormField extends StatelessWidget {
       @required this.onSaved,
       @required this.onChanged,
       @required this.validator,
+      this.focusNode,
+      this.onFieldSubmitted,
       this.decoration = defaultDecoration,
-      this.textStyle = defaultTextStyle})
+      this.textStyle = defaultTextStyle,})
       : super(key: key);
 
+  final String initialValue;
   final void Function(String) onSaved;
   final void Function(String) onChanged;
   final String Function(String) validator;
-  final String initialValue;
+  final FocusNode focusNode;
+  final void Function(String) onFieldSubmitted;
   final InputDecoration decoration;
   final TextStyle textStyle;
 
@@ -45,6 +49,8 @@ class CardNumberFormField extends StatelessWidget {
         onChanged: onChanged,
         decoration: decoration,
         style: textStyle,
+        focusNode: focusNode,
+        onFieldSubmitted: onFieldSubmitted,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
       ),
