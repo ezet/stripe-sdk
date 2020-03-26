@@ -151,6 +151,7 @@ class _MyAppState extends State<MyApp> {
                 cardNumberTextStyle: cardNumberTextStyle,
                 cardNumberErrorText: 'Your own message here',
                 submitAction: _tempSubmitAction,
+                cardCvcTextInputAction: TextInputAction.done,
               ),
             ),
             Text('Using Form Text Fields'),
@@ -205,6 +206,7 @@ class _MyAppState extends State<MyApp> {
                       _cvvFocus.unfocus();
                       _tempPrintSubmitAction();
                     },
+                    textInputAction: TextInputAction.done,
                   ),
                 ],
 
