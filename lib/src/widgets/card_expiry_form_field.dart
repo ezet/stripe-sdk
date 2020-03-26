@@ -48,7 +48,7 @@ class CardExpiryFormField extends StatelessWidget {
       year = initialYearString.substring(initialYearString.length - 2, initialYearString.length);
     }
 
-    return month + year;
+    return '$month$year';
   }
 
   @override
