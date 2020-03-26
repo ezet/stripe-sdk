@@ -93,7 +93,6 @@ class _MyAppState extends State<MyApp> {
   final FocusNode _numberFocus = FocusNode();
   final FocusNode _expiryFocus = FocusNode();
   final FocusNode _cvvFocus = FocusNode();
-
   final cardNumberDecoration = const InputDecoration(
     border: InputBorder.none,
     fillColor: Colors.black,
@@ -108,7 +107,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     StripeApi.init(publishableKey);
   }
-
+  
   _tempSubmitAction() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
@@ -208,6 +207,7 @@ class _MyAppState extends State<MyApp> {
                     },
                   ),
                 ],
+
               ),
             ),
             RaisedButton(
