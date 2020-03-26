@@ -7,21 +7,22 @@ import 'card_number_form_field.dart';
 
 /// Basic form to add or edit a credit card, with complete validation.
 class CardForm extends StatefulWidget {
-  CardForm({
-    Key key,
-    @required this.formKey,
-    @required this.card,
-    this.cardNumberDecoration,
-    this.cardNumberTextStyle,
-    this.cardExpiryDecoration,
-    this.cardExpiryTextStyle,
-    this.cardCvcDecoration,
-    this.cardCvcTextStyle,
-    this.cardNumberErrorText,
-    this.cardExpiryErrorText,
-    this.cardCvcErrorText,
-    this.submitAction
-  }) : super(key: key);
+  CardForm(
+      {Key key,
+      @required this.formKey,
+      @required this.card,
+      this.cardNumberDecoration,
+      this.cardNumberTextStyle,
+      this.cardExpiryDecoration,
+      this.cardExpiryTextStyle,
+      this.cardCvcDecoration,
+      this.cardCvcTextStyle,
+      this.cardNumberErrorText,
+      this.cardExpiryErrorText,
+      this.cardCvcErrorText,
+      this.cardCvcTextInputAction,
+      this.submitAction})
+      : super(key: key);
 
   final GlobalKey<FormState> formKey;
   final StripeCard card;
@@ -34,6 +35,7 @@ class CardForm extends StatefulWidget {
   final String cardNumberErrorText;
   final String cardExpiryErrorText;
   final String cardCvcErrorText;
+  final TextInputAction cardCvcTextInputAction;
   final Function submitAction;
 
   @override
@@ -124,7 +126,7 @@ class _CardFormState extends State<CardForm> {
               focusNode: _cvvFocus,
               onFieldSubmitted: (value) {
                 _cvvFocus.unfocus();
-                if(widget.submitAction != null) {
+                if (widget.submitAction != null) {
                   widget.submitAction();
                 }
               },
@@ -132,6 +134,8 @@ class _CardFormState extends State<CardForm> {
                   widget.cardCvcTextStyle ?? CardCvcFormField.defaultTextStyle,
               decoration: widget.cardCvcDecoration ??
                   CardCvcFormField.defaultDecoration,
+              textInputAction: widget.cardCvcTextInputAction ??
+                  CardCvcFormField.defaultTextInputAction,
             ),
           ),
         ],

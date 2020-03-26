@@ -11,6 +11,7 @@ class CardCvcFormField extends StatelessWidget {
       @required this.onChanged,
       this.focusNode,
       this.onFieldSubmitted,
+      this.textInputAction = defaultTextInputAction,
       this.decoration = defaultDecoration,
       this.textStyle = defaultTextStyle})
       : super(key: key);
@@ -21,6 +22,7 @@ class CardCvcFormField extends StatelessWidget {
   final void Function(String) onChanged;
   final FocusNode focusNode;
   final void Function(String) onFieldSubmitted;
+  final TextInputAction textInputAction;
   final InputDecoration decoration;
   final TextStyle textStyle;
 
@@ -28,6 +30,7 @@ class CardCvcFormField extends StatelessWidget {
   static const defaultDecoration = InputDecoration(
       border: OutlineInputBorder(), labelText: "CVV", hintText: "XXX");
   static const defaultTextStyle = TextStyle(color: Colors.black);
+  static const defaultTextInputAction = TextInputAction.done;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +48,7 @@ class CardCvcFormField extends StatelessWidget {
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmitted,
         keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.done,
+        textInputAction: textInputAction,
       ),
     );
   }
