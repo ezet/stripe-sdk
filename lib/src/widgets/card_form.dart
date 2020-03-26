@@ -75,7 +75,6 @@ class _CardFormState extends State<CardForm> {
               validator: (text) => _validationModel.validateNumber()
                   ? null
                   : widget.cardNumberErrorText ?? CardNumberFormField.defaultErrorText,
-              textStyle: widget.cardNumberTextStyle ?? CardNumberFormField.defaultTextStyle,
               onSaved: (text) => widget.card.number = text,
               focusNode: _numberFocus,
               onFieldSubmitted:
