@@ -6,8 +6,10 @@ A native dart package for Stripe. There are various other flutter plugins that w
 but this package uses a different approach.
 It does not wrap existing Stripe libraries, but instead accesses the Stripe API directly.
 
-See *examples* for additional examples.
+See *examples* for additional short examples.
 
+See <https://github.com/ezet/glappen-client> for a complete example using this library.
+See <https://github.com/ezet/glappen-firebase-api> for a complete example of a supporting backend, using Firebase Functions.
 
 ## Features
 

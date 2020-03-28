@@ -1,5 +1,9 @@
 # Stripe SDK Changelog
 
+## 2.4.5
+
+* Add links to complete examples of the stripe SDK and supporting backend.
+
 ## 2.4.4
 
 * Fix bug which caused initial expiry date not to be set
