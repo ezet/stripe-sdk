@@ -25,20 +25,28 @@ class CardExpiryFormField extends StatelessWidget {
   static const defaultLabelText = "Expiry Date";
   static const defaultHintText = "MM/YY";
   static const defaultErrorText = "Invalid expiry date";
+  static const defaultMonthMask = "##";
+  static const defaultYearMask = "##";
 
   static const defaultDecoration = InputDecoration(
-      border: OutlineInputBorder(),
-      labelText: defaultLabelText,
-      hintText: defaultHintText);
+      border: OutlineInputBorder(), labelText: defaultLabelText, hintText: defaultHintText);
   static const defaultTextStyle = TextStyle(color: Colors.black);
 
   @override
   Widget build(BuildContext context) {
-    var maskFormatter = MaskTextInputFormatter(mask: '##/##');
+    var maskFormatter = MaskTextInputFormatter(mask: '$defaultMonthMask/$defaultYearMask');
+
+    final month = initialMonth?.toString()?.padLeft(defaultMonthMask.length, "0");
+    final year =
+        initialYear?.toString()?.substring(initialYear.toString().length - defaultYearMask.length);
+    final initial = (month ?? "") + (year ?? "");
 
     return Container(
       child: TextFormField(
         validator: validator,
+        initialValue: maskFormatter
+            .formatEditUpdate(TextEditingValue(), TextEditingValue(text: initial))
+            .text,
         onChanged: (text) {
           final arr = text.split("/");
           final month = int.tryParse(arr[0]);
