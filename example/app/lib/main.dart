@@ -71,8 +71,8 @@ class _MyAppState extends State<MyApp> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(top: 8),
               child: CardExpiryFormField(
-                initialMonth: 10,
-                initialYear: 2020,
+                initialMonth: 9,
+                initialYear: 20,
                 onChanged: (int month, int year) {
                   cardTwo.expMonth = month;
                   cardTwo.expYear = year;
