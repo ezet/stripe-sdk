@@ -82,7 +82,7 @@ Provides basic low-level methods to access the Stripe REST API.
 
 ## Initialization
 
-All classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
+All classes offer a singleton instance that can be initiated by calling the `init(...)` methods and then accessed through `.instance`.
 Regular instances can also be created using the constructor, which allows them to be managed by e.g. dependency injection instead.
 
 ### Stripe
@@ -129,6 +129,10 @@ onPressed: () async {
 ```
 
 <img src="./doc/cardform.png" width="300">
+
+You can easily build your own or use any other existing library to collect credit card details, e.g. <https://pub.dev/packages?q=credit+card>. 
+Just instantiate a new StripeCard() with the details you have collected, and proceed using the Stripe SDK API.
+
 
 ## SCA/PSD2
 
