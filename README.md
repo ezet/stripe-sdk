@@ -8,8 +8,9 @@ It does not wrap existing Stripe libraries, but instead accesses the Stripe API 
 
 See *examples* for additional short examples.
 
-See <https://github.com/ezet/glappen-client> for a complete example using this library.
-See <https://github.com/ezet/glappen-firebase-api> for a complete example of a supporting backend, using Firebase Functions.
+<https://github.com/ezet/glappen-client> for a complete example using this library.
+
+<https://github.com/ezet/glappen-firebase-api> for a complete example of a supporting backend, using Firebase Functions.
 
 ## Features
 
