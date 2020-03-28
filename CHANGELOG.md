@@ -1,5 +1,10 @@
 # Stripe SDK Changelog
 
+## 2.4.4
+
+* Fix bug which caused initial expiry date not to be set
+* Add runnable example in example/app
+
 ## 2.4.3
 
 * Add support for custom text style on card form and form fields
