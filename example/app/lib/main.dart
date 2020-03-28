@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
                   cardTwo.expYear = year;
                 },
                 validator: (String text) =>
-                cardTwo.validateDate() ? null : CardExpiryFormField.defaultErrorText,
+                    cardTwo.validateDate() ? null : CardExpiryFormField.defaultErrorText,
               ),
             ),
             Container(
