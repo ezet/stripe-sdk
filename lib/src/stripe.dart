@@ -7,10 +7,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'stripe_api.dart';
 
 class Stripe {
-  Stripe(String publishableKey, {String stripeAccount})
-      : _stripeApi = StripeApi(publishableKey, stripeAccount: stripeAccount);
+  Stripe(String publishableKey, {String stripeAccount, String returnUrlFor3ds})
+      : _stripeApi = StripeApi(publishableKey, stripeAccount: stripeAccount),
+        _returnUrlFor3ds = returnUrlFor3ds ?? "stripesdk://3ds.stripesdk.io";
 
   final StripeApi _stripeApi;
+  final String _returnUrlFor3ds;
   static Stripe _instance;
 
   static Stripe get instance {
@@ -21,15 +23,17 @@ class Stripe {
     return _instance;
   }
 
-  static void init(String publishableKey, {String stripeAccount}) {
-    _instance = Stripe(publishableKey, stripeAccount: stripeAccount);
+  static void init(String publishableKey, {String stripeAccount, String returnUrlFor3ds}) {
+    _instance = Stripe(publishableKey,
+        stripeAccount: stripeAccount,
+        returnUrlFor3ds: returnUrlFor3ds);
   }
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
   /// This should be set on the intent before attempting to authenticate it.
-  static String getReturnUrl() {
+  String getReturnUrl() {
     final requestId = Random.secure().nextInt(99999999);
-    return "stripesdk://3ds.stripesdk.io?requestId=$requestId";
+    return "$_returnUrlFor3ds?requestId=$requestId";
   }
 
   /// Confirm a SetupIntent
