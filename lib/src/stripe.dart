@@ -7,14 +7,28 @@ import 'package:url_launcher/url_launcher.dart';
 import 'stripe_api.dart';
 
 class Stripe {
-  Stripe(String publishableKey, {String stripeAccount, String returnUrlFor3ds})
+  /// Creates a new [Stripe] object. Use this constructor if you wish to handle the instance of this class by yourself.
+  /// If not, call [Stripe.init] to create an singleton and use [Stripe.instance] instead.
+  ///
+  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
+  ///
+  /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
+  /// This is a optional parameter.
+  ///
+  /// [returnUrlForSCA] can be used to use your own return url for
+  /// Strong Customer Authentication (SCA) such as 3DS, 3DS2, BankID and others.
+  /// It is recommended to use your own app specific url scheme and host.
+  Stripe(String publishableKey, {String stripeAccount, String returnUrlForSCA})
       : _stripeApi = StripeApi(publishableKey, stripeAccount: stripeAccount),
-        _returnUrlFor3ds = returnUrlFor3ds ?? "stripesdk://3ds.stripesdk.io";
+        _returnUrlForSCA = returnUrlForSCA ?? "stripesdk://3ds.stripesdk.io";
 
   final StripeApi _stripeApi;
-  final String _returnUrlFor3ds;
+  final String _returnUrlForSCA;
   static Stripe _instance;
 
+  /// Access the instance of Stripe by calling [Stripe.instance].
+  /// Throws an [Exception] if [Stripe.init] hasn't been called previously.
   static Stripe get instance {
     if (_instance == null) {
       throw Exception(
@@ -23,17 +37,31 @@ class Stripe {
     return _instance;
   }
 
-  static void init(String publishableKey, {String stripeAccount, String returnUrlFor3ds}) {
+  /// Initializes the singleton instance of [Stripe]. Afterwards you can
+  /// use [Stripe.instance] to access the created instance.
+  ///
+  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
+  ///
+  /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
+  /// This is a optional parameter.
+  ///
+  /// [returnUrlForSCA] can be used to use your own return url for
+  /// Strong Customer Authentication (SCA) such as 3DS, 3DS2, BankID and others.
+  /// It is recommended to use your own app specific url scheme and host. This
+  /// parameter must match your "android/app/src/main/AndroidManifest.xml"
+  /// and "ios/Runner/Info.plist" configuration.
+  static void init(String publishableKey, {String stripeAccount, String returnUrlForSCA}) {
     _instance = Stripe(publishableKey,
         stripeAccount: stripeAccount,
-        returnUrlFor3ds: returnUrlFor3ds);
+        returnUrlForSCA: returnUrlForSCA);
   }
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
   /// This should be set on the intent before attempting to authenticate it.
   String getReturnUrl() {
     final requestId = Random.secure().nextInt(99999999);
-    return "$_returnUrlFor3ds?requestId=$requestId";
+    return "$_returnUrlForSCA?requestId=$requestId";
   }
 
   /// Confirm a SetupIntent

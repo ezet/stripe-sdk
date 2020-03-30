@@ -14,6 +14,13 @@ class StripeApi {
   final String apiVersion;
 
   /// Create a new instance, which can be used with e.g. dependency injection.
+  /// Throws a [Exception] if an invalid [publishableKey] has been submitted.
+  ///
+  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
+  ///
+  /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
+  /// This is a optional parameter.
   StripeApi(this.publishableKey,
       {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
       : _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
@@ -21,7 +28,14 @@ class StripeApi {
     _apiHandler.apiVersion = apiVersion;
   }
 
-  /// Initialize the managed singleton instance.
+  /// Initialize the managed singleton instance of [StripeApi].
+  /// Afterwards you can use [StripeApi.instance] to access the created instance.
+  ///
+  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
+  ///
+  /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
+  /// This is a optional parameter.
   static void init(String publishableKey,
       {String apiVersion = DEFAULT_API_VERSION, String stripeAccount}) {
     if (_instance == null) {
@@ -30,6 +44,8 @@ class StripeApi {
     }
   }
 
+  /// Access the singleton instance of [StripeApi].
+  /// Throws an [Exception] if [StripeApi.init] hasn't been called previously.
   static StripeApi get instance {
     if (_instance == null) {
       throw Exception(
@@ -112,6 +128,8 @@ class StripeApi {
         params: params);
   }
 
+  /// Validates the received [publishableKey] and throws a [Exception] if an
+  /// invalid key has been submitted.
   static void _validateKey(String publishableKey) {
     if (publishableKey == null || publishableKey.isEmpty) {
       throw Exception("Invalid Publishable Key: " +
