@@ -134,16 +134,18 @@ onPressed: () async {
 The library offers complete support for SCA on iOS and Android.
 It handles all types of SCA, including 3DS, 3DS2, BankID and others.
 It handles SCA by launching the authentication flow in a web browser, and returns the result to the app.
+The `returnUrlForSCA` parameter must match the configuration of your `AndroidManifest.xml` and `Info.plist` as shown in the next steps.
 
 ```dart
-Stripe.init("pk_xxx");
-final clientSecret = await server.createPaymentIntent(Stripe.getReturnUrl());
+Stripe.init("pk_xxx", returnUrlForSCA: "stripesdk://3ds.stripesdk.io");
+final clientSecret = await server.createPaymentIntent(Stripe.instance.getReturnUrl());
 final paymentIntent = await Stripe.instance.confirmPayment(clientSecret, "pm_card_visa");
 ```
 
 ### Android
 
-You need to declare this intent filter in `android/app/src/main/AndroidManifest.xml`:
+You need to declare the following intent filter in `android/app/src/main/AndroidManifest.xml`.
+This example is for the url `stripesdk://3ds.stripesdk.io`:
 
 ```xml
 <manifest ...>
@@ -168,9 +170,8 @@ You need to declare this intent filter in `android/app/src/main/AndroidManifest.
 
 ### IOS
 
-For iOS you need to declare the scheme in
-`ios/Runner/Info.plist` (or through Xcode's Target Info editor,
-under URL Types):
+For iOS you need to declare the scheme in `ios/Runner/Info.plist` (or through Xcode's Target Info editor,
+under URL Types). This example is for the url `stripesdk://3ds.stripesdk.io`:
 
 ```xml
 <!-- ... other tags -->
