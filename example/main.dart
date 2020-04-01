@@ -32,7 +32,7 @@ Future<String> _fetchEphemeralKeyFromMyServer(String apiVersion) {
 exampleConfirmPayment() async {
   Stripe.init(publishableKey);
   final paymentIntentClientSecret =
-      await _createPaymentIntent(Stripe.getReturnUrl());
+      await _createPaymentIntent(Stripe.instance.getReturnUrl());
   final paymentIntent = await Stripe.instance
       .confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
   if (paymentIntent['status'] == 'success') {
@@ -54,7 +54,7 @@ Future<String> _createPaymentIntent(String returnUrl) {
 exampleAuthenticatePayment() async {
   Stripe.init(publishableKey);
   final paymentIntentClientSecret =
-      await _createAndConfirmPaymentIntent(Stripe.getReturnUrl());
+      await _createAndConfirmPaymentIntent(Stripe.instance.getReturnUrl());
   final paymentIntent =
       await Stripe.instance.authenticatePayment(paymentIntentClientSecret);
   if (paymentIntent['status'] == "success") {
