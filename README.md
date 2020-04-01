@@ -8,9 +8,8 @@ It does not wrap existing Stripe libraries, but instead accesses the Stripe API 
 
 See *examples* for additional short examples.
 
-<https://github.com/ezet/glappen-client> for a complete example using this library.
-
-<https://github.com/ezet/glappen-firebase-api> for a complete example of a supporting backend, using Firebase Functions.
+See <https://github.com/ezet/glappen-client> for a complete example using this library.
+See <https://github.com/ezet/glappen-firebase-api> for a complete example of a supporting backend, using Firebase Functions.
 
 ## Features
 
@@ -82,7 +81,7 @@ Provides basic low-level methods to access the Stripe REST API.
 
 ## Initialization
 
-All classes offer a singleton instance that can be initiated by calling the `init(...)` methods and then accessed through `.instance`.
+All classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
 Regular instances can also be created using the constructor, which allows them to be managed by e.g. dependency injection instead.
 
 ### Stripe
@@ -130,10 +129,6 @@ onPressed: () async {
 
 <img src="./doc/cardform.png" width="300">
 
-You can easily build your own or use any other existing library to collect credit card details, e.g. <https://pub.dev/packages?q=credit+card>. 
-Just instantiate a new StripeCard() with the details you have collected, and proceed using the Stripe SDK API.
-
-
 ## SCA/PSD2
 
 The library offers complete support for SCA on iOS and Android.
@@ -143,7 +138,7 @@ The `returnUrlForSCA` parameter must match the configuration of your `AndroidMan
 
 ```dart
 Stripe.init("pk_xxx", returnUrlForSCA: "stripesdk://3ds.stripesdk.io");
-final clientSecret = await server.createPaymentIntent(Stripe.instance.getReturnUrl());
+final clientSecret = await server.createPaymentIntent(Stripe.instance.getReturnUrlForSca());
 final paymentIntent = await Stripe.instance.confirmPayment(clientSecret, "pm_card_visa");
 ```
 
