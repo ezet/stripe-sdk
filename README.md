@@ -152,6 +152,11 @@ This example is for the url `stripesdk://3ds.stripesdk.io`:
   <!-- ... other tags -->
   <application ...>
     <activity ...>
+    
+      android:launchMode="singleTask"
+      <!-- When the launchMode key is set to "singleTask" Android will use the existing instance if possible or open a new one when needed.
+      This fixes the problem that the app will not restart if Firefox was used for the authorization process. -->
+      
       <!-- ... other tags -->
 
       <!-- Deep Links -->
