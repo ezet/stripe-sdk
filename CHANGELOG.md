@@ -1,5 +1,11 @@
 # Stripe SDK Changelog
 
+
+## 2.5.0
+
+* Add support for custom return url scheme
+* Update documentation
+
 ## 2.4.5
 
 * Add links to complete examples of the stripe SDK and supporting backend.
