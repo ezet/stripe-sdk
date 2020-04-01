@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
-
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 const publishableKey = "my-key";
@@ -17,8 +16,7 @@ exampleSetupStripeApi() async {
 
 /// CustomerSession provides access to customer specific APIs
 exampleSetupSession() {
-  CustomerSession.initCustomerSession(
-      (apiVersion) => _fetchEphemeralKeyFromMyServer(apiVersion));
+  CustomerSession.initCustomerSession((apiVersion) => _fetchEphemeralKeyFromMyServer(apiVersion));
   CustomerSession.instance.listPaymentMethods();
 }
 
@@ -32,9 +30,9 @@ Future<String> _fetchEphemeralKeyFromMyServer(String apiVersion) {
 exampleConfirmPayment() async {
   Stripe.init(publishableKey);
   final paymentIntentClientSecret =
-      await _createPaymentIntent(Stripe.getReturnUrl());
-  final paymentIntent = await Stripe.instance
-      .confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
+      await _createPaymentIntent(Stripe.instance.getReturnUrlForSca());
+  final paymentIntent =
+      await Stripe.instance.confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
   if (paymentIntent['status'] == 'success') {
     // Confirmation successfull
   } else {
@@ -54,9 +52,8 @@ Future<String> _createPaymentIntent(String returnUrl) {
 exampleAuthenticatePayment() async {
   Stripe.init(publishableKey);
   final paymentIntentClientSecret =
-      await _createAndConfirmPaymentIntent(Stripe.getReturnUrl());
-  final paymentIntent =
-      await Stripe.instance.authenticatePayment(paymentIntentClientSecret);
+      await _createAndConfirmPaymentIntent(Stripe.instance.getReturnUrlForSca());
+  final paymentIntent = await Stripe.instance.authenticatePayment(paymentIntentClientSecret);
   if (paymentIntent['status'] == "success") {
     // Authentication was successfull
   } else {
@@ -130,9 +127,8 @@ class _MyAppState extends State<MyApp> {
               margin: const EdgeInsets.only(top: 8),
               child: CardNumberFormField(
                   onChanged: (String number) => cardTwo.number = number,
-                  validator: (String text) => cardTwo.validateNumber()
-                      ? null
-                      : CardNumberFormField.defaultErrorText,
+                  validator: (String text) =>
+                      cardTwo.validateNumber() ? null : CardNumberFormField.defaultErrorText,
                   onSaved: (String text) {
                     cardTwo.number = text;
                   },
@@ -151,9 +147,8 @@ class _MyAppState extends State<MyApp> {
                   cardTwo.expMonth = month;
                   cardTwo.expYear = year;
                 },
-                validator: (String text) => cardTwo.validateDate()
-                    ? null
-                    : CardExpiryFormField.defaultErrorText,
+                validator: (String text) =>
+                    cardTwo.validateDate() ? null : CardExpiryFormField.defaultErrorText,
               ),
             ),
             Container(
@@ -166,9 +161,8 @@ class _MyAppState extends State<MyApp> {
                 onSaved: (String cvc) {
                   cardTwo.cvc = cvc;
                 },
-                validator: (String text) => cardTwo.validateDate()
-                    ? null
-                    : CardExpiryFormField.defaultErrorText,
+                validator: (String text) =>
+                    cardTwo.validateDate() ? null : CardExpiryFormField.defaultErrorText,
               ),
             ),
             RaisedButton(

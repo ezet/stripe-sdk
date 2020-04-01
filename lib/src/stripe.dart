@@ -7,26 +7,62 @@ import 'package:url_launcher/url_launcher.dart';
 import 'stripe_api.dart';
 
 class Stripe {
-  Stripe(String publishableKey, {String stripeAccount})
-      : _stripeApi = StripeApi(publishableKey, stripeAccount: stripeAccount);
+  /// Creates a new [Stripe] object. Use this constructor if you wish to handle the instance of this class by yourself.
+  /// If not, call [Stripe.init] to create an singleton and use [Stripe.instance] instead.
+  ///
+  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
+  ///
+  /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
+  /// This is a optional parameter.
+  ///
+  /// [returnUrlForSca] can be used to use your own return url for
+  /// Strong Customer Authentication (SCA) such as 3DS, 3DS2, BankID and others.
+  /// It is recommended to use your own app specific url scheme and host.
+  Stripe(String publishableKey, {String stripeAccount, String returnUrlForSca})
+      : _stripeApi = StripeApi(publishableKey, stripeAccount: stripeAccount),
+        _returnUrlForSca = returnUrlForSca ?? "stripesdk://3ds.stripesdk.io";
 
   final StripeApi _stripeApi;
+  final String _returnUrlForSca;
   static Stripe _instance;
 
+  /// Access the instance of Stripe by calling [Stripe.instance].
+  /// Throws an [Exception] if [Stripe.init] hasn't been called previously.
   static Stripe get instance {
     if (_instance == null) {
-      throw Exception(
-          "Attempted to get singleton instance of Stripe without initialization");
+      throw Exception("Attempted to get singleton instance of Stripe without initialization");
     }
     return _instance;
   }
 
-  static void init(String publishableKey, {String stripeAccount}) {
-    _instance = Stripe(publishableKey, stripeAccount: stripeAccount);
+  /// Initializes the singleton instance of [Stripe]. Afterwards you can
+  /// use [Stripe.instance] to access the created instance.
+  ///
+  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
+  ///
+  /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
+  /// This is a optional parameter.
+  ///
+  /// [returnUrlForSCA] can be used to use your own return url for
+  /// Strong Customer Authentication (SCA) such as 3DS, 3DS2, BankID and others.
+  /// It is recommended to use your own app specific url scheme and host. This
+  /// parameter must match your "android/app/src/main/AndroidManifest.xml"
+  /// and "ios/Runner/Info.plist" configuration.
+  static void init(String publishableKey, {String stripeAccount, String returnUrlForSCA}) {
+    _instance =
+        Stripe(publishableKey, stripeAccount: stripeAccount, returnUrlForSca: returnUrlForSCA);
   }
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
   /// This should be set on the intent before attempting to authenticate it.
+  String getReturnUrlForSca() {
+    final requestId = Random.secure().nextInt(99999999);
+    return "$_returnUrlForSca?requestId=$requestId";
+  }
+
+  @Deprecated("Use `Stripe.instance.getReturnUrlForSca()` instead. Due for removal in version 3.0.")
   static String getReturnUrl() {
     final requestId = Random.secure().nextInt(99999999);
     return "stripesdk://3ds.stripesdk.io?requestId=$requestId";
@@ -36,7 +72,7 @@ class Stripe {
   /// https://stripe.com/docs/api/setup_intents/confirm
   Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret) async {
     final intent = await _stripeApi
-        .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrl()});
+        .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca()});
     if (intent['status'] == 'requires_action') {
       return handleSetupIntent(intent['next_action']);
     } else {
@@ -49,7 +85,7 @@ class Stripe {
   Future<Map<String, dynamic>> confirmSetupIntentWithPaymentMethod(
       String clientSecret, String paymentMethod) async {
     final intent = await _stripeApi.confirmSetupIntent(clientSecret,
-        data: {'return_url': getReturnUrl(), 'payment_method': paymentMethod});
+        data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethod});
     if (intent['status'] == 'requires_action') {
       return handleSetupIntent(intent['next_action']);
     } else {
@@ -62,11 +98,8 @@ class Stripe {
   /// https://stripe.com/docs/payments/payment-intents/android
   Future<Map<String, dynamic>> confirmPayment(
       String paymentIntentClientSecret, String paymentMethodId) async {
-    final paymentIntent = await _stripeApi
-        .confirmPaymentIntent(paymentIntentClientSecret, data: {
-      'return_url': getReturnUrl(),
-      'payment_method': paymentMethodId
-    });
+    final paymentIntent = await _stripeApi.confirmPaymentIntent(paymentIntentClientSecret,
+        data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethodId});
     if (paymentIntent['status'] == "requires_action") {
       return handlePaymentIntent(paymentIntent['next_action']);
     } else {
@@ -77,10 +110,8 @@ class Stripe {
   /// Authenticate a payment.
   /// Returns the PaymentIntent.
   /// https://stripe.com/docs/payments/payment-intents/android-manual
-  Future<Map<String, dynamic>> authenticatePayment(
-      String paymentIntentClientSecret) async {
-    final paymentIntent =
-        await _stripeApi.retrievePaymentIntent(paymentIntentClientSecret);
+  Future<Map<String, dynamic>> authenticatePayment(String paymentIntentClientSecret) async {
+    final paymentIntent = await _stripeApi.retrievePaymentIntent(paymentIntentClientSecret);
     if (paymentIntent['status'] == "requires_action") {
       return handlePaymentIntent(paymentIntent['next_action']);
     } else {
@@ -108,8 +139,7 @@ class Stripe {
             ));
   }
 
-  Future<Map<String, dynamic>> _authenticateIntent(
-      Map action, IntentProvider callback) async {
+  Future<Map<String, dynamic>> _authenticateIntent(Map action, IntentProvider callback) async {
     final url = action['redirect_to_url']['url'];
     final returnUrl = Uri.parse(action['redirect_to_url']['return_url']);
     final completer = Completer<Map<String, dynamic>>();
@@ -117,8 +147,7 @@ class Stripe {
     sub = getUriLinksStream().listen((Uri uri) async {
       if (uri.scheme == returnUrl.scheme &&
           uri.host == returnUrl.host &&
-          uri.queryParameters['requestId'] ==
-              returnUrl.queryParameters['requestId']) {
+          uri.queryParameters['requestId'] == returnUrl.queryParameters['requestId']) {
         await sub.cancel();
         final intent = await callback(uri);
         completer.complete(intent);

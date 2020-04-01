@@ -8,9 +8,8 @@ It does not wrap existing Stripe libraries, but instead accesses the Stripe API 
 
 See *examples* for additional short examples.
 
-<https://github.com/ezet/glappen-client> for a complete example using this library.
-
-<https://github.com/ezet/glappen-firebase-api> for a complete example of a supporting backend, using Firebase Functions.
+See <https://github.com/ezet/glappen-client> for a complete example using this library.
+See <https://github.com/ezet/glappen-firebase-api> for a complete example of a supporting backend, using Firebase Functions.
 
 ## Features
 
@@ -82,7 +81,7 @@ Provides basic low-level methods to access the Stripe REST API.
 
 ## Initialization
 
-All classes offer a singleton instance that can be initiated by calling the `init(...)` methods and then accessed through `.instance`.
+All classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
 Regular instances can also be created using the constructor, which allows them to be managed by e.g. dependency injection instead.
 
 ### Stripe
@@ -130,31 +129,34 @@ onPressed: () async {
 
 <img src="./doc/cardform.png" width="300">
 
-You can easily build your own or use any other existing library to collect credit card details, e.g. <https://pub.dev/packages?q=credit+card>. 
-Just instantiate a new StripeCard() with the details you have collected, and proceed using the Stripe SDK API.
-
-
 ## SCA/PSD2
 
 The library offers complete support for SCA on iOS and Android.
 It handles all types of SCA, including 3DS, 3DS2, BankID and others.
 It handles SCA by launching the authentication flow in a web browser, and returns the result to the app.
+The `returnUrlForSCA` parameter must match the configuration of your `AndroidManifest.xml` and `Info.plist` as shown in the next steps.
 
 ```dart
-Stripe.init("pk_xxx");
-final clientSecret = await server.createPaymentIntent(Stripe.getReturnUrl());
+Stripe.init("pk_xxx", returnUrlForSCA: "stripesdk://3ds.stripesdk.io");
+final clientSecret = await server.createPaymentIntent(Stripe.instance.getReturnUrlForSca());
 final paymentIntent = await Stripe.instance.confirmPayment(clientSecret, "pm_card_visa");
 ```
 
 ### Android
 
-You need to declare this intent filter in `android/app/src/main/AndroidManifest.xml`:
+You need to declare the following intent filter in `android/app/src/main/AndroidManifest.xml`.
+This example is for the url `stripesdk://3ds.stripesdk.io`:
 
 ```xml
 <manifest ...>
   <!-- ... other tags -->
   <application ...>
     <activity ...>
+    
+      android:launchMode="singleTask"
+      <!-- When the launchMode key is set to "singleTask" Android will use the existing instance if possible or open a new one when needed.
+      This fixes the problem that the app will not restart if Firefox was used for the authorization process. -->
+      
       <!-- ... other tags -->
 
       <!-- Deep Links -->
@@ -173,9 +175,8 @@ You need to declare this intent filter in `android/app/src/main/AndroidManifest.
 
 ### IOS
 
-For iOS you need to declare the scheme in
-`ios/Runner/Info.plist` (or through Xcode's Target Info editor,
-under URL Types):
+For iOS you need to declare the scheme in `ios/Runner/Info.plist` (or through Xcode's Target Info editor,
+under URL Types). This example is for the url `stripesdk://3ds.stripesdk.io`:
 
 ```xml
 <!-- ... other tags -->
