@@ -45,14 +45,14 @@ class Stripe {
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
   ///
-  /// [returnUrlForSCA] can be used to use your own return url for
+  /// [returnUrlForSca] can be used to use your own return url for
   /// Strong Customer Authentication (SCA) such as 3DS, 3DS2, BankID and others.
   /// It is recommended to use your own app specific url scheme and host. This
   /// parameter must match your "android/app/src/main/AndroidManifest.xml"
   /// and "ios/Runner/Info.plist" configuration.
-  static void init(String publishableKey, {String stripeAccount, String returnUrlForSCA}) {
+  static void init(String publishableKey, {String stripeAccount, String returnUrlForSca}) {
     _instance =
-        Stripe(publishableKey, stripeAccount: stripeAccount, returnUrlForSca: returnUrlForSCA);
+        Stripe(publishableKey, stripeAccount: stripeAccount, returnUrlForSca: returnUrlForSca);
   }
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
