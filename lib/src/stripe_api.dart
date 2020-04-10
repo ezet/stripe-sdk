@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'model/card.dart';
 import 'stripe_api_handler.dart';
 
@@ -49,7 +50,7 @@ class StripeApi {
   static StripeApi get instance {
     if (_instance == null) {
       throw Exception(
-          "Attempted to get singleton instance of Stripe without initialization");
+          "Attempted to get singleton instance of StripeApi without initialization");
     }
     return _instance;
   }
