@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:stripe_sdk/src/customer_session.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'ephemeral_key_manager.dart';
 import 'stripe_api.dart';
 
 class Stripe {
@@ -20,10 +22,10 @@ class Stripe {
   /// Strong Customer Authentication (SCA) such as 3DS, 3DS2, BankID and others.
   /// It is recommended to use your own app specific url scheme and host.
   Stripe(String publishableKey, {String stripeAccount, String returnUrlForSca})
-      : _stripeApi = StripeApi(publishableKey, stripeAccount: stripeAccount),
+      : api = StripeApi(publishableKey, stripeAccount: stripeAccount),
         _returnUrlForSca = returnUrlForSca ?? "stripesdk://3ds.stripesdk.io";
 
-  final StripeApi _stripeApi;
+  final StripeApi api;
   final String _returnUrlForSca;
   static Stripe _instance;
 
@@ -51,8 +53,12 @@ class Stripe {
   /// parameter must match your "android/app/src/main/AndroidManifest.xml"
   /// and "ios/Runner/Info.plist" configuration.
   static void init(String publishableKey, {String stripeAccount, String returnUrlForSca}) {
-    _instance =
-        Stripe(publishableKey, stripeAccount: stripeAccount, returnUrlForSca: returnUrlForSca);
+    _instance = Stripe(publishableKey, stripeAccount: stripeAccount, returnUrlForSca: returnUrlForSca);
+    StripeApi.init(publishableKey, stripeAccount: stripeAccount);
+  }
+
+  CustomerSession getCustomerSession(EphemeralKeyProvider provider) {
+    return CustomerSession(provider);
   }
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
@@ -71,8 +77,7 @@ class Stripe {
   /// Confirm a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
   Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret) async {
-    final intent = await _stripeApi
-        .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca()});
+    final intent = await api.confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca()});
     if (intent['status'] == 'requires_action') {
       return handleSetupIntent(intent['next_action']);
     } else {
@@ -82,10 +87,9 @@ class Stripe {
 
   /// Confirm a SetupIntent with a PaymentMethod
   /// https://stripe.com/docs/api/setup_intents/confirm
-  Future<Map<String, dynamic>> confirmSetupIntentWithPaymentMethod(
-      String clientSecret, String paymentMethod) async {
-    final intent = await _stripeApi.confirmSetupIntent(clientSecret,
-        data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethod});
+  Future<Map<String, dynamic>> confirmSetupIntentWithPaymentMethod(String clientSecret, String paymentMethod) async {
+    final intent = await api
+        .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethod});
     if (intent['status'] == 'requires_action') {
       return handleSetupIntent(intent['next_action']);
     } else {
@@ -96,9 +100,8 @@ class Stripe {
   /// Confirm and authenticate a payment.
   /// Returns the PaymentIntent.
   /// https://stripe.com/docs/payments/payment-intents/android
-  Future<Map<String, dynamic>> confirmPayment(
-      String paymentIntentClientSecret, String paymentMethodId) async {
-    final paymentIntent = await _stripeApi.confirmPaymentIntent(paymentIntentClientSecret,
+  Future<Map<String, dynamic>> confirmPayment(String paymentIntentClientSecret, String paymentMethodId) async {
+    final paymentIntent = await api.confirmPaymentIntent(paymentIntentClientSecret,
         data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethodId});
     if (paymentIntent['status'] == "requires_action") {
       return handlePaymentIntent(paymentIntent['next_action']);
@@ -111,7 +114,7 @@ class Stripe {
   /// Returns the PaymentIntent.
   /// https://stripe.com/docs/payments/payment-intents/android-manual
   Future<Map<String, dynamic>> authenticatePayment(String paymentIntentClientSecret) async {
-    final paymentIntent = await _stripeApi.retrievePaymentIntent(paymentIntentClientSecret);
+    final paymentIntent = await api.retrievePaymentIntent(paymentIntentClientSecret);
     if (paymentIntent['status'] == "requires_action") {
       return handlePaymentIntent(paymentIntent['next_action']);
     } else {
@@ -124,7 +127,7 @@ class Stripe {
   Future<Map<String, dynamic>> handlePaymentIntent(Map action) async {
     return _authenticateIntent(
         action,
-        (uri) => _stripeApi.retrievePaymentIntent(
+        (uri) => api.retrievePaymentIntent(
               uri.queryParameters['payment_intent_client_secret'],
             ));
   }
@@ -134,7 +137,7 @@ class Stripe {
   Future<Map<String, dynamic>> handleSetupIntent(Map action) async {
     return _authenticateIntent(
         action,
-        (uri) => _stripeApi.retrieveSetupIntent(
+        (uri) => api.retrieveSetupIntent(
               uri.queryParameters['setup_intent_client_secret'],
             ));
   }
