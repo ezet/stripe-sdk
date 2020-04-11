@@ -33,7 +33,14 @@ class HomeScreen extends StatelessWidget {
             title: Text('Payment Methods'),
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentMethodsScreen())),
           ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Payments'),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentMethodsScreen())),
+          ),
         )
+
       ]),
     );
   }

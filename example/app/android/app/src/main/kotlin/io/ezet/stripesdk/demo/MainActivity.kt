@@ -1,4 +1,4 @@
-package com.example.app
+package io.ezet.stripesdk.demo
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

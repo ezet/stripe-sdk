@@ -4,6 +4,7 @@ import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'network/network_service.dart';
+import 'ui/progress_bar.dart';
 
 class AddPaymentMethod extends StatefulWidget {
   @override
@@ -63,12 +64,6 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
             )));
   }
 
-  void hideProgressDialog(BuildContext context) {
-    Navigator.pop(context);
-  }
 
-  void showProgressDialog(BuildContext context) {
-    showDialog(
-        context: context, barrierDismissible: false, builder: (context) => Center(child: CircularProgressIndicator()));
-  }
 }
+

@@ -1,4 +1,5 @@
 import 'package:app/locator.dart';
+import 'package:app/ui/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
@@ -9,7 +10,6 @@ class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final paymentMethods = Provider.of<PaymentMethods>(context);
-
 
     return Scaffold(
       appBar: AppBar(
@@ -103,12 +103,10 @@ class PaymentMethodsList extends StatelessWidget {
                               child: Text("Yes"),
                               onPressed: () async {
                                 Navigator.pop(rootContext);
-                                showDialog(
-                                    context: rootContext,
-                                    barrierDismissible: false,
-                                    builder: (context) => Center(child: CircularProgressIndicator()));
+                                showProgressDialog(rootContext);
+
                                 final result = await stripeSession.detachPaymentMethod(card.id);
-                                Navigator.pop(rootContext);
+                                hideProgressDialog(rootContext);
                                 if (result != null) {
                                   await paymentMethods.refresh();
                                   Scaffold.of(rootContext).showSnackBar(SnackBar(
