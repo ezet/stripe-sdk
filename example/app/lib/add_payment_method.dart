@@ -30,11 +30,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
 
-                  // ignore: unawaited_futures
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => Center(child: CircularProgressIndicator()));
+                  showProgressDialog(context);
 
                   var paymentMethod = await stripe.api.createPaymentMethodFromCard(_cardData);
 
@@ -42,7 +38,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
 //                  final stripeSession = locator.get<CustomerSession>();
 //                  paymentMethod = await stripeSession.attachPaymentMethod(paymentMethod['id']);
                   final createSetupIntentResponse = await networkService.createSetupIntent(paymentMethod['id']);
-                  Navigator.pop(context);
+                  hideProgressDialog(context);
 
                   if (createSetupIntentResponse['status'] == 'succeeded') {
                     Navigator.pop(context, true);
@@ -65,5 +61,14 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               card: _cardData,
               formKey: _formKey,
             )));
+  }
+
+  void hideProgressDialog(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  void showProgressDialog(BuildContext context) {
+    showDialog(
+        context: context, barrierDismissible: false, builder: (context) => Center(child: CircularProgressIndicator()));
   }
 }
