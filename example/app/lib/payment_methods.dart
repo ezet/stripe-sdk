@@ -8,7 +8,9 @@ import 'add_payment_method.dart';
 class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-//    final paymentMethods = Provider.of<PaymentMethods>(context);
+    final paymentMethods = Provider.of<PaymentMethods>(context);
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Payment methods"),
@@ -17,15 +19,12 @@ class PaymentMethodsScreen extends StatelessWidget {
             icon: Icon(Icons.add),
             onPressed: () async {
               final added = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
-//              if (added == true) await paymentMethods.refresh();
+              if (added == true) await paymentMethods.refresh();
             },
           )
         ],
       ),
-      body: ChangeNotifierProvider(
-        create: (_) => PaymentMethods(),
-        child: PaymentMethodsList(),
-      ),
+      body: PaymentMethodsList(),
     );
   }
 }
@@ -49,8 +48,6 @@ class PaymentMethods extends ChangeNotifier {
   Future<void> refresh() {
     final session = locator.get<CustomerSession>();
     final paymentMethodFuture = session.listPaymentMethods();
-
-//    final paymentMethodFuture = listPaymentMethods();
 
     return paymentMethodFuture.then((value) {
       final List listData = value['data'] ?? List<PaymentMethod>();
@@ -81,6 +78,7 @@ class PaymentMethodsList extends StatelessWidget {
   }
 
   Widget buildListView(List<PaymentMethod> listData, PaymentMethods paymentMethods, BuildContext rootContext) {
+    final stripeSession = locator.get<CustomerSession>();
     if (listData.isEmpty) {
       return ListView();
     } else {
@@ -102,23 +100,22 @@ class PaymentMethodsList extends StatelessWidget {
                             onPressed: () => Navigator.pop(rootContext),
                           ),
                           FlatButton(
-                            child: Text("Yes"),
-//                              onPressed: () async {
-//                                Navigator.pop(rootContext);
-//                                showDialog(
-//                                    context: rootContext,
-//                                    barrierDismissible: false,
-//                                    builder: (context) => Center(child: CircularProgressIndicator()));
-//                                final result = await stripeSession.detachPaymentMethod(card.id);
-//                                Navigator.pop(rootContext);
-//                                if (result != null) {
-//                                  await paymentMethods.refresh();
-//                                  Scaffold.of(rootContext).showSnackBar(SnackBar(
-//                                    content: Text('Payment method successfully deleted.'),
-//                                  ));
-//                                }
-//                              }
-                          )
+                              child: Text("Yes"),
+                              onPressed: () async {
+                                Navigator.pop(rootContext);
+                                showDialog(
+                                    context: rootContext,
+                                    barrierDismissible: false,
+                                    builder: (context) => Center(child: CircularProgressIndicator()));
+                                final result = await stripeSession.detachPaymentMethod(card.id);
+                                Navigator.pop(rootContext);
+                                if (result != null) {
+                                  await paymentMethods.refresh();
+                                  Scaffold.of(rootContext).showSnackBar(SnackBar(
+                                    content: Text('Payment method successfully deleted.'),
+                                  ));
+                                }
+                              })
                         ],
                       );
                     });

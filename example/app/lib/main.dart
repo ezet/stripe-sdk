@@ -1,5 +1,6 @@
 import 'package:app/payment_methods.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'locator.dart';
 
@@ -13,7 +14,9 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "Stripe SDK Showcase", home: HomeScreen());
+    final app = MaterialApp(title: "Stripe SDK Showcase", home: HomeScreen());
+
+    return ChangeNotifierProvider(create: (_) => PaymentMethods(), child: app);
   }
 }
 
