@@ -64,7 +64,7 @@ class StripeApi {
         params: data);
   }
 
-  /// Create a PaymenMethod.
+  /// Create a PaymentMethod.
   /// https://stripe.com/docs/api/payment_methods/create
   Future<Map<String, dynamic>> createPaymentMethod(
       Map<String, dynamic> data) async {

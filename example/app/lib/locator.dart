@@ -9,6 +9,6 @@ GetIt locator = GetIt();
 void initializeLocator() {
   locator.registerLazySingleton(() => CloudFunctions(region: "europe-west2"));
   locator.registerLazySingleton(() => NetworkService(locator.get()));
-  locator.registerSingleton(Stripe('pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47'));
+  locator.registerSingleton(Stripe('pk_test_FlC2pf2JCTgKLcgG0aScSQmp00XqfTJL8s'));
   locator.registerSingleton(CustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version)));
 }

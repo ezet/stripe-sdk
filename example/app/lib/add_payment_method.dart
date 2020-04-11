@@ -18,7 +18,6 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
   @override
   Widget build(BuildContext context) {
     final stripe = locator.get<Stripe>();
-    final stripeSession = locator.get<CustomerSession>();
     final networkService = locator.get<NetworkService>();
 
     return Scaffold(
@@ -30,13 +29,18 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  await showDialog(
+
+                  // ignore: unawaited_futures
+                  showDialog(
                       context: context,
                       barrierDismissible: false,
                       builder: (context) => Center(child: CircularProgressIndicator()));
 
                   var paymentMethod = await stripe.api.createPaymentMethodFromCard(_cardData);
-                  paymentMethod = await stripeSession.attachPaymentMethod(paymentMethod['id']);
+
+                  // With or without setupIntent. Stripe recommends using setup intent.
+//                  final stripeSession = locator.get<CustomerSession>();
+//                  paymentMethod = await stripeSession.attachPaymentMethod(paymentMethod['id']);
                   final createSetupIntentResponse = await networkService.createSetupIntent(paymentMethod['id']);
                   Navigator.pop(context);
 
