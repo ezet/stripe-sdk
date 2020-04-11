@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "345345135463",
+    "firebase_url": "https://stripe-sdk-demo.firebaseio.com",
+    "project_id": "stripe-sdk-demo",
+    "storage_bucket": "stripe-sdk-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345345135463:android:bd3d9b5f5796cffb8315c2",
+        "android_client_info": {
+          "package_name": "io.ezet.stripesdk.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345345135463-0c3a6cltgggcipra79eiookhe4uic4aj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPnGRTRxrUO_vgyBW8cfTEDywTrwzJg4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345345135463-0c3a6cltgggcipra79eiookhe4uic4aj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

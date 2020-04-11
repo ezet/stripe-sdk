@@ -26,7 +26,7 @@ dependencies:
   provider: ^4.0.0
   get_it: ^1.0.3+2
   shared_preferences: ^0.5.3+4
-
+  cloud_functions: ^0.4.1
 
     #  stripe_sdk: ^2.3.0
   stripe_sdk:
