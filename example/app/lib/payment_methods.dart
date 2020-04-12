@@ -3,13 +3,16 @@ import 'package:app/ui/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
-import 'add_payment_method.dart';
+import 'network/network_service.dart';
 
 class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final paymentMethods = Provider.of<PaymentMethods>(context);
+    final stripe = locator.get<Stripe>();
+    final networkService = locator.get<NetworkService>();
 
     return Scaffold(
       appBar: AppBar(
@@ -18,7 +21,11 @@ class PaymentMethodsScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () async {
-              final added = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
+              final added = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AddPaymentMethod.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
               if (added == true) await paymentMethods.refresh();
             },
           )
