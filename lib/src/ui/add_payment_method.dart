@@ -14,11 +14,12 @@ class AddPaymentMethod extends StatefulWidget {
   final bool useSetupIntent;
 
 //  final CardForm form;
-
+  @Deprecated("Experimental")
   AddPaymentMethod.withSetupIntent(this.createSetupIntent, {this.stripe})
       : useSetupIntent = true,
         customerSession = null;
 
+  @Deprecated("Experimental")
   AddPaymentMethod.withoutSetupIntent(this.customerSession, {this.stripe})
       : useSetupIntent = false,
         createSetupIntent = null;
