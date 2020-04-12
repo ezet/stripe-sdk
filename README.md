@@ -8,8 +8,10 @@ It does not wrap existing Stripe libraries, but instead accesses the Stripe API 
 
 See *examples* for additional short examples.
 
-See <https://github.com/ezet/glappen-client> for a complete example using this library.
-See <https://github.com/ezet/glappen-firebase-api> for a complete example of a supporting backend, using Firebase Functions.
+See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete demo app.
+
+See <https://github.com/ezet/glappen-client> for a complete app using this library.
+See <https://github.com/ezet/glappen-firebase-api> for a complete backend, using Firebase Cloud Functions.
 
 ## Features
 
@@ -38,6 +40,11 @@ See <https://github.com/ezet/glappen-firebase-api> for a complete example of a s
 - Support for additional APIs
 - Offer complete UI flow for adding payment method
 - Offer complete UI flow for checkout
+
+
+### Demo application
+
+There is a complete demo application available at <https://github.com/ezet/stripe-sdk/tree/master/example/app>.
 
 
 ## Overview
