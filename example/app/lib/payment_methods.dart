@@ -10,7 +10,7 @@ import 'network/network_service.dart';
 class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final paymentMethods = Provider.of<PaymentMethods>(context);
+    final paymentMethods = Provider.of<PaymentMethodsData>(context);
     final stripe = locator.get<Stripe>();
     final networkService = locator.get<NetworkService>();
 
@@ -44,11 +44,11 @@ class PaymentMethod {
   PaymentMethod(this.id, this.last4, this.brand);
 }
 
-class PaymentMethods extends ChangeNotifier {
+class PaymentMethodsData extends ChangeNotifier {
   List<PaymentMethod> paymentMethods = List();
   Future<List<PaymentMethod>> paymentMethodsFuture;
 
-  PaymentMethods() {
+  PaymentMethodsData() {
     refresh();
   }
 
@@ -72,7 +72,7 @@ class PaymentMethods extends ChangeNotifier {
 class PaymentMethodsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final paymentMethods = Provider.of<PaymentMethods>(context);
+    final paymentMethods = Provider.of<PaymentMethodsData>(context);
     final listData = paymentMethods.paymentMethods;
 //    final defaultPaymentMethod = Provider.of<DefaultPaymentMethod>(context);
     if (listData == null) {
@@ -84,7 +84,7 @@ class PaymentMethodsList extends StatelessWidget {
     );
   }
 
-  Widget buildListView(List<PaymentMethod> listData, PaymentMethods paymentMethods, BuildContext rootContext) {
+  Widget buildListView(List<PaymentMethod> listData, PaymentMethodsData paymentMethods, BuildContext rootContext) {
     final stripeSession = locator.get<CustomerSession>();
     if (listData.isEmpty) {
       return ListView();

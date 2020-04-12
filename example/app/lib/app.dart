@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
-const publishableKey = "pk_test_FlC2pf2JCTgKLcgG0aScSQmp00XqfTJL8s";
-
 void main() {
   runApp(MyApp());
 }
@@ -30,7 +28,6 @@ class _MyAppState extends State<MyApp> {
   @override
   initState() {
     super.initState();
-    StripeApi.init(publishableKey);
   }
 
   @override

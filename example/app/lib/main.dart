@@ -8,8 +8,6 @@ import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'locator.dart';
 
-const publishableKey = "my-key";
-
 void main() {
   initializeLocator();
   runApp(MyApp());
@@ -20,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = MaterialApp(title: "Stripe SDK Showcase", home: HomeScreen());
 
-    return ChangeNotifierProvider(create: (_) => PaymentMethods(), child: app);
+    return ChangeNotifierProvider(create: (_) => PaymentMethodsData(), child: app);
   }
 }
 
@@ -69,7 +67,7 @@ class HomeScreen extends StatelessWidget {
   void createPaymentMethodWithSetupIntent(BuildContext context) async {
     final networkService = locator.get<NetworkService>();
     final stripe = locator.get<Stripe>();
-    final paymentMethods = Provider.of<PaymentMethods>(context, listen: false);
+    final paymentMethods = Provider.of<PaymentMethodsData>(context, listen: false);
     final added = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -80,16 +78,9 @@ class HomeScreen extends StatelessWidget {
   void createPaymentMethodWithoutSetupIntent(BuildContext context) async {
     final stripe = locator.get<Stripe>();
     final customerSession = locator.get<CustomerSession>();
-    final paymentMethods = Provider.of<PaymentMethods>(context, listen: false);
+    final paymentMethods = Provider.of<PaymentMethodsData>(context, listen: false);
     final added = await Navigator.push(context,
         MaterialPageRoute(builder: (context) => AddPaymentMethod.withoutSetupIntent(customerSession, stripe: stripe)));
     if (added == true) await paymentMethods.refresh();
-  }
-
-  void confirmSetupIntentWithForcedSca(BuildContext context) async {
-    final networkService = locator.get<NetworkService>();
-    final stripe = locator.get<Stripe>();
-    final paymentMethods = Provider.of<PaymentMethods>(context, listen: false);
-    final card = StripeCard();
   }
 }
