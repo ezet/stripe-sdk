@@ -135,7 +135,7 @@ onPressed: () async {
 
 ```
 
-<img src="./doc/cardform.png" width="300">
+<img src="https://github.com/ezet/stripe-sdk/blob/master/doc/cardform.png" width="300">
 
 ## SCA/PSD2
 
