@@ -70,6 +70,7 @@ class CardExpiryFormField extends StatelessWidget {
         decoration: decoration,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
+        onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
       ),
     );
   }

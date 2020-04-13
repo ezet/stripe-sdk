@@ -39,6 +39,7 @@ class CardNumberFormField extends StatelessWidget {
         initialValue: initialValue,
 //        controller: controller,
         inputFormatters: [maskFormatter],
+        autofocus: true,
         autovalidate: false,
         onSaved: onSaved,
         validator: validator,
@@ -47,6 +48,7 @@ class CardNumberFormField extends StatelessWidget {
         style: textStyle,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
+        onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
       ),
     );
   }
