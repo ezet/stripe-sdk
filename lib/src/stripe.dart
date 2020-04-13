@@ -10,7 +10,7 @@ import 'stripe_api.dart';
 
 class Stripe {
   /// Creates a new [Stripe] object. Use this constructor if you wish to handle the instance of this class by yourself.
-  /// If not, call [Stripe.init] to create an singleton and use [Stripe.instance] instead.
+  /// Alternatively, use [Stripe.init] to create a singleton and access it through [Stripe.instance].
   ///
   /// [publishableKey] is your publishable key, beginning with "sk_".
   /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
@@ -23,7 +23,7 @@ class Stripe {
   /// It is recommended to use your own app specific url scheme and host.
   Stripe(String publishableKey, {String stripeAccount, String returnUrlForSca})
       : api = StripeApi(publishableKey, stripeAccount: stripeAccount),
-        _returnUrlForSca = returnUrlForSca ?? "stripesdk://3ds.stripesdk.io";
+        _returnUrlForSca = returnUrlForSca ?? null;
 
   final StripeApi api;
   final String _returnUrlForSca;
