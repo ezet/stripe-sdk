@@ -11,6 +11,7 @@ See *examples* for additional short examples.
 See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete demo app.
 
 See <https://github.com/ezet/glappen-client> for a complete app using this library.
+
 See <https://github.com/ezet/glappen-firebase-api> for a complete backend, using Firebase Cloud Functions.
 
 ## Features

@@ -1,16 +1,23 @@
 # Stripe SDK Changelog
 
-## 2.6.0
+## 2.5.3
 
-* Added "AddPaymentMethod" screen, which handles the complete flow of adding a payment card.
-  * This is still WIP and in beta stage, meaning the API might change.
+## 2.5.2
   
 * Added a complete demo application, available in /examples/app.
   * Display, add and remove payment methods.
   * Add payment methods with and without Setup Intent.
   * Quickly test pre-made Stripe test cards, with SCA and more.
+  
+* Made the `StripeApi` instance on `Stripe` objects public. This avoids having to create
+a separate StripeApi instance.   
 
 * Fixed bug which prevented ephemeral keys from refreshing correctly.
+
+### Experimental:
+
+* Added "AddPaymentMethod" screen, which handles the complete flow of adding a payment card.
+  * This is still WIP and in beta stage, meaning the API might change.
 
 ## 2.5.1
 
