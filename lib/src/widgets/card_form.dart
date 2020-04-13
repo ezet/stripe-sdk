@@ -9,8 +9,8 @@ import 'card_number_form_field.dart';
 class CardForm extends StatefulWidget {
   CardForm({
     Key key,
-    @required this.formKey,
-    @required this.card,
+    formKey,
+    card,
     this.cardNumberDecoration,
     this.cardNumberTextStyle,
     this.cardExpiryDecoration,
@@ -20,7 +20,9 @@ class CardForm extends StatefulWidget {
     this.cardNumberErrorText,
     this.cardExpiryErrorText,
     this.cardCvcErrorText,
-  }) : super(key: key);
+  })  : this.card = card ?? StripeCard(),
+        this.formKey = formKey ?? GlobalKey(),
+        super(key: key);
 
   final GlobalKey<FormState> formKey;
   final StripeCard card;
@@ -63,8 +65,7 @@ class _CardFormState extends State<CardForm> {
                   : widget.cardNumberErrorText ?? CardNumberFormField.defaultErrorText,
               textStyle: widget.cardNumberTextStyle ?? CardNumberFormField.defaultTextStyle,
               onSaved: (text) => widget.card.number = text,
-              decoration: widget.cardNumberDecoration ??
-                  CardNumberFormField.defaultDecoration,
+              decoration: widget.cardNumberDecoration ?? CardNumberFormField.defaultDecoration,
             ),
           ),
           Container(
