@@ -19,6 +19,9 @@ class CustomerSession {
       : _keyManager = EphemeralKeyManager(provider, keyRefreshBufferInSeconds),
         _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _apiHandler.apiVersion = apiVersion;
+    if (_instance == null) {
+      _instance = this;
+    }
   }
 
   /// Initiate the customer session singleton instance.
