@@ -10,9 +10,6 @@ See *examples* for additional short examples.
 
 See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete demo app.
 
-See <https://github.com/ezet/glappen-client> for a complete app using this library.
-
-See <https://github.com/ezet/glappen-firebase-api> for a complete backend, using Firebase Cloud Functions.
 
 ## Features
 
@@ -43,9 +40,11 @@ See <https://github.com/ezet/glappen-firebase-api> for a complete backend, using
 - Offer complete UI flow for checkout
 
 
-### Demo application
+## Demo application
 
 There is a complete demo application available at <https://github.com/ezet/stripe-sdk/tree/master/example/app>.
+
+<img src="https://github.com/ezet/stripe-sdk/blob/master/doc/demo.png" width="300">
 
 
 ## Overview
@@ -89,7 +88,7 @@ Provides basic low-level methods to access the Stripe REST API.
 
 ## Initialization
 
-All classes offer a singleton instance that can be initated by calling the `init(...)` methods and then accessed through `.instance`.
+All classes offer a singleton instance that can be initiated by calling the `init(...)` methods and then accessed through `.instance`.
 Regular instances can also be created using the constructor, which allows them to be managed by e.g. dependency injection instead.
 
 ### Stripe
@@ -136,6 +135,8 @@ onPressed: () async {
 ```
 
 <img src="https://github.com/ezet/stripe-sdk/blob/master/doc/cardform.png" width="300">
+
+
 
 ## SCA/PSD2
 
@@ -208,3 +209,23 @@ under URL Types). This example is for the url `stripesdk://3ds.stripesdk.io`:
     </dict>
 </plist>
 ```
+
+
+## Experimental
+
+Experimental features are marked as `deprecated` and the API is subject to change until it is deemed stable.
+Feel free to use these features but be aware that breaking changes might be introduced in minor updates.
+
+### Add Payment Method
+
+Use `AddPaymentMethod.withSetupIntent()` to launch a managed UI flow for adding a payment method.
+This will also handle SCA if required. 
+
+## Additional examples
+
+### Glappen
+This is a complete application, with a mobile client and a backend API.
+Documentation is lacking, but it can serve as an example for more advanced use.
+
+App: <https://github.com/ezet/glappen-client> 
+Backend: <https://github.com/ezet/glappen-firebase-api>
