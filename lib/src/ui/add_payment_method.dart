@@ -18,17 +18,20 @@ class AddPaymentMethod extends StatefulWidget {
   final CardForm form;
 
   @Deprecated("Experimental, api might change.")
-  AddPaymentMethod.withSetupIntent(this.createSetupIntent, {this.stripe, this.form})
+  AddPaymentMethod.withSetupIntent(this.createSetupIntent,
+      {this.stripe, this.form})
       : useSetupIntent = true,
         customerSession = null;
 
   @Deprecated("Experimental, api might change.")
-  AddPaymentMethod.withoutSetupIntent(this.customerSession, {this.stripe, this.form})
+  AddPaymentMethod.withoutSetupIntent(this.customerSession,
+      {this.stripe, this.form})
       : useSetupIntent = false,
         createSetupIntent = null;
 
   @override
-  _AddPaymentMethodState createState() => _AddPaymentMethodState(this.form ?? CardForm());
+  _AddPaymentMethodState createState() =>
+      _AddPaymentMethodState(this.form ?? CardForm());
 }
 
 class _AddPaymentMethodState extends State<AddPaymentMethod> {
@@ -54,24 +57,34 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
 
                   showProgressDialog(context);
 
-                  var paymentMethod = await this.widget.stripe.api.createPaymentMethodFromCard(_cardData);
+                  var paymentMethod = await this
+                      .widget
+                      .stripe
+                      .api
+                      .createPaymentMethodFromCard(_cardData);
                   if (this.widget.useSetupIntent) {
-                    final createSetupIntentResponse = await this.widget.createSetupIntent(paymentMethod['id']);
+                    final createSetupIntentResponse = await this
+                        .widget
+                        .createSetupIntent(paymentMethod['id']);
 
                     if (createSetupIntentResponse['status'] == 'succeeded') {
                       hideProgressDialog(context);
                       Navigator.pop(context, true);
                       return;
                     }
-                    var setupIntent =
-                        await this.widget.stripe.confirmSetupIntent(createSetupIntentResponse['client_secret']);
+                    var setupIntent = await this
+                        .widget
+                        .stripe
+                        .confirmSetupIntent(
+                            createSetupIntentResponse['client_secret']);
 
                     hideProgressDialog(context);
                     if (setupIntent['status'] == 'succeeded') {
                       Navigator.pop(context, true);
                     }
                   } else {
-                    paymentMethod = await widget.customerSession.attachPaymentMethod(paymentMethod['id']);
+                    paymentMethod = await widget.customerSession
+                        .attachPaymentMethod(paymentMethod['id']);
                     Navigator.pop(context, true);
                     return;
                   }

@@ -62,10 +62,13 @@ class _CardFormState extends State<CardForm> {
               onChanged: (number) => _validationModel.number = number,
               validator: (text) => _validationModel.validateNumber()
                   ? null
-                  : widget.cardNumberErrorText ?? CardNumberFormField.defaultErrorText,
-              textStyle: widget.cardNumberTextStyle ?? CardNumberFormField.defaultTextStyle,
+                  : widget.cardNumberErrorText ??
+                      CardNumberFormField.defaultErrorText,
+              textStyle: widget.cardNumberTextStyle ??
+                  CardNumberFormField.defaultTextStyle,
               onSaved: (text) => widget.card.number = text,
-              decoration: widget.cardNumberDecoration ?? CardNumberFormField.defaultDecoration,
+              decoration: widget.cardNumberDecoration ??
+                  CardNumberFormField.defaultDecoration,
             ),
           ),
           Container(
@@ -84,9 +87,12 @@ class _CardFormState extends State<CardForm> {
                 },
                 validator: (text) => _validationModel.validateDate()
                     ? null
-                    : widget.cardExpiryErrorText ?? CardExpiryFormField.defaultErrorText,
-                textStyle: widget.cardExpiryTextStyle ?? CardExpiryFormField.defaultTextStyle,
-                decoration: widget.cardExpiryDecoration ?? CardExpiryFormField.defaultDecoration,
+                    : widget.cardExpiryErrorText ??
+                        CardExpiryFormField.defaultErrorText,
+                textStyle: widget.cardExpiryTextStyle ??
+                    CardExpiryFormField.defaultTextStyle,
+                decoration: widget.cardExpiryDecoration ??
+                    CardExpiryFormField.defaultDecoration,
               )),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -95,10 +101,14 @@ class _CardFormState extends State<CardForm> {
               initialValue: _validationModel.cvc ?? widget.card.cvc,
               onChanged: (text) => _validationModel.cvc = text,
               onSaved: (text) => widget.card.cvc = text,
-              validator: (text) =>
-                  _validationModel.validateCVC() ? null : widget.cardCvcErrorText ?? CardCvcFormField.defaultErrorText,
-              textStyle: widget.cardCvcTextStyle ?? CardCvcFormField.defaultTextStyle,
-              decoration: widget.cardCvcDecoration ?? CardCvcFormField.defaultDecoration,
+              validator: (text) => _validationModel.validateCVC()
+                  ? null
+                  : widget.cardCvcErrorText ??
+                      CardCvcFormField.defaultErrorText,
+              textStyle:
+                  widget.cardCvcTextStyle ?? CardCvcFormField.defaultTextStyle,
+              decoration: widget.cardCvcDecoration ??
+                  CardCvcFormField.defaultDecoration,
             ),
           ),
         ],
