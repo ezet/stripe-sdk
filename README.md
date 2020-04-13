@@ -19,7 +19,7 @@ See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete 
 * Manage customer information.
 * Create all types of Stripe tokens.
 * Forms, widgets and utilities to use directly, or create your own UI!
-
+* EXPERIMENTAL: Managed UI flow for adding payment methods with SCA (SetupIntent).
 
 ### Supported APIs
 
@@ -34,10 +34,7 @@ See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete 
 
 ### Planned features
 
-- Add additional UI widgets
-- Support for additional APIs
-- Offer complete UI flow for adding payment method
-- Offer complete UI flow for checkout
+- Offer managed UI flow for checkout
 
 
 ## Demo application
@@ -95,11 +92,13 @@ Regular instances can also be created using the constructor, which allows them t
 
 ```dart
 Stripe.init("pk_xxx");
-// or, to manage your own instances
+// or, to manage your own instance, or multiple instances
 final stripe = Stripe("pk_xxx);
 ```
 
 ### CustomerSession
+
+The function that retrieves the ephemeral key must return the JSON response as a plain string.
 
 ```dart
 CustomerSession.init((apiVersion) => server.getEphemeralKeyFromServer(apiVersion));
