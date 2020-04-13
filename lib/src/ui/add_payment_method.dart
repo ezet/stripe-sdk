@@ -6,26 +6,28 @@ import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'progress_bar.dart';
 
-typedef Future<Map> createSetupIntent(String paymentMethodId);
-typedef Future<Map> confirmSetupIntent(String clientSecret);
+typedef Future<Map> CreateSetupIntent(String paymentMethodId);
 
 class AddPaymentMethod extends StatefulWidget {
-  final Stripe stripe;
-  final CustomerSession customerSession;
-  final Future<Map> Function(String paymentMethodId) createSetupIntent;
-  final bool useSetupIntent;
+  final Stripe _stripe;
+  final CustomerSession _customerSession;
+  final CreateSetupIntent _createSetupIntent;
+  final bool _useSetupIntent;
 
   final CardForm form;
 
-  @Deprecated("Experimental, api might change.")
-  AddPaymentMethod.withSetupIntent(this.createSetupIntent, {this.stripe, this.form})
-      : useSetupIntent = true,
-        customerSession = null;
+  @Deprecated("Experimental. API can change.")
+  AddPaymentMethod.withSetupIntent(this._createSetupIntent, {Stripe stripe, this.form})
+      : _useSetupIntent = true,
+        _customerSession = null,
+        _stripe = stripe ?? Stripe.instance;
 
-  @Deprecated("Experimental, api might change.")
-  AddPaymentMethod.withoutSetupIntent(this.customerSession, {this.stripe, this.form})
-      : useSetupIntent = false,
-        createSetupIntent = null;
+  @Deprecated("Experimental. API can change.")
+  AddPaymentMethod.withoutSetupIntent({CustomerSession customerSession, Stripe stripe, this.form})
+      : _useSetupIntent = false,
+        _createSetupIntent = null,
+        _stripe = stripe ?? Stripe.instance,
+        _customerSession = customerSession ?? CustomerSession.instance;
 
   @override
   _AddPaymentMethodState createState() => _AddPaymentMethodState(this.form ?? CardForm());
@@ -54,9 +56,9 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
 
                   showProgressDialog(context);
 
-                  var paymentMethod = await this.widget.stripe.api.createPaymentMethodFromCard(_cardData);
-                  if (this.widget.useSetupIntent) {
-                    final createSetupIntentResponse = await this.widget.createSetupIntent(paymentMethod['id']);
+                  var paymentMethod = await this.widget._stripe.api.createPaymentMethodFromCard(_cardData);
+                  if (this.widget._useSetupIntent) {
+                    final createSetupIntentResponse = await this.widget._createSetupIntent(paymentMethod['id']);
 
                     if (createSetupIntentResponse['status'] == 'succeeded') {
                       hideProgressDialog(context);
@@ -64,14 +66,14 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                       return;
                     }
                     var setupIntent =
-                        await this.widget.stripe.confirmSetupIntent(createSetupIntentResponse['client_secret']);
+                        await this.widget._stripe.confirmSetupIntent(createSetupIntentResponse['client_secret']);
 
                     hideProgressDialog(context);
                     if (setupIntent['status'] == 'succeeded') {
                       Navigator.pop(context, true);
                     }
                   } else {
-                    paymentMethod = await widget.customerSession.attachPaymentMethod(paymentMethod['id']);
+                    paymentMethod = await widget._customerSession.attachPaymentMethod(paymentMethod['id']);
                     Navigator.pop(context, true);
                     return;
                   }

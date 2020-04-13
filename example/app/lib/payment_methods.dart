@@ -10,9 +10,9 @@ import 'network/network_service.dart';
 class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final paymentMethods = Provider.of<PaymentMethodsData>(context);
-    final stripe = locator.get<Stripe>();
-    final networkService = locator.get<NetworkService>();
+    final PaymentMethodsData paymentMethods = Provider.of(context);
+    final Stripe stripe = locator.get();
+    final NetworkService networkService = locator.get();
 
     return Scaffold(
       appBar: AppBar(

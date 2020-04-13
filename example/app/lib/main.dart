@@ -79,8 +79,11 @@ class HomeScreen extends StatelessWidget {
     final stripe = locator.get<Stripe>();
     final customerSession = locator.get<CustomerSession>();
     final paymentMethods = Provider.of<PaymentMethodsData>(context, listen: false);
-    final added = await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => AddPaymentMethod.withoutSetupIntent(customerSession, stripe: stripe)));
+    final added = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                AddPaymentMethod.withoutSetupIntent(customerSession: customerSession, stripe: stripe)));
     if (added == true) await paymentMethods.refresh();
   }
 }
