@@ -23,7 +23,7 @@ class Stripe {
   /// It is recommended to use your own app specific url scheme and host.
   Stripe(String publishableKey, {String stripeAccount, String returnUrlForSca})
       : api = StripeApi(publishableKey, stripeAccount: stripeAccount),
-        _returnUrlForSca = returnUrlForSca ?? null;
+        _returnUrlForSca = returnUrlForSca ?? "stripesdk://3ds.stripesdk.io";
 
   final StripeApi api;
   final String _returnUrlForSca;

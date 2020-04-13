@@ -2,6 +2,10 @@
 
 ## 2.5.3
 
+* Add focus handling for CardForm.
+  * Give card number focus by default.
+  * Enable tapping "next/arrow" on keyboard to move to next field.
+
 ## 2.5.2
   
 * Added a complete demo application, available in /examples/app.

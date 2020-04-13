@@ -24,9 +24,9 @@ class PaymentMethodsScreen extends StatelessWidget {
               final added = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddPaymentMethod.withSetupIntent(
-                          networkService.createSetupIntent,
-                          stripe: stripe)));
+                      builder: (context) =>
+                          // ignore: deprecated_member_use
+                          AddPaymentMethod.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
               if (added == true) await paymentMethods.refresh();
             },
           )
@@ -62,10 +62,8 @@ class PaymentMethodsData extends ChangeNotifier {
       if (listData.isEmpty) {
         paymentMethods = List();
       } else {
-        paymentMethods = listData
-            .map((item) => PaymentMethod(
-                item['id'], item['card']['last4'], item['card']['brand']))
-            .toList();
+        paymentMethods =
+            listData.map((item) => PaymentMethod(item['id'], item['card']['last4'], item['card']['brand'])).toList();
       }
       notifyListeners();
     });
@@ -87,8 +85,7 @@ class PaymentMethodsList extends StatelessWidget {
     );
   }
 
-  Widget buildListView(List<PaymentMethod> listData,
-      PaymentMethodsData paymentMethods, BuildContext rootContext) {
+  Widget buildListView(List<PaymentMethod> listData, PaymentMethodsData paymentMethods, BuildContext rootContext) {
     final stripeSession = locator.get<CustomerSession>();
     if (listData.isEmpty) {
       return ListView();
@@ -116,15 +113,12 @@ class PaymentMethodsList extends StatelessWidget {
                                 Navigator.pop(rootContext);
                                 showProgressDialog(rootContext);
 
-                                final result = await stripeSession
-                                    .detachPaymentMethod(card.id);
+                                final result = await stripeSession.detachPaymentMethod(card.id);
                                 hideProgressDialog(rootContext);
                                 if (result != null) {
                                   await paymentMethods.refresh();
-                                  Scaffold.of(rootContext)
-                                      .showSnackBar(SnackBar(
-                                    content: Text(
-                                        'Payment method successfully deleted.'),
+                                  Scaffold.of(rootContext).showSnackBar(SnackBar(
+                                    content: Text('Payment method successfully deleted.'),
                                   ));
                                 }
                               })
