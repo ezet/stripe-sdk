@@ -16,7 +16,8 @@ exampleSetupStripeApi() async {
 
 /// CustomerSession provides access to customer specific APIs
 exampleSetupSession() {
-  CustomerSession.initCustomerSession((apiVersion) => _fetchEphemeralKeyFromMyServer(apiVersion));
+  CustomerSession.initCustomerSession(
+      (apiVersion) => _fetchEphemeralKeyFromMyServer(apiVersion));
   CustomerSession.instance.listPaymentMethods();
 }
 
@@ -31,8 +32,8 @@ exampleConfirmPayment() async {
   Stripe.init(publishableKey);
   final paymentIntentClientSecret =
       await _createPaymentIntent(Stripe.instance.getReturnUrlForSca());
-  final paymentIntent =
-      await Stripe.instance.confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
+  final paymentIntent = await Stripe.instance
+      .confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
   if (paymentIntent['status'] == 'success') {
     // Confirmation successfull
   } else {
@@ -51,9 +52,10 @@ Future<String> _createPaymentIntent(String returnUrl) {
 /// https://stripe.com/docs/payments/payment-intents/android-manual
 exampleAuthenticatePayment() async {
   Stripe.init(publishableKey);
-  final paymentIntentClientSecret =
-      await _createAndConfirmPaymentIntent(Stripe.instance.getReturnUrlForSca());
-  final paymentIntent = await Stripe.instance.authenticatePayment(paymentIntentClientSecret);
+  final paymentIntentClientSecret = await _createAndConfirmPaymentIntent(
+      Stripe.instance.getReturnUrlForSca());
+  final paymentIntent =
+      await Stripe.instance.authenticatePayment(paymentIntentClientSecret);
   if (paymentIntent['status'] == "success") {
     // Authentication was successfull
   } else {
@@ -127,8 +129,9 @@ class _MyAppState extends State<MyApp> {
               margin: const EdgeInsets.only(top: 8),
               child: CardNumberFormField(
                   onChanged: (String number) => cardTwo.number = number,
-                  validator: (String text) =>
-                      cardTwo.validateNumber() ? null : CardNumberFormField.defaultErrorText,
+                  validator: (String text) => cardTwo.validateNumber()
+                      ? null
+                      : CardNumberFormField.defaultErrorText,
                   onSaved: (String text) {
                     cardTwo.number = text;
                   },
@@ -147,8 +150,9 @@ class _MyAppState extends State<MyApp> {
                   cardTwo.expMonth = month;
                   cardTwo.expYear = year;
                 },
-                validator: (String text) =>
-                    cardTwo.validateDate() ? null : CardExpiryFormField.defaultErrorText,
+                validator: (String text) => cardTwo.validateDate()
+                    ? null
+                    : CardExpiryFormField.defaultErrorText,
               ),
             ),
             Container(
@@ -161,15 +165,18 @@ class _MyAppState extends State<MyApp> {
                 onSaved: (String cvc) {
                   cardTwo.cvc = cvc;
                 },
-                validator: (String text) =>
-                    cardTwo.validateDate() ? null : CardExpiryFormField.defaultErrorText,
+                validator: (String text) => cardTwo.validateDate()
+                    ? null
+                    : CardExpiryFormField.defaultErrorText,
               ),
             ),
             RaisedButton(
               onPressed: () async {
                 if (formKey.currentState.validate()) {
                   formKey.currentState.save();
-                  await StripeApi.instance.createPaymentMethodFromCard(card).then((result) {
+                  await StripeApi.instance
+                      .createPaymentMethodFromCard(card)
+                      .then((result) {
                     // Get payment method id
                     print(result['id']);
                   });

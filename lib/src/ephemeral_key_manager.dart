@@ -41,8 +41,8 @@ class EphemeralKey {
     _type = json[FIELD_ASSOCIATED_OBJECTS][0][FIELD_TYPE];
     _object = optString(json, FIELD_OBJECT);
     _secret = optString(json, FIELD_SECRET);
-    _createdAt = DateTime.fromMillisecondsSinceEpoch(_created*1000);
-    _expiresAt = DateTime.fromMillisecondsSinceEpoch(_expires*1000);
+    _createdAt = DateTime.fromMillisecondsSinceEpoch(_created * 1000);
+    _expiresAt = DateTime.fromMillisecondsSinceEpoch(_expires * 1000);
   }
 
   String get id => _id;

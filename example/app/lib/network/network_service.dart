@@ -8,7 +8,8 @@ class NetworkService {
 
   NetworkService(this._cf);
 
-  NetworkService.defaultInstance() : _cf = CloudFunctions(region: "europe-west2");
+  NetworkService.defaultInstance()
+      : _cf = CloudFunctions(region: "europe-west2");
 
   /// Utility function to call a Firebase Function
   Future<T> _call<T>(String name, Map params) async {
@@ -30,14 +31,15 @@ class NetworkService {
 
   /// Get a stripe ephemeral key
   Future<String> getEphemeralKey(String apiVersion) async {
-    final result = await _call('getEphemeralKey', {'stripeversion': apiVersion});
+    final result =
+        await _call('getEphemeralKey', {'stripeversion': apiVersion});
     final key = result['key'];
     final jsonKey = json.encode(key);
     return jsonKey;
   }
+
   Future<Map> createSetupIntent(String paymentMethod) {
     final params = {'payment_method': paymentMethod};
     return _call('createSetupIntent', params);
   }
-
 }
