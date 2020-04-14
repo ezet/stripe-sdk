@@ -25,7 +25,7 @@ class PaymentMethodsScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          // ignore: deprecated_member_use_from_same_package
+                          // ignore: deprecated_member_use
                           AddPaymentMethod.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
               if (added == true) await paymentMethods.refresh();
             },
