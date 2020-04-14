@@ -161,9 +161,10 @@ This example is for the url `stripesdk://3ds.stripesdk.io`:
   <application ...>
     <activity ...>
     
-      android:launchMode="singleTask"
-      <!-- When the launchMode key is set to "singleTask" Android will use the existing instance if possible or open a new one when needed.
-      This fixes the problem that the app will not restart if Firefox was used for the authorization process. -->
+      <!-- The launchMode should be singleTop or singleTask,
+        to avoid launching a new instance of the app when SCA has been completed. -->
+      android:launchMode="singleTop"
+
       
       <!-- ... other tags -->
 
