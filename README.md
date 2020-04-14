@@ -1,14 +1,15 @@
-# Flutter Stripe SDK
+[![pub package](https://img.shields.io/pub/v/stripe_sdk.svg)](https://pub.dev/packages/stripe_sdk)
 
-<https://pub.dev/packages/stripe_sdk>
+# Flutter Stripe SDK
 
 A native dart package for Stripe. There are various other flutter plugins that wrap existing Stripe libraries,
 but this package uses a different approach.
 It does not wrap existing Stripe libraries, but instead accesses the Stripe API directly.
 
-See *examples* for additional short examples.
+See *example/main.dart* for additional short examples.
 
-See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete demo app.
+See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete demo application,
+with a working example backend.
 
 
 ## Features
@@ -41,7 +42,7 @@ See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete 
 
 There is a complete demo application available at <https://github.com/ezet/stripe-sdk/tree/master/example/app>.
 
-<img src="https://github.com/ezet/stripe-sdk/blob/master/doc/demo.png" width="300">
+<img src="https://raw.githubusercontent.com/ezet/stripe-sdk/master/doc/demo.png" width="300">
 
 
 ## Overview
@@ -133,7 +134,7 @@ onPressed: () async {
 
 ```
 
-<img src="https://github.com/ezet/stripe-sdk/blob/master/doc/cardform.png" width="300">
+<img src="https://raw.githubusercontent.com/ezet/stripe-sdk/master/doc/cardform.png" width="300">
 
 
 
@@ -218,7 +219,7 @@ Feel free to use these features but be aware that breaking changes might be intr
 
 ### Add Payment Method
 
-Use `AddPaymentMethod.withSetupIntent()` to launch a managed UI flow for adding a payment method.
+Use `AddPaymentMethod.withSetupIntent(...)` to launch a managed UI flow for adding a payment method.
 This will also handle SCA if required. 
 
 ## Additional examples

@@ -2,7 +2,9 @@
 
 ## 2.6.0
 
-* Add visual indicators for card type in CardForm
+* Add visual card widget in CardForm
+
+* Fix misc bugs in CardForm
 
 ## 2.5.3
 
