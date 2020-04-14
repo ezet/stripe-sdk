@@ -22,6 +22,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
+  awesome_card:
+    dependency: "direct main"
+    description:
+      name: awesome_card
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   boolean_selector:
     dependency: transitive
     description:

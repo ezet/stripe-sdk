@@ -82,6 +82,6 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
             )
           ],
         ),
-        body: Padding(padding: const EdgeInsets.all(16.0), child: _form));
+        body: _form);
   }
 }

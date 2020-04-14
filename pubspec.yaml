@@ -1,6 +1,6 @@
 name: stripe_sdk
 description: The only native Stripe library for Flutter. Has complete support for SCA/PSD2, payment intents and the newest Stripe features.
-version: 2.5.3
+version: 2.6.0
 homepage: https://github.com/ezet/stripe_sdk
 
 environment:
@@ -13,7 +13,8 @@ dependencies:
   http: ^0.12.0
   url_launcher: ^5.1.2
   uni_links: ^0.2.0
-  mask_text_input_formatter: ^1.0.5
+  mask_text_input_formatter: ^1.0.6
+  awesome_card: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -24,4 +25,3 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-

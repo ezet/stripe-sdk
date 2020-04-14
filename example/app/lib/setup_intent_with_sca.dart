@@ -1,12 +1,12 @@
-import 'package:app/locator.dart';
-import 'package:app/ui/progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 
+import 'locator.dart';
 import 'network/network_service.dart';
 import 'payment_methods.dart';
+import 'ui/progress_bar.dart';
 
 class SetupIntentWithScaScreen extends StatelessWidget {
   @override

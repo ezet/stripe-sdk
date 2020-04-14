@@ -1,3 +1,5 @@
+import 'package:awesome_card/credit_card.dart';
+import 'package:awesome_card/style/card_background.dart';
 import 'package:flutter/material.dart';
 
 import '../model/card.dart';
@@ -41,7 +43,8 @@ class CardForm extends StatefulWidget {
 }
 
 class _CardFormState extends State<CardForm> {
-  final StripeCard _validationModel = StripeCard();
+  StripeCard _validationModel = StripeCard();
+  bool cvcHasFocus = false;
 
   @override
   void initState() {
@@ -50,69 +53,95 @@ class _CardFormState extends State<CardForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: widget.formKey,
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            margin: const EdgeInsets.only(top: 16),
-            child: CardNumberFormField(
-              initialValue: _validationModel.number ?? widget.card.number,
-              onChanged: (number) => _validationModel.number = number,
-              validator: (text) => _validationModel.validateNumber()
-                  ? null
-                  : widget.cardNumberErrorText ??
-                      CardNumberFormField.defaultErrorText,
-              textStyle: widget.cardNumberTextStyle ??
-                  CardNumberFormField.defaultTextStyle,
-              onSaved: (text) => widget.card.number = text,
-              decoration: widget.cardNumberDecoration ??
-                  CardNumberFormField.defaultDecoration,
+    var cardExpiry = "MM/YY";
+    if (_validationModel.expMonth != null) {
+      cardExpiry = "${_validationModel.expMonth}/${_validationModel.expYear ?? 'YY'}";
+    }
+
+    return SingleChildScrollView(
+      child:
+          Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: CreditCard(
+            cardNumber: _validationModel.number ?? "",
+            cardExpiry: cardExpiry,
+            cvv: _validationModel.cvc ?? "",
+            frontBackground: CardBackgrounds.black,
+            backBackground: CardBackgrounds.white,
+            showBackSide: cvcHasFocus,
+            showShadow: true,
+          ),
+        ),
+        Form(
+          key: widget.formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  margin: const EdgeInsets.only(top: 16),
+                  child: CardNumberFormField(
+                    initialValue: _validationModel.number ?? widget.card.number,
+                    onChanged: (number) {
+                      setState(() {
+                        _validationModel.number = number;
+                      });
+                    },
+                    validator: (text) => _validationModel.validateNumber()
+                        ? null
+                        : widget.cardNumberErrorText ?? CardNumberFormField.defaultErrorText,
+                    textStyle: widget.cardNumberTextStyle ?? CardNumberFormField.defaultTextStyle,
+                    onSaved: (text) => widget.card.number = text,
+                    decoration: widget.cardNumberDecoration ?? CardNumberFormField.defaultDecoration,
+                  ),
+                ),
+                Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    margin: const EdgeInsets.only(top: 8),
+                    child: CardExpiryFormField(
+                      initialMonth: _validationModel.expMonth ?? widget.card.expMonth,
+                      initialYear: _validationModel.expYear ?? widget.card.expYear,
+                      onChanged: (int month, int year) {
+                        setState(() {
+                          _validationModel.expMonth = month;
+                          _validationModel.expYear = year;
+                        });
+                      },
+                      onSaved: (int month, int year) {
+                        widget.card.expMonth = month;
+                        widget.card.expYear = year;
+                      },
+                      validator: (text) => _validationModel.validateDate()
+                          ? null
+                          : widget.cardExpiryErrorText ?? CardExpiryFormField.defaultErrorText,
+                      textStyle: widget.cardExpiryTextStyle ?? CardExpiryFormField.defaultTextStyle,
+                      decoration: widget.cardExpiryDecoration ?? CardExpiryFormField.defaultDecoration,
+                    )),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  margin: const EdgeInsets.only(top: 8),
+                  child: FocusScope(
+                    skipTraversal: false,
+                    onFocusChange: (value) => setState(() => this.cvcHasFocus = value),
+                    child: CardCvcFormField(
+                      initialValue: _validationModel.cvc ?? widget.card.cvc,
+                      onChanged: (text) => setState(() => _validationModel.cvc = text),
+                      onSaved: (text) => widget.card.cvc = text,
+                      validator: (text) => _validationModel.validateCVC()
+                          ? null
+                          : widget.cardCvcErrorText ?? CardCvcFormField.defaultErrorText,
+                      textStyle: widget.cardCvcTextStyle ?? CardCvcFormField.defaultTextStyle,
+                      decoration: widget.cardCvcDecoration ?? CardCvcFormField.defaultDecoration,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(top: 8),
-              child: CardExpiryFormField(
-                initialMonth: _validationModel.expMonth ?? widget.card.expMonth,
-                initialYear: _validationModel.expYear ?? widget.card.expYear,
-                onChanged: (int month, int year) {
-                  _validationModel.expMonth = month;
-                  _validationModel.expYear = year;
-                },
-                onSaved: (int month, int year) {
-                  widget.card.expMonth = month;
-                  widget.card.expYear = year;
-                },
-                validator: (text) => _validationModel.validateDate()
-                    ? null
-                    : widget.cardExpiryErrorText ??
-                        CardExpiryFormField.defaultErrorText,
-                textStyle: widget.cardExpiryTextStyle ??
-                    CardExpiryFormField.defaultTextStyle,
-                decoration: widget.cardExpiryDecoration ??
-                    CardExpiryFormField.defaultDecoration,
-              )),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            margin: const EdgeInsets.only(top: 8),
-            child: CardCvcFormField(
-              initialValue: _validationModel.cvc ?? widget.card.cvc,
-              onChanged: (text) => _validationModel.cvc = text,
-              onSaved: (text) => widget.card.cvc = text,
-              validator: (text) => _validationModel.validateCVC()
-                  ? null
-                  : widget.cardCvcErrorText ??
-                      CardCvcFormField.defaultErrorText,
-              textStyle:
-                  widget.cardCvcTextStyle ?? CardCvcFormField.defaultTextStyle,
-              decoration: widget.cardCvcDecoration ??
-                  CardCvcFormField.defaultDecoration,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 }

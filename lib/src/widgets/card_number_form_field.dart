@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 /// Form field to edit a credit card number, with validation.
-class CardNumberFormField extends StatelessWidget {
-  const CardNumberFormField(
+class CardNumberFormField extends StatefulWidget {
+  CardNumberFormField(
       {Key key,
       this.initialValue,
       @required this.onSaved,
-      @required this.onChanged,
       @required this.validator,
+      this.onChanged,
       this.decoration = defaultDecoration,
-      this.textStyle = defaultTextStyle})
+      this.textStyle = defaultTextStyle,
+      this.textEditingController})
       : super(key: key);
 
   final void Function(String) onSaved;
@@ -19,6 +20,7 @@ class CardNumberFormField extends StatelessWidget {
   final String initialValue;
   final InputDecoration decoration;
   final TextStyle textStyle;
+  final TextEditingController textEditingController;
 
   static const defaultLabelText = 'Card number';
   static const defaultHintText = 'xxxx xxxx xxxx xxxx';
@@ -32,20 +34,26 @@ class CardNumberFormField extends StatelessWidget {
   static const defaultTextStyle = TextStyle(color: Colors.black);
 
   @override
+  _CardNumberFormFieldState createState() => _CardNumberFormFieldState();
+}
+
+class _CardNumberFormFieldState extends State<CardNumberFormField> {
+  final maskFormatter = MaskTextInputFormatter(mask: '#### #### #### ####');
+
+  @override
   Widget build(BuildContext context) {
-    var maskFormatter = MaskTextInputFormatter(mask: '#### #### #### ####');
     return Container(
       child: TextFormField(
-        initialValue: initialValue,
-//        controller: controller,
+        initialValue: widget.initialValue,
+        controller: widget.textEditingController,
         inputFormatters: [maskFormatter],
         autofocus: true,
         autovalidate: false,
-        onSaved: onSaved,
-        validator: validator,
-        onChanged: onChanged,
-        decoration: decoration,
-        style: textStyle,
+        onSaved: widget.onSaved,
+        validator: widget.validator,
+        onChanged: widget.onChanged,
+        decoration: widget.decoration,
+        style: widget.textStyle,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),

@@ -1,10 +1,10 @@
-import 'package:app/locator.dart';
 import 'package:app/ui/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
+import 'locator.dart';
 import 'network/network_service.dart';
 
 class PaymentMethodsScreen extends StatelessWidget {
@@ -25,7 +25,7 @@ class PaymentMethodsScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          // ignore: deprecated_member_use
+                          // ignore: deprecated_member_use_from_same_package
                           AddPaymentMethod.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
               if (added == true) await paymentMethods.refresh();
             },

@@ -1,5 +1,9 @@
 # Stripe SDK Changelog
 
+## 2.6.0
+
+* Add visual indicators for card type in CardForm
+
 ## 2.5.3
 
 * Add focus handling for CardForm.

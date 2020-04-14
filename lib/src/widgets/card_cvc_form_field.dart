@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 /// Form field to edit a credit card CVC code, with validation
-class CardCvcFormField extends StatelessWidget {
+class CardCvcFormField extends StatefulWidget {
   CardCvcFormField(
       {Key key,
       this.initialValue,
@@ -26,18 +26,24 @@ class CardCvcFormField extends StatelessWidget {
   static const defaultTextStyle = TextStyle(color: Colors.black);
 
   @override
+  _CardCvcFormFieldState createState() => _CardCvcFormFieldState();
+}
+
+class _CardCvcFormFieldState extends State<CardCvcFormField> {
+  final maskFormatter = MaskTextInputFormatter(mask: '####');
+
+  @override
   Widget build(BuildContext context) {
-    var maskFormatter = MaskTextInputFormatter(mask: '####');
 
     return Container(
       child: TextFormField(
-        initialValue: initialValue,
+        initialValue: widget.initialValue,
         inputFormatters: [maskFormatter],
-        onChanged: onChanged,
-        validator: validator,
-        onSaved: onSaved,
-        style: textStyle,
-        decoration: decoration,
+        onChanged: widget.onChanged,
+        validator: widget.validator,
+        onSaved: widget.onSaved,
+        style: widget.textStyle,
+        decoration: widget.decoration,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.done,
       ),
