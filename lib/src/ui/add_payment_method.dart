@@ -6,7 +6,14 @@ import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'progress_bar.dart';
 
-typedef Future<Map> CreateSetupIntent(String paymentMethodId);
+class SetupIntentResponse {
+  final String status;
+  final String clientSecret;
+
+  SetupIntentResponse(this.status, this.clientSecret);
+}
+
+typedef Future<SetupIntentResponse> CreateSetupIntent(String paymentMethodId);
 
 class AddPaymentMethod extends StatefulWidget {
   final Stripe _stripe;
@@ -60,13 +67,13 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                   if (this.widget._useSetupIntent) {
                     final createSetupIntentResponse = await this.widget._createSetupIntent(paymentMethod['id']);
 
-                    if (createSetupIntentResponse['status'] == 'succeeded') {
+                    if (createSetupIntentResponse.status == 'succeeded') {
                       hideProgressDialog(context);
                       Navigator.pop(context, true);
                       return;
                     }
                     var setupIntent =
-                        await this.widget._stripe.confirmSetupIntent(createSetupIntentResponse['client_secret']);
+                        await this.widget._stripe.confirmSetupIntent(createSetupIntentResponse.clientSecret);
 
                     hideProgressDialog(context);
                     if (setupIntent['status'] == 'succeeded') {
