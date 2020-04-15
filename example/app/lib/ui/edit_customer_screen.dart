@@ -13,11 +13,8 @@ class EditCustomerScreen extends StatelessWidget {
         title: Text('Customer'),
       ),
       body: FutureProvider.value(
-        value: session.retrieveCurrentCustomer().then((value) {
-          debugPrint(value.toString());
-          return CustomerData(
-              value['id'], value['email'], value['description'], value['shipping']['name'], value['shipping']['phone']);
-        }),
+        value: session.retrieveCurrentCustomer().then((value) => CustomerData(
+            value['id'], value['email'], value['description'], value['shipping']['name'], value['shipping']['phone'])),
         child: EditCustomerForm(),
       ),
     );
