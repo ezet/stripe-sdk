@@ -33,7 +33,7 @@ exampleConfirmPayment() async {
   final paymentIntentClientSecret =
       await _createPaymentIntent(Stripe.instance.getReturnUrlForSca());
   final paymentIntent = await Stripe.instance
-      .confirmPayment(paymentIntentClientSecret, "pm-paymentMethod");
+      .confirmPayment(paymentIntentClientSecret, paymentMethodId: "pm-paymentMethod");
   if (paymentIntent['status'] == 'success') {
     // Confirmation successfull
   } else {

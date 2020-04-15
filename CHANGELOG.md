@@ -5,6 +5,7 @@
 
 * Use explicit type for CreateSetupIntent return.
 * Added optional [nextAction] parameter to Stripe.authenticatePayment.
+* Make [paymentMethodId]  of `Stripe.confirmPayment` optional 
 
 * Fix bug which prevented ephemeral keys from refreshing correctly.
 

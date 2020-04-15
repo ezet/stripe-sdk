@@ -39,17 +39,24 @@ class NetworkService {
   }
 
   Future<SetupIntentResponse> createSetupIntent(String paymentMethod) async {
-    final params = {'payment_method': paymentMethod};
+    final params = {'paymentMethod': paymentMethod};
     final response = await _call('createSetupIntent', params);
     return SetupIntentResponse(response['status'], response['clientSecret']);
   }
 
-  Future<Map> createPaymentIntent(int amount, String paymentMethod) {
+  Future<Map> createAutomaticPaymentIntent(int amount) {
     final params = {
       "amount": amount,
-      "paymentMethodId": paymentMethod,
+    };
+    return _call('createAutomaticPaymentIntent', params);
+  }
+
+  Future<Map> createManualPaymentIntent(int amount, String paymentMethod) {
+    final params = {
+      "amount": amount,
+      "paymentMethod": paymentMethod,
       "returnUrl": Stripe.instance.getReturnUrlForSca()
     };
-    return _call('performCharge', params);
+    return _call('createManualPaymentIntent', params);
   }
 }
