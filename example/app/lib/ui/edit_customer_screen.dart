@@ -7,7 +7,6 @@ class EditCustomerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final session = CustomerSession.instance;
-    final customer = session.retrieveCurrentCustomer();
     return Scaffold(
       appBar: AppBar(
         title: Text('Customer'),
