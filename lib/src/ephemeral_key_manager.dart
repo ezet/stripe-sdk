@@ -111,7 +111,7 @@ class EphemeralKeyManager {
     }
 
     DateTime now = DateTime.now();
-    final diff = _ephemeralKey.expiresAt.difference(now).abs();
+    final diff = _ephemeralKey.expiresAt.difference(now);
     return diff.inSeconds < timeBufferInSeconds;
   }
 }
