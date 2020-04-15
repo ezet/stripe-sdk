@@ -2,6 +2,7 @@ import 'package:app/network/network_service.dart';
 import 'package:app/payment_methods.dart';
 import 'package:app/setup_intent_with_sca.dart';
 import 'package:app/ui/edit_customer_screen.dart';
+import 'package:app/ui/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
@@ -63,8 +64,8 @@ class HomeScreen extends StatelessWidget {
         ),
         Card(
           child: ListTile(
-            title: Text('Payment Intent with SCA/3DS'),
-            onTap: () async => await this.createPaymentMethodWithoutSetupIntent(context),
+            title: Text('Payments'),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen())),
           ),
         ),
       ]),
@@ -78,7 +79,7 @@ class HomeScreen extends StatelessWidget {
     final added = await Navigator.push(
         context,
         MaterialPageRoute(
-            // ignore: deprecated_member_use
+          // ignore: deprecated_member_use
             builder: (context) => AddPaymentMethod.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
     if (added == true) await paymentMethods.refresh();
   }
@@ -91,8 +92,8 @@ class HomeScreen extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                // ignore: deprecated_member_use
-                AddPaymentMethod.withoutSetupIntent(customerSession: customerSession, stripe: stripe)));
+            // ignore: deprecated_member_use
+            AddPaymentMethod.withoutSetupIntent(customerSession: customerSession, stripe: stripe)));
     if (added == true) await paymentMethods.refresh();
   }
 
@@ -101,5 +102,4 @@ class HomeScreen extends StatelessWidget {
     final session = CustomerSession.instance;
   }
 
-  void editCustomerDetails(BuildContext context) async {}
 }

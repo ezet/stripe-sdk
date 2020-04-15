@@ -20,21 +20,18 @@ class SetupIntentWithScaScreen extends StatelessWidget {
           Card(
               child: ListTile(
             title: Text('pm_card_authenticationRequiredOnSetup'),
-            onTap: () async => await completeSetupIntent(
-                context, 'pm_card_authenticationRequiredOnSetup'),
+            onTap: () async => await completeSetupIntent(context, 'pm_card_authenticationRequiredOnSetup'),
           )),
           Card(
               child: ListTile(
             title: Text('pm_card_authenticationRequired'),
-            onTap: () async => await completeSetupIntent(
-                context, 'pm_card_authenticationRequired'),
+            onTap: () async => await completeSetupIntent(context, 'pm_card_authenticationRequired'),
           )),
           Card(
               child: ListTile(
-            title: Text(
-                'pm_card_authenticationRequiredChargeDeclinedInsufficientFunds'),
-            onTap: () async => await completeSetupIntent(context,
-                'pm_card_authenticationRequiredChargeDeclinedInsufficientFunds'),
+            title: Text('pm_card_authenticationRequiredChargeDeclinedInsufficientFunds'),
+            onTap: () async =>
+                await completeSetupIntent(context, 'pm_card_authenticationRequiredChargeDeclinedInsufficientFunds'),
           )),
         ],
       ),
@@ -45,18 +42,15 @@ class SetupIntentWithScaScreen extends StatelessWidget {
     final Stripe stripe = Stripe.instance;
     final NetworkService networkService = locator.get();
     showProgressDialog(context);
-    final createSetupIntentResponse =
-        await networkService.createSetupIntent(paymentMethod);
-    final PaymentMethodsData paymentMethods =
-        Provider.of(context, listen: false);
-    if (createSetupIntentResponse['status'] == 'succeeded') {
+    final createSetupIntentResponse = await networkService.createSetupIntent(paymentMethod);
+    final PaymentMethodsData paymentMethods = Provider.of(context, listen: false);
+    if (createSetupIntentResponse.status == 'succeeded') {
       hideProgressDialog(context);
       Navigator.pop(context, true);
       await paymentMethods.refresh();
       return;
     }
-    var setupIntent = await stripe
-        .confirmSetupIntent(createSetupIntentResponse['client_secret']);
+    var setupIntent = await stripe.confirmSetupIntent(createSetupIntentResponse.clientSecret);
     hideProgressDialog(context);
 
     if (setupIntent['status'] == 'succeeded') {

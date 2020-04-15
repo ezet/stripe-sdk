@@ -2,18 +2,19 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 class NetworkService {
   final CloudFunctions _cf;
 
   NetworkService(this._cf);
 
-  NetworkService.defaultInstance()
-      : _cf = CloudFunctions(region: "europe-west2");
+  NetworkService.defaultInstance() : _cf = CloudFunctions(region: "europe-west2");
 
   /// Utility function to call a Firebase Function
   Future<T> _call<T>(String name, Map params) async {
-    log('GlappenService._call, $name, $params');
+    log('NetworkService._call, $name, $params');
     final HttpsCallable callable = _cf.getHttpsCallable(
       functionName: name,
     );
@@ -31,15 +32,24 @@ class NetworkService {
 
   /// Get a stripe ephemeral key
   Future<String> getEphemeralKey(String apiVersion) async {
-    final result =
-        await _call('getEphemeralKey', {'stripeversion': apiVersion});
+    final result = await _call('getEphemeralKey', {'stripeVersion': apiVersion});
     final key = result['key'];
     final jsonKey = json.encode(key);
     return jsonKey;
   }
 
-  Future<Map> createSetupIntent(String paymentMethod) {
+  Future<SetupIntentResponse> createSetupIntent(String paymentMethod) async {
     final params = {'payment_method': paymentMethod};
-    return _call('createSetupIntent', params);
+    final response = await _call('createSetupIntent', params);
+    return SetupIntentResponse(response['status'], response['clientSecret']);
+  }
+
+  Future<Map> createPaymentIntent(int amount, String paymentMethod) {
+    final params = {
+      "amount": amount,
+      "paymentMethodId": paymentMethod,
+      "returnUrl": Stripe.instance.getReturnUrlForSca()
+    };
+    return _call('performCharge', params);
   }
 }
