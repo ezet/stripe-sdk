@@ -1,5 +1,15 @@
 # Stripe SDK Changelog
 
+
+## 2.6.1
+
+* Use explicit type for CreateSetupIntent return.
+* Added optional [nextAction] parameter to Stripe.authenticatePayment.
+
+* Fix bug which prevented ephemeral keys from refreshing correctly.
+
+
+
 ## 2.6.0
 
 * Add visual card widget in CardForm
