@@ -1,6 +1,7 @@
 import 'package:app/network/network_service.dart';
 import 'package:app/payment_methods.dart';
 import 'package:app/setup_intent_with_sca.dart';
+import 'package:app/ui/edit_customer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
@@ -16,7 +17,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final app = MaterialApp(title: "Stripe SDK Showcase", home: HomeScreen());
+    final app = MaterialApp(title: "Stripe SDK Demo", home: HomeScreen());
 
     return ChangeNotifierProvider(create: (_) => PaymentMethodsData(), child: app);
   }
@@ -30,6 +31,12 @@ class HomeScreen extends StatelessWidget {
         title: Text('Stripe SDK Demo'),
       ),
       body: ListView(children: <Widget>[
+        Card(
+          child: ListTile(
+            title: Text('Customer Details'),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditCustomerScreen())),
+          ),
+        ),
         Card(
           child: ListTile(
             title: Text('List Payment Methods'),
@@ -59,14 +66,14 @@ class HomeScreen extends StatelessWidget {
             title: Text('Payment Intent with SCA/3DS'),
             onTap: () async => await this.createPaymentMethodWithoutSetupIntent(context),
           ),
-        )
+        ),
       ]),
     );
   }
 
   void createPaymentMethodWithSetupIntent(BuildContext context) async {
     final networkService = locator.get<NetworkService>();
-    final stripe = locator.get<Stripe>();
+    final stripe = Stripe.instance;
     final paymentMethods = Provider.of<PaymentMethodsData>(context, listen: false);
     final added = await Navigator.push(
         context,
@@ -77,7 +84,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   void createPaymentMethodWithoutSetupIntent(BuildContext context) async {
-    final stripe = locator.get<Stripe>();
+    final stripe = Stripe.instance;
     final customerSession = locator.get<CustomerSession>();
     final paymentMethods = Provider.of<PaymentMethodsData>(context, listen: false);
     final added = await Navigator.push(
@@ -88,4 +95,11 @@ class HomeScreen extends StatelessWidget {
                 AddPaymentMethod.withoutSetupIntent(customerSession: customerSession, stripe: stripe)));
     if (added == true) await paymentMethods.refresh();
   }
+
+  void cratePaymentIntent(BuildContext context) async {
+    final stripe = Stripe.instance;
+    final session = CustomerSession.instance;
+  }
+
+  void editCustomerDetails(BuildContext context) async {}
 }

@@ -11,7 +11,7 @@ class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PaymentMethodsData paymentMethods = Provider.of(context);
-    final Stripe stripe = locator.get();
+    final Stripe stripe = Stripe.instance;
     final NetworkService networkService = locator.get();
 
     return Scaffold(

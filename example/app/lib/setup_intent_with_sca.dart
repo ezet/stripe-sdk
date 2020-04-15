@@ -42,7 +42,7 @@ class SetupIntentWithScaScreen extends StatelessWidget {
   }
 
   completeSetupIntent(BuildContext context, String paymentMethod) async {
-    final Stripe stripe = locator.get();
+    final Stripe stripe = Stripe.instance;
     final NetworkService networkService = locator.get();
     showProgressDialog(context);
     final createSetupIntentResponse =

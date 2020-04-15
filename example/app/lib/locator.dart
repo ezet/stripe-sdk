@@ -11,11 +11,8 @@ const _returnUrl = "stripesdk://demo.stripesdk.ezet.io";
 GetIt locator = GetIt();
 
 void initializeLocator() {
-  locator.registerLazySingleton(
-      () => CloudFunctions(region: _cloudFunctionsRegion));
+  locator.registerLazySingleton(() => CloudFunctions(region: _cloudFunctionsRegion));
   locator.registerLazySingleton(() => NetworkService(locator.get()));
-  locator.registerSingleton(
-      Stripe(_stripePublishableKey, returnUrlForSca: _returnUrl));
-  locator.registerSingleton(CustomerSession(
-      (version) => locator.get<NetworkService>().getEphemeralKey(version)));
+  Stripe.init(_stripePublishableKey, returnUrlForSca: _returnUrl);
+  locator.registerSingleton(CustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version)));
 }
