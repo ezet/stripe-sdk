@@ -20,7 +20,10 @@ with a working example backend.
 * Manage customer information.
 * Create all types of Stripe tokens.
 * Forms, widgets and utilities to use directly, or create your own UI!
-* EXPERIMENTAL: Managed UI flow for adding payment methods with SCA (SetupIntent).
+
+### Experimental
+
+* Managed UI flow for adding payment methods with SCA (using SetupIntent).
 
 ### Supported APIs
 
@@ -32,11 +35,9 @@ with a working example backend.
 - Sources
 - Tokens
 
-
 ### Planned features
 
 - Offer managed UI flow for checkout
-
 
 ## Demo application
 
