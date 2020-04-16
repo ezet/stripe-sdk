@@ -4,10 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../stripe.dart';
-import '../utils/annotations.dart';
 import 'models.dart';
 
-@experimental
+@Deprecated("experimental")
 class CheckoutScreen extends StatelessWidget {
   final Iterable<CheckoutItem> items;
   final Iterable<PaymentMethod> paymentMethods;
@@ -59,7 +58,7 @@ class CheckoutScreen extends StatelessWidget {
   }
 }
 
-@experimental
+@Deprecated("experimental")
 class CheckoutItemList extends StatelessWidget {
   final List<CheckoutItem> items;
   final int total;

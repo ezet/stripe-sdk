@@ -1,18 +1,19 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 
 import '../customer_session.dart';
 import '../model/card.dart';
 import '../stripe.dart';
-import '../utils/annotations.dart';
 import '../widgets/card_form.dart';
 import 'models.dart';
 import 'progress_bar.dart';
 
+@Deprecated("experimental")
 typedef Future<IntentResponse> CreateSetupIntent(String paymentMethodId);
 
-@experimental
+@Deprecated("experimental")
 class AddPaymentMethod extends StatefulWidget {
   final Stripe _stripe;
   final CustomerSession _customerSession;

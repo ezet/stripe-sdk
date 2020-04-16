@@ -1,6 +1,4 @@
-import '../utils/annotations.dart';
-
-@experimental
+@Deprecated("experimental")
 class IntentResponse {
   final String status;
   final String clientSecret;
