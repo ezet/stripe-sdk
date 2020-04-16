@@ -14,7 +14,7 @@ import 'progress_bar.dart';
 typedef Future<IntentResponse> CreateSetupIntent(String paymentMethodId);
 
 @Deprecated("experimental")
-class AddPaymentMethod extends StatefulWidget {
+class AddPaymentMethodScreen extends StatefulWidget {
   final Stripe _stripe;
   final CustomerSession _customerSession;
   final CreateSetupIntent _createSetupIntent;
@@ -22,28 +22,28 @@ class AddPaymentMethod extends StatefulWidget {
 
   final CardForm form;
 
-  AddPaymentMethod.withSetupIntent(this._createSetupIntent, {Stripe stripe, this.form})
+  AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent, {Stripe stripe, this.form})
       : _useSetupIntent = true,
         _customerSession = null,
         _stripe = stripe ?? Stripe.instance;
 
-  AddPaymentMethod.withoutSetupIntent({CustomerSession customerSession, Stripe stripe, this.form})
+  AddPaymentMethodScreen.withoutSetupIntent({CustomerSession customerSession, Stripe stripe, this.form})
       : _useSetupIntent = false,
         _createSetupIntent = null,
         _stripe = stripe ?? Stripe.instance,
         _customerSession = customerSession ?? CustomerSession.instance;
 
   @override
-  _AddPaymentMethodState createState() => _AddPaymentMethodState(this.form ?? CardForm());
+  _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState(this.form ?? CardForm());
 }
 
 // ignore: deprecated_member_use_from_same_package
-class _AddPaymentMethodState extends State<AddPaymentMethod> {
+class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   final StripeCard _cardData;
   final GlobalKey<FormState> _formKey;
   final CardForm _form;
 
-  _AddPaymentMethodState(this._form)
+  _AddPaymentMethodScreenState(this._form)
       : _cardData = _form.card,
         _formKey = _form.formKey;
 
