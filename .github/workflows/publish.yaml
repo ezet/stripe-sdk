@@ -7,14 +7,10 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v2
+      - name: Dart and Flutter Package Publisher
+        uses: k-paxian/dart-package-publisher@v1.2
         with:
-          java-version: '12.x'
-      - uses: subosito/flutter-action@v1
-        with:
-          flutter-version: '1.9.1+hotfix.6'
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter pub publish
-
+          skiptests: true
+          dryRunOnly: true
+          credentialJson: {{ secrets.CREDENTIAL_JSON }}
