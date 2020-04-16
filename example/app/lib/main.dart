@@ -79,6 +79,7 @@ class HomeScreen extends StatelessWidget {
     final added = await Navigator.push(
         context,
         MaterialPageRoute(
+            // ignore: deprecated_member_use
             builder: (context) => AddPaymentMethod.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
     if (added == true) await paymentMethods.refresh();
   }
@@ -91,6 +92,7 @@ class HomeScreen extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) =>
+                // ignore: deprecated_member_use
                 AddPaymentMethod.withoutSetupIntent(customerSession: customerSession, stripe: stripe)));
     if (added == true) await paymentMethods.refresh();
   }

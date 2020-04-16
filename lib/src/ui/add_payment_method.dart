@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:flutter/material.dart';
 
@@ -11,6 +10,7 @@ import 'models.dart';
 import 'progress_bar.dart';
 
 @Deprecated("experimental")
+// ignore: deprecated_member_use_from_same_package
 typedef Future<IntentResponse> CreateSetupIntent(String paymentMethodId);
 
 @Deprecated("experimental")
@@ -37,6 +37,7 @@ class AddPaymentMethod extends StatefulWidget {
   _AddPaymentMethodState createState() => _AddPaymentMethodState(this.form ?? CardForm());
 }
 
+// ignore: deprecated_member_use_from_same_package
 class _AddPaymentMethodState extends State<AddPaymentMethod> {
   final StripeCard _cardData;
   final GlobalKey<FormState> _formKey;
