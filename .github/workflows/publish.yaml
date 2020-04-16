@@ -1,6 +1,10 @@
 name: Publish
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - workflow
 
 jobs:
   build:
@@ -13,4 +17,4 @@ jobs:
         with:
           skiptests: true
           dryRunOnly: true
-          credentialJson: {{ secrets.CREDENTIAL_JSON }}
+          credentialJson: ${{ secrets.CREDENTIAL_JSON }}
