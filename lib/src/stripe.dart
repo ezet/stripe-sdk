@@ -68,7 +68,7 @@ class Stripe {
     return "$_returnUrlForSca?requestId=$requestId";
   }
 
-  @Deprecated("Use `Stripe.instance.getReturnUrlForSca()` instead. Due for removal in version 3.0.")
+  @Deprecated("Use `Stripe.instance.getReturnUrlForSca()` instead. Will be removed in v3.0.")
   static String getReturnUrl() {
     final requestId = Random.secure().nextInt(99999999);
     return "stripesdk://3ds.stripesdk.io?requestId=$requestId";

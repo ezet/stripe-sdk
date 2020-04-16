@@ -1,7 +1,7 @@
 # Stripe SDK Changelog
 
 
-## 2.6.1
+## 2.7.0
 
 * Use explicit type for CreateSetupIntent return.
 * Added optional [nextAction] parameter to Stripe.authenticatePayment.
@@ -9,7 +9,10 @@
 
 * Fix bug which prevented ephemeral keys from refreshing correctly.
 
-
+### Example
+* Add [Customer Details]
+* Add [Payments] with automatic and manual confirmation
+  * 
 
 ## 2.6.0
 

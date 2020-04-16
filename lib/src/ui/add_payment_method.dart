@@ -1,20 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
-import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
+import '../customer_session.dart';
+import '../model/card.dart';
+import '../stripe.dart';
+import '../utils/annotations.dart';
+import '../widgets/card_form.dart';
+import 'models.dart';
 import 'progress_bar.dart';
 
-class SetupIntentResponse {
-  final String status;
-  final String clientSecret;
+typedef Future<IntentResponse> CreateSetupIntent(String paymentMethodId);
 
-  SetupIntentResponse(this.status, this.clientSecret);
-}
-
-typedef Future<SetupIntentResponse> CreateSetupIntent(String paymentMethodId);
-
+@experimental
 class AddPaymentMethod extends StatefulWidget {
   final Stripe _stripe;
   final CustomerSession _customerSession;
@@ -23,13 +21,11 @@ class AddPaymentMethod extends StatefulWidget {
 
   final CardForm form;
 
-  @Deprecated("Experimental. API can change.")
   AddPaymentMethod.withSetupIntent(this._createSetupIntent, {Stripe stripe, this.form})
       : _useSetupIntent = true,
         _customerSession = null,
         _stripe = stripe ?? Stripe.instance;
 
-  @Deprecated("Experimental. API can change.")
   AddPaymentMethod.withoutSetupIntent({CustomerSession customerSession, Stripe stripe, this.form})
       : _useSetupIntent = false,
         _createSetupIntent = null,

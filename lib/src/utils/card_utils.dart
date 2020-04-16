@@ -1,4 +1,4 @@
-import 'package:stripe_sdk/src/model/model_utils.dart';
+import '../model/model_utils.dart';
 
 bool validateExpiryDate(int month, int year) {
   final now = DateTime.now();
