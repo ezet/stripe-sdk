@@ -15,6 +15,6 @@ jobs:
       - name: Dart and Flutter Package Publisher
         uses: k-paxian/dart-package-publisher@v1.2
         with:
-          skiptests: true
+          skiptests: false
           dryRunOnly: false
           credentialJson: ${{ secrets.CREDENTIAL_JSON }}
