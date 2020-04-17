@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stripe_sdk/src/ui/payment_methods.dart';
 
 import '../stripe.dart';
 import 'models.dart';
+import 'payment_methods_screen.dart';
 
 @Deprecated("experimental")
 class CheckoutScreen extends StatelessWidget {

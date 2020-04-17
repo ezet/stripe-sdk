@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
@@ -112,49 +113,55 @@ class PaymentMethodsList extends StatelessWidget {
   Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
     final stripeSession = CustomerSession.instance;
     if (listData.isEmpty) {
+      // TODO: loading indicator
       return ListView();
     } else {
       return ListView.builder(
           itemCount: listData.length,
           itemBuilder: (BuildContext context, int index) {
             final card = listData[index];
-            return ListTile(
-              onLongPress: () async {
-                await showDialog(
-                    context: rootContext,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Delete card"),
-                        content: Text("Do you want to delete this card?"),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text("No"),
-                            onPressed: () => Navigator.pop(rootContext),
-                          ),
-                          FlatButton(
-                              child: Text("Yes"),
-                              onPressed: () async {
-                                Navigator.pop(rootContext);
-                                showProgressDialog(rootContext);
+            return Slidable(
+              actionPane: SlidableDrawerActionPane(),
+              child: Card(
+                child: ListTile(
+                  onLongPress: () async {
+                    await showDialog(
+                        context: rootContext,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Delete card"),
+                            content: Text("Do you want to delete this card?"),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("No"),
+                                onPressed: () => Navigator.pop(rootContext),
+                              ),
+                              FlatButton(
+                                  child: Text("Yes"),
+                                  onPressed: () async {
+                                    Navigator.pop(rootContext);
+                                    showProgressDialog(rootContext);
 
-                                final result = await stripeSession.detachPaymentMethod(card.id);
-                                hideProgressDialog(rootContext);
-                                if (result != null) {
-                                  await paymentMethods.refresh();
-                                  Scaffold.of(rootContext).showSnackBar(SnackBar(
-                                    content: Text('Payment method successfully deleted.'),
-                                  ));
-                                }
-                              })
-                        ],
-                      );
-                    });
-              },
+                                    final result = await stripeSession.detachPaymentMethod(card.id);
+                                    hideProgressDialog(rootContext);
+                                    if (result != null) {
+                                      await paymentMethods.refresh();
+                                      Scaffold.of(rootContext).showSnackBar(SnackBar(
+                                        content: Text('Payment method successfully deleted.'),
+                                      ));
+                                    }
+                                  })
+                            ],
+                          );
+                        });
+                  },
 //              onTap: () => defaultPaymentMethod.set(card.id),
-              subtitle: Text(card.last4),
-              title: Text(card.brand),
-              leading: Icon(Icons.credit_card),
+                  subtitle: Text(card.last4),
+                  title: Text(card.brand),
+                  leading: Icon(Icons.credit_card),
 //              trailing: card.id == defaultPaymentMethod.paymentMethodId ? Icon(Icons.check_circle) : null,
+                ),
+              ),
             );
           });
     }

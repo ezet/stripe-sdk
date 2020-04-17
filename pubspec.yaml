@@ -15,6 +15,7 @@ dependencies:
   uni_links: ^0.2.0
   mask_text_input_formatter: ^1.0.6
   awesome_card: ^1.1.0
+  flutter_slidable: ^0.5.4
 
 dev_dependencies:
   flutter_test:

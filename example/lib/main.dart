@@ -1,13 +1,13 @@
-import 'package:app/network/network_service.dart';
-import 'package:app/setup_intent_with_sca.dart';
-import 'package:app/ui/edit_customer_screen.dart';
-import 'package:app/ui/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'locator.dart';
+import 'network/network_service.dart';
+import 'setup_intent_with_sca.dart';
+import 'ui/edit_customer_screen.dart';
+import 'ui/payment_screen.dart';
 
 void main() {
   initializeLocator();
