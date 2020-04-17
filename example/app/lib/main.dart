@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = MaterialApp(title: "Stripe SDK Demo", home: HomeScreen());
 
-    return ChangeNotifierProvider(create: (_) => PaymentMethodsData(), child: app);
+    return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
 }
 
@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Card(
           child: ListTile(
-            title: Text('List Payment Methods'),
+            title: Text('Payment Methods Screen'),
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentMethodsScreen())),
           ),
         ),
@@ -75,7 +75,7 @@ class HomeScreen extends StatelessWidget {
   void createPaymentMethodWithSetupIntent(BuildContext context) async {
     final networkService = locator.get<NetworkService>();
     final stripe = Stripe.instance;
-    final paymentMethods = Provider.of<PaymentMethodsData>(context, listen: false);
+    final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
     final added = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -87,7 +87,7 @@ class HomeScreen extends StatelessWidget {
   void createPaymentMethodWithoutSetupIntent(BuildContext context) async {
     final stripe = Stripe.instance;
     final customerSession = locator.get<CustomerSession>();
-    final paymentMethods = Provider.of<PaymentMethodsData>(context, listen: false);
+    final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
     final added = await Navigator.push(
         context,
         MaterialPageRoute(

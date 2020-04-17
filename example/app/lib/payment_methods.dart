@@ -5,18 +5,28 @@ import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'locator.dart';
-import 'network/network_service.dart';
 
 class PaymentMethodsScreen extends StatelessWidget {
+  final String title;
+  final CreateSetupIntent createSetupIntent;
+  final PaymentMethodStore paymentMethodsData;
+
+  PaymentMethodsScreen(
+      {Key key,
+      @required this.createSetupIntent,
+      this.title = "Payment Methods",
+      PaymentMethodStore paymentMethodsData})
+      : this.paymentMethodsData = paymentMethodsData ?? PaymentMethodStore(),
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final PaymentMethodsData paymentMethods = Provider.of(context);
+    final PaymentMethodStore paymentMethods = Provider.of(context);
     final Stripe stripe = Stripe.instance;
-    final NetworkService networkService = locator.get();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Payment methods"),
+        title: Text(title),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -26,7 +36,7 @@ class PaymentMethodsScreen extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) =>
                           // ignore: deprecated_member_use
-                          AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
+                          AddPaymentMethodScreen.withSetupIntent(createSetupIntent, stripe: stripe)));
               if (added == true) await paymentMethods.refresh();
             },
           )
@@ -45,11 +55,10 @@ class PaymentMethod {
   PaymentMethod(this.id, this.last4, this.brand);
 }
 
-class PaymentMethodsData extends ChangeNotifier {
-  List<PaymentMethod> paymentMethods = List();
-  Future<List<PaymentMethod>> paymentMethodsFuture;
+class PaymentMethodStore extends ChangeNotifier {
+  final List<PaymentMethod> paymentMethods = List();
 
-  PaymentMethodsData() {
+  PaymentMethodStore() {
     refresh();
   }
 
@@ -59,11 +68,10 @@ class PaymentMethodsData extends ChangeNotifier {
 
     return paymentMethodFuture.then((value) {
       final List listData = value['data'] ?? List<PaymentMethod>();
-      if (listData.isEmpty) {
-        paymentMethods = List();
-      } else {
-        paymentMethods =
-            listData.map((item) => PaymentMethod(item['id'], item['card']['last4'], item['card']['brand'])).toList();
+      paymentMethods.clear;
+      if (listData.isNotEmpty) {
+        paymentMethods.addAll(
+            listData.map((item) => PaymentMethod(item['id'], item['card']['last4'], item['card']['brand'])).toList());
       }
       notifyListeners();
     });
@@ -73,7 +81,7 @@ class PaymentMethodsData extends ChangeNotifier {
 class PaymentMethodsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final paymentMethods = Provider.of<PaymentMethodsData>(context);
+    final paymentMethods = Provider.of<PaymentMethodStore>(context);
     final listData = paymentMethods.paymentMethods;
 //    final defaultPaymentMethod = Provider.of<DefaultPaymentMethod>(context);
     if (listData == null) {
@@ -85,7 +93,7 @@ class PaymentMethodsList extends StatelessWidget {
     );
   }
 
-  Widget buildListView(List<PaymentMethod> listData, PaymentMethodsData paymentMethods, BuildContext rootContext) {
+  Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
     final stripeSession = locator.get<CustomerSession>();
     if (listData.isEmpty) {
       return ListView();

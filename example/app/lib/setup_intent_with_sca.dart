@@ -43,7 +43,7 @@ class SetupIntentWithScaScreen extends StatelessWidget {
     final NetworkService networkService = locator.get();
     showProgressDialog(context);
     final createSetupIntentResponse = await networkService.createSetupIntent(paymentMethod);
-    final PaymentMethodsData paymentMethods = Provider.of(context, listen: false);
+    final PaymentMethodStore paymentMethods = Provider.of(context, listen: false);
     if (createSetupIntentResponse.status == 'succeeded') {
       hideProgressDialog(context);
       Navigator.pop(context, true);

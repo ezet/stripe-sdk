@@ -52,7 +52,7 @@ class PaymentScreen extends StatelessWidget {
       )
     ];
     final NetworkService networkService = locator.get();
-    final app.PaymentMethodsData paymentMethods = Provider.of(context, listen: false);
+    final app.PaymentMethodStore paymentMethods = Provider.of(context, listen: false);
     return Navigator.push(context, MaterialPageRoute(builder: (context) {
       var items2 = items;
       return CheckoutScreen(
