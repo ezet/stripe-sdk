@@ -1,5 +1,4 @@
 import 'package:app/network/network_service.dart';
-import 'package:app/payment_methods.dart';
 import 'package:app/setup_intent_with_sca.dart';
 import 'package:app/ui/edit_customer_screen.dart';
 import 'package:app/ui/payment_screen.dart';
@@ -19,8 +18,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = MaterialApp(title: "Stripe SDK Demo", home: HomeScreen());
+    return app;
 
-    return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
+//    return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
 }
 
@@ -41,7 +41,11 @@ class HomeScreen extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text('Payment Methods Screen'),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentMethodsScreen())),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        PaymentMethodsScreen(createSetupIntent: locator.get<NetworkService>().createSetupIntent))),
           ),
         ),
         Card(
@@ -80,7 +84,8 @@ class HomeScreen extends StatelessWidget {
         context,
         MaterialPageRoute(
             // ignore: deprecated_member_use
-            builder: (context) => AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
+            builder: (context) =>
+                AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
     if (added == true) await paymentMethods.refresh();
   }
 

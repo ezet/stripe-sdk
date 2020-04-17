@@ -1,32 +1,38 @@
-import 'package:app/ui/progress_bar.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
-import 'locator.dart';
+import 'progress_bar.dart';
 
-class PaymentMethodsScreen extends StatelessWidget {
+class PaymentMethodsScreen extends StatefulWidget {
   final String title;
   final CreateSetupIntent createSetupIntent;
-  final PaymentMethodStore paymentMethodsData;
+  final PaymentMethodStore paymentMethodStore;
 
   PaymentMethodsScreen(
       {Key key,
       @required this.createSetupIntent,
       this.title = "Payment Methods",
       PaymentMethodStore paymentMethodsData})
-      : this.paymentMethodsData = paymentMethodsData ?? PaymentMethodStore(),
+      : this.paymentMethodStore = paymentMethodsData ?? PaymentMethodStore(),
         super(key: key);
 
   @override
+  _PaymentMethodsScreenState createState() => _PaymentMethodsScreenState();
+}
+
+class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
+  List<PaymentMethod> paymentMethods;
+
+  @override
   Widget build(BuildContext context) {
-    final PaymentMethodStore paymentMethods = Provider.of(context);
     final Stripe stripe = Stripe.instance;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -35,15 +41,22 @@ class PaymentMethodsScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          // ignore: deprecated_member_use
-                          AddPaymentMethodScreen.withSetupIntent(createSetupIntent, stripe: stripe)));
-              if (added == true) await paymentMethods.refresh();
+                          // ignore: deprecated_member_use_from_same_package
+                          AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent, stripe: stripe)));
+              if (added == true) await widget.paymentMethodStore.refresh();
             },
           )
         ],
       ),
-      body: PaymentMethodsList(),
+      body: PaymentMethodsList(
+        paymentMethodStore: widget.paymentMethodStore,
+      ),
     );
+  }
+
+  @override
+  void initState() {
+    widget.paymentMethodStore.addListener(() => setState(() => this.paymentMethods = widget.paymentMethodStore.paymentMethods));
   }
 }
 
@@ -63,7 +76,7 @@ class PaymentMethodStore extends ChangeNotifier {
   }
 
   Future<void> refresh() {
-    final session = locator.get<CustomerSession>();
+    final session = CustomerSession.instance;
     final paymentMethodFuture = session.listPaymentMethods();
 
     return paymentMethodFuture.then((value) {
@@ -79,22 +92,25 @@ class PaymentMethodStore extends ChangeNotifier {
 }
 
 class PaymentMethodsList extends StatelessWidget {
+  final PaymentMethodStore paymentMethodStore;
+
+  const PaymentMethodsList({Key key, @required this.paymentMethodStore}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final paymentMethods = Provider.of<PaymentMethodStore>(context);
-    final listData = paymentMethods.paymentMethods;
+    final listData = paymentMethodStore.paymentMethods;
 //    final defaultPaymentMethod = Provider.of<DefaultPaymentMethod>(context);
     if (listData == null) {
       return Center(child: CircularProgressIndicator());
     }
     return RefreshIndicator(
-      onRefresh: () => paymentMethods.refresh(),
-      child: buildListView(listData, paymentMethods, context),
+      onRefresh: () => paymentMethodStore.refresh(),
+      child: buildListView(listData, paymentMethodStore, context),
     );
   }
 
   Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
-    final stripeSession = locator.get<CustomerSession>();
+    final stripeSession = CustomerSession.instance;
     if (listData.isEmpty) {
       return ListView();
     } else {

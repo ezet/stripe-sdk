@@ -1,8 +1,6 @@
 import 'package:app/network/network_service.dart';
-import 'package:app/payment_methods.dart' as app;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
@@ -52,13 +50,12 @@ class PaymentScreen extends StatelessWidget {
       )
     ];
     final NetworkService networkService = locator.get();
-    final app.PaymentMethodStore paymentMethods = Provider.of(context, listen: false);
     return Navigator.push(context, MaterialPageRoute(builder: (context) {
       var items2 = items;
       return CheckoutScreen(
         title: "Checkout",
         items: items2,
-        paymentMethods: paymentMethods.paymentMethods.map((e) => PaymentMethod(e.id, e.last4)),
+//        paymentMethods: paymentMethods.paymentMethods.map((e) => PaymentMethod(e.id, e.last4)),
         createPaymentIntent: networkService.createAutomaticPaymentIntent,
       );
     }));

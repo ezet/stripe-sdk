@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stripe_sdk/src/ui/payment_methods.dart';
 
 import '../stripe.dart';
 import 'models.dart';
@@ -13,13 +14,14 @@ class CheckoutScreen extends StatelessWidget {
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
 
-  const CheckoutScreen(
+  CheckoutScreen(
       {Key key,
       @required this.title,
       @required this.items,
-      @required this.paymentMethods,
+      PaymentMethodStore paymentMethods,
       @required this.createPaymentIntent})
-      : super(key: key);
+      : this.paymentMethods = paymentMethods ?? PaymentMethodStore().paymentMethods,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -108,13 +110,6 @@ class CheckoutItem extends StatelessWidget {
       trailing: Text((price / 100).toStringAsFixed(2)),
     );
   }
-}
-
-class PaymentMethod {
-  final String id;
-  final String last4;
-
-  PaymentMethod(this.id, this.last4);
 }
 
 class PaymentMethodSelector extends StatelessWidget {
