@@ -1,6 +1,10 @@
 name: Publish
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - workflow
 
 jobs:
   build:
@@ -11,6 +15,6 @@ jobs:
       - name: Dart and Flutter Package Publisher
         uses: k-paxian/dart-package-publisher@v1.2
         with:
-          skiptests: true
-          dryRunOnly: true
-          credentialJson: {{ secrets.CREDENTIAL_JSON }}
+          skiptests: false
+          dryRunOnly: false
+          credentialJson: ${{ secrets.CREDENTIAL_JSON }}
