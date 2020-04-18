@@ -57,9 +57,11 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
 
   @override
   void initState() {
+    super.initState();
     widget.paymentMethodStore
         .addListener(() => setState(() => this.paymentMethods = widget.paymentMethodStore.paymentMethods));
   }
+
 }
 
 class PaymentMethod {
