@@ -1,5 +1,23 @@
 # Stripe SDK Changelog
 
+## 2.8.0
+* Expose StripeApiException and StripeApiError
+* Deprecated Stripe.handlePaymentIntent. Contact me if you used this.
+* Deprecated Stripe.handleSetupIntent. Contact me if you used this.
+* Deprecated `CustomerSession()` constructor. 3.0 will enforce the singleton pattern.
+
+* Removed experimental parameter `nextAction` from `Stripe.authenticatePayment()`
+* Added `Stripe.authenticatePaymentWithNextAction()`
+
+### Experimental: PaymentMethodsScreen
+A complete UI screen that lets a user view, delete and add stripe payment methods.
+
+* Slide right to display delete option
+* Press `+` to open `AddPaymentMethodScreen`
+
+### Example
+
+* Re-organize example code
 
 ## 2.7.0
 
@@ -12,7 +30,6 @@
 ### Example
 * Add [Customer Details]
 * Add [Payments] with automatic and manual confirmation
-  * 
 
 ## 2.6.0
 

@@ -221,8 +221,16 @@ Feel free to use these features but be aware that breaking changes might be intr
 
 ### Add Payment Method
 
-Use `AddPaymentMethod.withSetupIntent(...)` to launch a managed UI flow for adding a payment method.
+Use `AddPaymentMethodScreen.withSetupIntent(...)` to launch a managed UI flow for adding a payment method.
 This will also handle SCA if required. 
+
+### Payment Methods
+
+`PaymentMethodsScreen` offers a prebuilt UI that can:
+
+* List all current payment methods
+* Add new payment methods, using setup intents
+* Delete existing payment methods
 
 ## Additional examples
 
