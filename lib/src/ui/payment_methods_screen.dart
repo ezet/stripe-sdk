@@ -12,11 +12,10 @@ class PaymentMethodsScreen extends StatefulWidget {
   final CreateSetupIntent createSetupIntent;
   final PaymentMethodStore paymentMethodStore;
 
-  PaymentMethodsScreen(
-      {Key key,
-      @required this.createSetupIntent,
-      this.title = "Payment Methods",
-      PaymentMethodStore paymentMethodsData})
+  PaymentMethodsScreen({Key key,
+    @required this.createSetupIntent,
+    this.title = "Payment Methods",
+    PaymentMethodStore paymentMethodsData})
       : this.paymentMethodStore = paymentMethodsData ?? PaymentMethodStore(),
         super(key: key);
 
@@ -42,8 +41,8 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          // ignore: deprecated_member_use_from_same_package
-                          AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent, stripe: stripe)));
+                      // ignore: deprecated_member_use_from_same_package
+                      AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent, stripe: stripe)));
               if (added == true) await widget.paymentMethodStore.refresh();
             },
           )
@@ -57,7 +56,8 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
 
   @override
   void initState() {
-    widget.paymentMethodStore.addListener(() => setState(() => this.paymentMethods = widget.paymentMethodStore.paymentMethods));
+    widget.paymentMethodStore
+        .addListener(() => setState(() => this.paymentMethods = widget.paymentMethodStore.paymentMethods));
   }
 }
 
@@ -122,22 +122,33 @@ class PaymentMethodsList extends StatelessWidget {
             final card = listData[index];
             return Slidable(
               actionPane: SlidableDrawerActionPane(),
-              child: Card(
-                child: ListTile(
-                  onLongPress: () async {
+              actions: <Widget>[
+//                IconSlideAction(
+//                  icon: Icons.edit,
+//                  color: Theme.of(context).accentColor  ,
+////                  color: Colors.green,
+//                  caption: "Edit",
+//                ),
+                IconSlideAction(
+                  caption: "Delete",
+                  icon: Icons.delete_forever,
+//                  color: Theme.of(context).errorColor,
+                  color: Colors.red,
+//                  closeOnTap: true,
+                  onTap: () async {
                     await showDialog(
                         context: rootContext,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text("Delete card"),
-                            content: Text("Do you want to delete this card?"),
+                            title: Text("Delete payment method"),
+                            content: Text("Are you sure you want to delete this payment method?"),
                             actions: <Widget>[
                               FlatButton(
-                                child: Text("No"),
+                                child: Text("Cancel"),
                                 onPressed: () => Navigator.pop(rootContext),
                               ),
                               FlatButton(
-                                  child: Text("Yes"),
+                                  child: Text("Delete"),
                                   onPressed: () async {
                                     Navigator.pop(rootContext);
                                     showProgressDialog(rootContext);
@@ -155,9 +166,14 @@ class PaymentMethodsList extends StatelessWidget {
                           );
                         });
                   },
+                )
+              ],
+              child: Card(
+                child: ListTile(
+                  onLongPress: () async {},
 //              onTap: () => defaultPaymentMethod.set(card.id),
-                  subtitle: Text(card.last4),
-                  title: Text(card.brand),
+                  subtitle: Text("**** **** **** ${card.last4}"),
+                  title: Text(card.brand.toUpperCase()),
                   leading: Icon(Icons.credit_card),
 //              trailing: card.id == defaultPaymentMethod.paymentMethodId ? Icon(Icons.check_circle) : null,
                 ),
