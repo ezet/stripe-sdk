@@ -3,6 +3,7 @@ import 'dart:convert' show json;
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
 import 'stripe_error.dart';
 
 const String DEFAULT_API_VERSION = "2019-08-14 ";
@@ -84,15 +85,15 @@ class StripeApiHandler {
     try {
       resp = json.decode(response.body);
     } catch (error) {
-      final stripeError = StripeAPIError(requestId,
-          {StripeAPIError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
-      throw StripeAPIException(stripeError);
+      final stripeError = StripeApiError(requestId,
+          {StripeApiError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
+      throw StripeApiException(stripeError);
     }
 
     if (statusCode < 200 || statusCode >= 300) {
       final Map<String, dynamic> errBody = resp[FIELD_ERROR];
-      final stripeError = StripeAPIError(requestId, errBody);
-      throw StripeAPIException(stripeError);
+      final stripeError = StripeApiError(requestId, errBody);
+      throw StripeApiException(stripeError);
     } else {
       return resp;
     }

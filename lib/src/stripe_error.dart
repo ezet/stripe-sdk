@@ -1,6 +1,6 @@
 import 'model/stripe_json_utils.dart';
 
-class StripeAPIError {
+class StripeApiError {
   static const String FIELD_TYPE = "type";
   static const String FIELD_CHARGE = "charge";
   static const String FIELD_CODE = "code";
@@ -18,7 +18,7 @@ class StripeAPIError {
   final String message;
   final String param;
 
-  StripeAPIError._internal(
+  StripeApiError._internal(
     this.requestId,
     this.type,
     this.charge,
@@ -29,7 +29,7 @@ class StripeAPIError {
     this.param,
   );
 
-  factory StripeAPIError(String requestId, Map<String, dynamic> json) {
+  factory StripeApiError(String requestId, Map<String, dynamic> json) {
     final type = optString(json, FIELD_TYPE);
     final charge = optString(json, FIELD_CHARGE);
     final code = optString(json, FIELD_CODE);
@@ -38,7 +38,7 @@ class StripeAPIError {
     final message = optString(json, FIELD_MESSAGE);
     final param = optString(json, FIELD_PARAM);
 
-    return StripeAPIError._internal(
+    return StripeApiError._internal(
       requestId,
       type,
       charge,
@@ -51,12 +51,12 @@ class StripeAPIError {
   }
 }
 
-class StripeAPIException implements Exception {
-  final StripeAPIError error;
+class StripeApiException implements Exception {
+  final StripeApiError error;
   final String requestId;
   final String message;
 
-  StripeAPIException(this.error)
+  StripeApiException(this.error)
       : requestId = error.requestId,
         message = error.message;
 
