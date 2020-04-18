@@ -73,6 +73,7 @@ class Stripe {
   Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret) async {
     final intent = await api.confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca()});
     if (intent['status'] == 'requires_action') {
+      // ignore: deprecated_member_use_from_same_package
       return handleSetupIntent(intent['next_action']);
     } else {
       return Future.value(intent);
@@ -85,6 +86,7 @@ class Stripe {
     final intent = await api
         .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethod});
     if (intent['status'] == 'requires_action') {
+      // ignore: deprecated_member_use_from_same_package
       return handleSetupIntent(intent['next_action']);
     } else {
       return Future.value(intent);
@@ -108,20 +110,26 @@ class Stripe {
   /// Authenticate a payment.
   /// Returns the PaymentIntent.
   /// https://stripe.com/docs/payments/payment-intents/android-manual
-  ///
-  /// If [nextAction] is provided, used instead of retrieving the payment intent from Stripe.
-  /// [nextAction] should be an exact copy of the [next_action] property returned from Stripe.
-  Future<Map<String, dynamic>> authenticatePayment(String paymentIntentClientSecret, {Map nextAction}) async {
-    if (nextAction == null) {
-      final paymentIntent = await api.retrievePaymentIntent(paymentIntentClientSecret);
-      if (paymentIntent['status'] != "requires_action") return Future.value(paymentIntent);
-      nextAction = paymentIntent['next_action'];
-    }
+  Future<Map<String, dynamic>> authenticatePayment(String paymentIntentClientSecret) async {
+    final paymentIntent = await api.retrievePaymentIntent(paymentIntentClientSecret);
+    if (paymentIntent['status'] != "requires_action") return Future.value(paymentIntent);
+    final nextAction = paymentIntent['next_action'];
+    // ignore: deprecated_member_use_from_same_package
+    return handlePaymentIntent(nextAction);
+  }
+
+  /// Authenticate a payment with [nextAction].
+  /// This is similar to [authenticatePayment] but is slightly more efficient,
+  /// as it avoids the request to the Stripe API to retrieve the action.
+  /// To use this, return the complete [nextAction] from your server.
+  Future<Map<String, dynamic>> authenticatePaymentWithNextAction(Map nextAction) async {
+    // ignore: deprecated_member_use_from_same_package
     return handlePaymentIntent(nextAction);
   }
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe PaymentIntent when the user completes or cancels authentication.
+  @Deprecated("Use [authenticatePaymentWithNextAction] instead. Will be removed in v3.0.")
   Future<Map<String, dynamic>> handlePaymentIntent(Map action) async {
     return _authenticateIntent(
         action,
@@ -132,6 +140,8 @@ class Stripe {
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe SetupIntent when the user completes or cancels authentication.
+  @Deprecated(
+      "This will be removed in v3.0. Contact the maintainer if you use this and want it to remain public.")
   Future<Map<String, dynamic>> handleSetupIntent(Map action) async {
     return _authenticateIntent(
         action,
