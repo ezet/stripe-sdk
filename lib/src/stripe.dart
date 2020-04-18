@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:stripe_sdk/src/customer_session.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'ephemeral_key_manager.dart';
 import 'stripe_api.dart';
 
 class Stripe {
@@ -55,10 +53,6 @@ class Stripe {
   static void init(String publishableKey, {String stripeAccount, String returnUrlForSca}) {
     _instance = Stripe(publishableKey, stripeAccount: stripeAccount, returnUrlForSca: returnUrlForSca);
     StripeApi.init(publishableKey, stripeAccount: stripeAccount);
-  }
-
-  CustomerSession getCustomerSession(EphemeralKeyProvider provider) {
-    return CustomerSession(provider);
   }
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
