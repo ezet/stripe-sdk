@@ -9,9 +9,18 @@ import 'setup_intent_with_sca.dart';
 import 'ui/edit_customer_screen.dart';
 import 'ui/payment_screen.dart';
 
+const _stripePublishableKey = 'pk_test_FlC2pf2JCTgKLcgG0aScSQmp00XqfTJL8s';
+const _returnUrl = "stripesdk://demo.stripesdk.ezet.io";
+
 void main() {
   initializeLocator();
+  _initializeStripe();
   runApp(MyApp());
+}
+
+void _initializeStripe() {
+  Stripe.init(_stripePublishableKey, returnUrlForSca: _returnUrl);
+  CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
 }
 
 class MyApp extends StatelessWidget {
@@ -78,27 +87,24 @@ class HomeScreen extends StatelessWidget {
 
   void createPaymentMethodWithSetupIntent(BuildContext context) async {
     final networkService = locator.get<NetworkService>();
-    final stripe = Stripe.instance;
     final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
     final added = await Navigator.push(
         context,
         MaterialPageRoute(
             // ignore: deprecated_member_use
             builder: (context) =>
-                AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent, stripe: stripe)));
+                AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent)));
     if (added == true) await paymentMethods.refresh();
   }
 
   void createPaymentMethodWithoutSetupIntent(BuildContext context) async {
-    final stripe = Stripe.instance;
-    final customerSession = locator.get<CustomerSession>();
     final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
     final added = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
                 // ignore: deprecated_member_use
-                AddPaymentMethodScreen.withoutSetupIntent(customerSession: customerSession, stripe: stripe)));
+                AddPaymentMethodScreen.withoutSetupIntent()));
     if (added == true) await paymentMethods.refresh();
   }
 }
