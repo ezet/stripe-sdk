@@ -9,11 +9,11 @@ import '../widgets/card_form.dart';
 import 'models.dart';
 import 'progress_bar.dart';
 
-@Deprecated("experimental")
+@Deprecated("Experimental")
 // ignore: deprecated_member_use_from_same_package
 typedef Future<IntentResponse> CreateSetupIntent(String paymentMethodId);
 
-@Deprecated("experimental")
+@Deprecated("Experimental")
 class AddPaymentMethodScreen extends StatefulWidget {
   final Stripe _stripe;
   final CustomerSession _customerSession;

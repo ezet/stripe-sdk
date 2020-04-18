@@ -7,7 +7,7 @@ import '../stripe.dart';
 import 'models.dart';
 import 'payment_methods_screen.dart';
 
-@Deprecated("experimental")
+@Deprecated("Experimental")
 class CheckoutScreen extends StatelessWidget {
   final Iterable<CheckoutItem> items;
   final Iterable<PaymentMethod> paymentMethods;
@@ -60,7 +60,7 @@ class CheckoutScreen extends StatelessWidget {
   }
 }
 
-@Deprecated("experimental")
+@Deprecated("Experimental")
 class CheckoutItemList extends StatelessWidget {
   final List<CheckoutItem> items;
   final int total;

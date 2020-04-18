@@ -7,6 +7,7 @@ import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'progress_bar.dart';
 
+@Deprecated("Experimental")
 class PaymentMethodsScreen extends StatefulWidget {
   final String title;
   final CreateSetupIntent createSetupIntent;

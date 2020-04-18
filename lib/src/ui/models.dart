@@ -1,4 +1,4 @@
-@Deprecated("experimental")
+@Deprecated("Experimental")
 class IntentResponse {
   final String status;
   final String clientSecret;
