@@ -41,7 +41,8 @@ class CustomerSession {
   /// Get the current customer session
   static CustomerSession get instance {
     if (_instance == null) {
-      throw Exception("Attempted to get singleton instance of CustomerSession without initialization.");
+      throw Exception("Attempted to get instance of CustomerSession before initialization."
+          "Please initialize a new session using [CustomerSession.initCustomerSession() first.]");
     }
     return _instance;
   }

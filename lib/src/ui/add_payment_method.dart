@@ -16,7 +16,7 @@ typedef Future<IntentResponse> CreateSetupIntent(String paymentMethodId);
 @Deprecated("Experimental")
 class AddPaymentMethodScreen extends StatefulWidget {
   final Stripe _stripe;
-  final CustomerSession _customerSession;
+  final CustomerSession _customerSession = CustomerSession.instance;
   final CreateSetupIntent _createSetupIntent;
   final bool _useSetupIntent;
 
@@ -24,14 +24,12 @@ class AddPaymentMethodScreen extends StatefulWidget {
 
   AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent, {Stripe stripe, this.form})
       : _useSetupIntent = true,
-        _customerSession = null,
         _stripe = stripe ?? Stripe.instance;
 
-  AddPaymentMethodScreen.withoutSetupIntent({CustomerSession customerSession, Stripe stripe, this.form})
+  AddPaymentMethodScreen.withoutSetupIntent({Stripe stripe, this.form})
       : _useSetupIntent = false,
         _createSetupIntent = null,
-        _stripe = stripe ?? Stripe.instance,
-        _customerSession = customerSession ?? CustomerSession.instance;
+        _stripe = stripe ?? Stripe.instance;
 
   @override
   _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState(this.form ?? CardForm());
