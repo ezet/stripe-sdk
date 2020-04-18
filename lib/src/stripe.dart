@@ -101,6 +101,7 @@ class Stripe {
     if (paymentMethodId != null) data["payment_method"] = paymentMethodId;
     final paymentIntent = await api.confirmPaymentIntent(paymentIntentClientSecret, data: data);
     if (paymentIntent['status'] == "requires_action") {
+      // ignore: deprecated_member_use_from_same_package
       return handlePaymentIntent(paymentIntent['next_action']);
     } else {
       return Future.value(paymentIntent);

@@ -24,6 +24,7 @@ class PaymentMethodsScreen extends StatefulWidget {
   _PaymentMethodsScreenState createState() => _PaymentMethodsScreenState();
 }
 
+// ignore: deprecated_member_use_from_same_package
 class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
   List<PaymentMethod> paymentMethods;
 

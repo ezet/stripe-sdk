@@ -28,6 +28,7 @@ class CustomerSession {
   static void initCustomerSession(EphemeralKeyProvider provider,
       {String apiVersion = DEFAULT_API_VERSION, String stripeAccount}) {
     if (_instance == null) {
+      // ignore: deprecated_member_use_from_same_package
       _instance = CustomerSession(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
     }
   }

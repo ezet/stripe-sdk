@@ -54,6 +54,7 @@ class HomeScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
+                        // ignore: deprecated_member_use
                         PaymentMethodsScreen(createSetupIntent: locator.get<NetworkService>().createSetupIntent))),
           ),
         ),
@@ -91,8 +92,8 @@ class HomeScreen extends StatelessWidget {
     final added = await Navigator.push(
         context,
         MaterialPageRoute(
-            // ignore: deprecated_member_use
             builder: (context) =>
+                // ignore: deprecated_member_use
                 AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent)));
     if (added == true) await paymentMethods.refresh();
   }

@@ -38,17 +38,21 @@ class NetworkService {
     return jsonKey;
   }
 
+  // ignore: deprecated_member_use
   Future<IntentResponse> createSetupIntent(String paymentMethod) async {
     final params = {'paymentMethod': paymentMethod};
     final response = await _call('createSetupIntent', params);
+    // ignore: deprecated_member_use
     return IntentResponse(response['status'], response['clientSecret']);
   }
 
+  // ignore: deprecated_member_use
   Future<IntentResponse> createAutomaticPaymentIntent(int amount) async {
     final params = {
       "amount": amount,
     };
     final response = await _call('createAutomaticPaymentIntent', params);
+    // ignore: deprecated_member_use
     return IntentResponse(response['status'], response['clientSecret']);
   }
 
