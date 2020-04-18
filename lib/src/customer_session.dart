@@ -25,11 +25,15 @@ class CustomerSession {
   }
 
   /// Initiate the customer session singleton instance.
+  /// If [prefetchKey] is true, fetch the ephemeral key immediately.
   static void initCustomerSession(EphemeralKeyProvider provider,
-      {String apiVersion = DEFAULT_API_VERSION, String stripeAccount}) {
+      {String apiVersion = DEFAULT_API_VERSION, String stripeAccount, prefetchKey = true}) {
     if (_instance == null) {
       // ignore: deprecated_member_use_from_same_package
       _instance = CustomerSession(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
+      if (prefetchKey) {
+        _instance._keyManager.retrieveEphemeralKey();
+      }
     }
   }
 

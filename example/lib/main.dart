@@ -14,18 +14,14 @@ const _returnUrl = "stripesdk://demo.stripesdk.ezet.io";
 
 void main() {
   initializeLocator();
-  _initializeStripe();
-  runApp(MyApp());
-}
-
-void _initializeStripe() {
   Stripe.init(_stripePublishableKey, returnUrlForSca: _returnUrl);
-  CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
     final app = MaterialApp(title: "Stripe SDK Demo", home: HomeScreen());
     return app;
 
