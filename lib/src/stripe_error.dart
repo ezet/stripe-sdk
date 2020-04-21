@@ -1,4 +1,4 @@
-import 'model/stripe_json_utils.dart';
+import 'util/stripe_json_utils.dart';
 
 class StripeApiError {
   static const String FIELD_TYPE = "type";

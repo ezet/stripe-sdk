@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../stripe.dart';
 import 'models.dart';
-import 'payment_methods_screen.dart';
+import 'screens/payment_methods_screen.dart';
 
 @Deprecated("Experimental")
 class CheckoutScreen extends StatelessWidget {

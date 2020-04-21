@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_sdk/src/ui/widgets/stripe_sdk.dart';
 
 import 'locator.dart';
 import 'network/network_service.dart';

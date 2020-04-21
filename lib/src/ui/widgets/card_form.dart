@@ -2,7 +2,7 @@ import 'package:awesome_card/credit_card.dart';
 import 'package:awesome_card/style/card_background.dart';
 import 'package:flutter/material.dart';
 
-import '../model/card.dart';
+import '../../models/card.dart';
 import 'card_cvc_form_field.dart';
 import 'card_expiry_form_field.dart';
 import 'card_number_form_field.dart';

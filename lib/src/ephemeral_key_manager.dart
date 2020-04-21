@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert' show json;
 
-import 'model/stripe_json_utils.dart';
 import 'stripe_api_handler.dart';
 import 'stripe_error.dart';
+import 'util/stripe_json_utils.dart';
 
 /// Function that takes a apiVersion and returns a Stripe ephemeral key response
 typedef Future<String> EphemeralKeyProvider(String apiVersion);

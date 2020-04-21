@@ -1,4 +1,4 @@
-import '../text_utils.dart';
+import '../util/stripe_text_utils.dart';
 
 class ModelUtils {
   /// Check to see whether the input string is a whole, positive number.

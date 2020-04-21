@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'model/card.dart';
+import 'models/card.dart';
 import 'stripe_api_handler.dart';
 
 typedef Future<Map<String, dynamic>> IntentProvider(Uri uri);

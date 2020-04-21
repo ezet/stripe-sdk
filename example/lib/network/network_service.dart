@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
-import 'package:stripe_sdk/stripe_sdk_ui.dart';
+import 'package:stripe_sdk/src/ui/widgets/stripe_sdk.dart';
+import 'package:stripe_sdk/src/ui/widgets/stripe_sdk_ui.dart';
 
 class NetworkService {
   final CloudFunctions _cf;

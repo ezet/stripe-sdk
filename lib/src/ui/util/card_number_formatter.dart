@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'card_utils.dart';
-import 'model/card.dart';
-import 'stripe_text_utils.dart';
+import '../../card_utils.dart';
+import '../../model/card.dart';
+import '../../stripe_text_utils.dart';
 
+@Deprecated("Not used by the library. Will be removed in 3.0.")
 class CardNumberFormatter extends TextInputFormatter {
   final ValueChanged<String> onCardBrandChanged;
   final VoidCallback onCardNumberComplete;
@@ -23,8 +24,7 @@ class CardNumberFormatter extends TextInputFormatter {
   }
 
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     if (oldValue.text == newValue.text) {
       return newValue;
     }
@@ -38,8 +38,7 @@ class CardNumberFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    List<String> cardParts =
-        separateCardNumberGroups(spacelessNumber, _cardBrand);
+    List<String> cardParts = separateCardNumberGroups(spacelessNumber, _cardBrand);
     String formattedNumber = '';
     for (int i = 0; i < cardParts.length; i++) {
       if (cardParts[i] == null) {
@@ -55,8 +54,7 @@ class CardNumberFormatter extends TextInputFormatter {
 
     TextSelection selection;
     if (newValue.selection.start >= formattedNumber.length - 1) {
-      selection = TextSelection.fromPosition(
-          TextPosition(offset: formattedNumber.length));
+      selection = TextSelection.fromPosition(TextPosition(offset: formattedNumber.length));
     } else {
       selection = newValue.selection;
     }
@@ -77,8 +75,7 @@ class CardNumberFormatter extends TextInputFormatter {
         onCardNumberComplete();
       }
     } else {
-      _isCardNumberValid =
-          computedValue.text != null && isValidCardNumber(computedValue.text);
+      _isCardNumberValid = computedValue.text != null && isValidCardNumber(computedValue.text);
       // Don't show errors if we aren't full-length.
       if (onShowError != null) {
         onShowError(false);

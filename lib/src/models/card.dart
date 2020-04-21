@@ -1,8 +1,6 @@
-import '../card_utils.dart';
-import '../stripe_network_utils.dart';
-import '../stripe_text_utils.dart';
-import '../utils/card_utils.dart';
-import 'model_utils.dart';
+import '../util/card_utils.dart';
+import '../util/model_utils.dart';
+import '../util/stripe_text_utils.dart';
 
 //enum CardType { UNKNOWN, AMERICAN_EXPRESS, DISCOVER, JCB, DINERS_CLUB, VISA, MASTERCARD, UNIONPAY }
 
@@ -310,6 +308,23 @@ class StripeCard {
       return StripeCard.FUNDING_PREPAID;
     } else {
       return StripeCard.FUNDING_UNKNOWN;
+    }
+  }
+
+  static void removeNullAndEmptyParams(Map<String, Object> mapToEdit) {
+// Remove all null values; they cause validation errors
+    final keys = mapToEdit.keys.toList(growable: false);
+    for (String key in keys) {
+      final value = mapToEdit[key];
+      if (value == null) {
+        mapToEdit.remove(key);
+      } else if (value is String) {
+        if (value.isEmpty) {
+          mapToEdit.remove(key);
+        }
+      } else if (value is Map) {
+        removeNullAndEmptyParams(value);
+      }
     }
   }
 }

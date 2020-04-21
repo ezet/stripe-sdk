@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../customer_session.dart';
-import '../model/card.dart';
-import '../stripe.dart';
+import '../../customer_session.dart';
+import '../../model/card.dart';
+import '../../stripe.dart';
+import '../models.dart';
+import '../progress_bar.dart';
 import '../widgets/card_form.dart';
-import 'models.dart';
-import 'progress_bar.dart';
 
 @Deprecated("Experimental")
 // ignore: deprecated_member_use_from_same_package

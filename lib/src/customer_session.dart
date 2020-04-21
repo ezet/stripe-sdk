@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'ephemeral_key_manager.dart';
 import 'stripe_api_handler.dart';
-import 'ui/payment_methods_screen.dart';
+import 'ui/screens/payment_methods_screen.dart';
 
 class CustomerSession {
   static final int keyRefreshBufferInSeconds = 30;

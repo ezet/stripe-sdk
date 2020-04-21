@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
-import 'model/card.dart';
+import '../models/card.dart';
+import 'model_utils.dart';
 import 'stripe_text_utils.dart';
-import 'text_utils.dart';
 
 const int LENGTH_COMMON_CARD = 16;
 const int LENGTH_AMERICAN_EXPRESS = 15;
@@ -62,50 +60,6 @@ bool isValidLuhnNumber(String cardNumber) {
   return valid;
 }
 
-Widget getCardTypeIcon(String cardNumber) {
-  Widget icon;
-  switch (getPossibleCardType(cardNumber)) {
-    case StripeCard.VISA:
-      icon = Image.asset(
-        'icons/visa.png',
-        height: 48,
-        width: 48,
-      );
-      break;
-
-    case StripeCard.AMERICAN_EXPRESS:
-      icon = Image.asset(
-        'icons/amex.png',
-        height: 48,
-        width: 48,
-      );
-      break;
-
-    case StripeCard.MASTERCARD:
-      icon = Image.asset(
-        'icons/mastercard.png',
-        height: 48,
-        width: 48,
-      );
-      break;
-
-    case StripeCard.DISCOVER:
-      icon = Image.asset(
-        'icons/discover.png',
-        height: 48,
-        width: 48,
-      );
-      break;
-
-    default:
-      icon = Container(
-        height: 48,
-        width: 48,
-      );
-      break;
-  }
-  return icon;
-}
 
 /// Checks to see whether the input number is of the correct length, given the assumed brand of
 /// the card. This function does not perform a Luhn check.
@@ -171,4 +125,30 @@ int getLengthForBrand(String cardBrand) {
   } else {
     return MAX_LENGTH_COMMON;
   }
+}
+
+bool validateExpiryDate(int month, int year) {
+  final now = DateTime.now();
+  if (!validateExpMonth(month)) {
+    return false;
+  }
+  if (!validateExpYear(year)) {
+    return false;
+  }
+  return !ModelUtils.hasMonthPassed(year, month, now);
+}
+
+/// Checks whether or not the {@link #expMonth} field is valid.
+///
+/// @return {@code true} if valid, {@code false} otherwise.
+bool validateExpMonth(int month) {
+  return month != null && month >= 1 && month <= 12;
+}
+
+/// Checks whether or not the {@link #expYear} field is valid.
+///
+/// @return {@code true} if valid, {@code false} otherwise.
+bool validateExpYear(int year) {
+  final now = DateTime.now();
+  return year != null && !ModelUtils.hasYearPassed(year, now);
 }
