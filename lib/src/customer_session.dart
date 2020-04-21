@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'ephemeral_key_manager.dart';
 import 'stripe_api_handler.dart';
+import 'ui/payment_methods_screen.dart';
 
 class CustomerSession {
   static final int keyRefreshBufferInSeconds = 30;
@@ -13,8 +14,10 @@ class CustomerSession {
   final EphemeralKeyManager _keyManager;
   final String apiVersion;
 
+  final PaymentMethodStore paymentMethodStore = PaymentMethodStore();
+
   /// Create a new CustomerSession instance. Use this if you prefer to manage your own instances.
-  @Deprecated("Use [initCustomerSession]. Will be removed in v3.0.")
+  @Deprecated("Use [initCustomerSession]. Will be removed in v3.0")
   CustomerSession(EphemeralKeyProvider provider, {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
       : _keyManager = EphemeralKeyManager(provider, keyRefreshBufferInSeconds),
         _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {

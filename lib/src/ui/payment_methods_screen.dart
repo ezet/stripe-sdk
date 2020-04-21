@@ -24,8 +24,7 @@ class PaymentMethodsScreen extends StatefulWidget {
   _PaymentMethodsScreenState createState() => _PaymentMethodsScreenState();
 }
 
-// ignore: deprecated_member_use_from_same_package
-class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
+class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> { // ignore: deprecated_member_use_from_same_package
   List<PaymentMethod> paymentMethods;
 
   @override
@@ -80,9 +79,12 @@ class PaymentMethodStore extends ChangeNotifier {
     refresh();
   }
 
+  void clear() {
+    paymentMethods.clear();
+  }
+
   Future<void> refresh() {
-    final session = CustomerSession.instance;
-    final paymentMethodFuture = session.listPaymentMethods();
+    final paymentMethodFuture = CustomerSession.instance.listPaymentMethods();
 
     return paymentMethodFuture.then((value) {
       final List listData = value['data'] ?? List<PaymentMethod>();
