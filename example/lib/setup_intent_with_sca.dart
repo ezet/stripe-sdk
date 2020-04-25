@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'locator.dart';
 import 'network/network_service.dart';
@@ -40,15 +42,20 @@ class SetupIntentWithScaScreen extends StatelessWidget {
     final Stripe stripe = Stripe.instance;
     final NetworkService networkService = locator.get();
     showProgressDialog(context);
+
     final createSetupIntentResponse = await networkService.createSetupIntent();
+    var setupIntent =
+        await stripe.confirmSetupIntentWithPaymentMethod(createSetupIntentResponse.clientSecret, paymentMethod);
 
-    var setupIntent = await stripe.confirmSetupIntentWithPaymentMethod(createSetupIntentResponse.clientSecret, paymentMethod);
+    PaymentMethodStore store = Provider.of(context);
     hideProgressDialog(context);
-
     if (setupIntent['status'] == 'succeeded') {
-      Navigator.pop(context, true);
-//      await paymentMethods.refresh();
+
+      // A new method has been attached, so refresh the store.
+      // ignore: unawaited_futures
+      store.refresh();
     } else {
+      // Something went wrong
       Navigator.pop(context, false);
     }
   }
