@@ -40,15 +40,9 @@ class SetupIntentWithScaScreen extends StatelessWidget {
     final Stripe stripe = Stripe.instance;
     final NetworkService networkService = locator.get();
     showProgressDialog(context);
-    final createSetupIntentResponse = await networkService.createSetupIntent(paymentMethod);
-//    final PaymentMethodStore paymentMethods = Provider.of(context, listen: false);
-    if (createSetupIntentResponse.status == 'succeeded') {
-      hideProgressDialog(context);
-      Navigator.pop(context, true);
-//      await paymentMethods.refresh();
-      return;
-    }
-    var setupIntent = await stripe.confirmSetupIntent(createSetupIntentResponse.clientSecret);
+    final createSetupIntentResponse = await networkService.createSetupIntent();
+
+    var setupIntent = await stripe.confirmSetupIntentWithPaymentMethod(createSetupIntentResponse.clientSecret, paymentMethod);
     hideProgressDialog(context);
 
     if (setupIntent['status'] == 'succeeded') {

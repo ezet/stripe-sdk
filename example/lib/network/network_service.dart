@@ -39,9 +39,8 @@ class NetworkService {
   }
 
   // ignore: deprecated_member_use
-  Future<IntentResponse> createSetupIntent(String paymentMethod) async {
-    final params = {'paymentMethod': paymentMethod};
-    final response = await _call('createSetupIntent', params);
+  Future<IntentResponse> createSetupIntent() async {
+    final response = await _call('createSetupIntent', {});
     // ignore: deprecated_member_use
     return IntentResponse(response['status'], response['clientSecret']);
   }
