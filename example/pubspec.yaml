@@ -30,7 +30,7 @@ dependencies:
 
     #  stripe_sdk: ^2.3.0
   stripe_sdk:
-    path: ./../
+    path: ../
   # git:
   # url: git://github.com/ezet/stripe_sdk.git
 

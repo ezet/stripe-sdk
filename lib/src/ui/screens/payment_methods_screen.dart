@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 
-import '../add_payment_method.dart';
 import '../progress_bar.dart';
+import 'add_payment_method_screen.dart';
 
 @Deprecated("Experimental")
 class PaymentMethodsScreen extends StatefulWidget {

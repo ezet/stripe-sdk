@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../card_utils.dart';
-import '../../model/card.dart';
-import '../../stripe_text_utils.dart';
+import '../../models/card.dart';
+import '../../util/card_utils.dart';
+import '../../util/stripe_text_utils.dart';
 
 @Deprecated("Not used by the library. Will be removed in 3.0.")
 class CardNumberFormatter extends TextInputFormatter {

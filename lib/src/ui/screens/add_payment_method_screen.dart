@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../customer_session.dart';
-import '../../model/card.dart';
+import '../../models/card.dart';
 import '../../stripe.dart';
 import '../models.dart';
 import '../progress_bar.dart';
