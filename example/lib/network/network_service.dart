@@ -46,6 +46,14 @@ class NetworkService {
   }
 
   // ignore: deprecated_member_use
+  Future<IntentResponse> createSetupIntentWithPaymentMethod(paymentMethod) async {
+    final params = {'paymentMethod': paymentMethod, "returnUrl": Stripe.instance.getReturnUrlForSca()};
+    final response = await _call('createSetupIntent', params);
+    // ignore: deprecated_member_use
+    return IntentResponse(response['status'], response['clientSecret']);
+  }
+
+  // ignore: deprecated_member_use
   Future<IntentResponse> createAutomaticPaymentIntent(int amount) async {
     final params = {
       "amount": amount,

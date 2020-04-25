@@ -56,6 +56,8 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   final StripeCard _cardData;
   final GlobalKey<FormState> _formKey;
   final CardForm _form;
+
+  // ignore: deprecated_member_use_from_same_package
   Future<IntentResponse> setupIntent;
 
   _AddPaymentMethodScreenState(this._form)
@@ -64,7 +66,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
 
   @override
   void initState() {
-    setupIntent = widget._createSetupIntent();
+    if (widget._useSetupIntent) setupIntent = widget._createSetupIntent();
     super.initState();
   }
 
@@ -90,13 +92,19 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
 
                     hideProgressDialog(context);
                     if (setupIntent['status'] == 'succeeded') {
+                      /// A new payment method has been attached, so refresh the store.
+                      // ignore: unawaited_futures
+                      widget.paymentMethodStore.refresh();
                       Navigator.pop(context, true);
+                      return;
                     }
                   } else {
                     paymentMethod = await widget.paymentMethodStore.attachPaymentMethod(paymentMethod['id']);
+                    hideProgressDialog(context);
                     Navigator.pop(context, true);
                     return;
                   }
+                  Navigator.pop(context, false);
                 }
               },
             )
