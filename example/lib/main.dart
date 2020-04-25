@@ -23,15 +23,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
     final app = MaterialApp(title: "Stripe SDK Demo", home: HomeScreen());
-    return app;
-
-//    return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
+    return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
 }
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Stripe SDK Demo'),
@@ -49,9 +48,10 @@ class HomeScreen extends StatelessWidget {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        // ignore: deprecated_member_use
-                        PaymentMethodsScreen(createSetupIntent: locator.get<NetworkService>().createSetupIntent))),
+                    builder: (context) {
+                      final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
+                      return PaymentMethodsScreen(createSetupIntent: locator.get<NetworkService>().createSetupIntent, paymentMethodStore: paymentMethods);
+                    })),
           ),
         ),
         Card(
@@ -90,7 +90,7 @@ class HomeScreen extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) =>
                 // ignore: deprecated_member_use
-                AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent)));
+                AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent, paymentMethods)));
     if (added == true) await paymentMethods.refresh();
   }
 
@@ -101,7 +101,7 @@ class HomeScreen extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) =>
                 // ignore: deprecated_member_use
-                AddPaymentMethodScreen.withoutSetupIntent()));
+                AddPaymentMethodScreen.withoutSetupIntent(paymentMethods)));
     if (added == true) await paymentMethods.refresh();
   }
 }

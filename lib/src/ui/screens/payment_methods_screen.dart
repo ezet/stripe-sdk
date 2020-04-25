@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
 
+import '../../stripe.dart';
+import '../../ui/stores/payment_method_store.dart';
 import '../progress_bar.dart';
 import 'add_payment_method_screen.dart';
 
@@ -11,20 +10,22 @@ import 'add_payment_method_screen.dart';
 class PaymentMethodsScreen extends StatefulWidget {
   final String title;
   final CreateSetupIntent createSetupIntent;
-  final PaymentMethodStore paymentMethodStore;
+  final PaymentMethodStore _paymentMethodStore;
 
-  PaymentMethodsScreen({Key key,
-    @required this.createSetupIntent,
-    this.title = "Payment Methods",
-    PaymentMethodStore paymentMethodsData})
-      : this.paymentMethodStore = paymentMethodsData ?? PaymentMethodStore(),
+  PaymentMethodsScreen(
+      {Key key,
+      @required this.createSetupIntent,
+      this.title = "Payment Methods",
+      PaymentMethodStore paymentMethodStore})
+      : this._paymentMethodStore = paymentMethodStore ?? PaymentMethodStore(),
         super(key: key);
 
   @override
   _PaymentMethodsScreenState createState() => _PaymentMethodsScreenState();
 }
 
-class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> { // ignore: deprecated_member_use_from_same_package
+class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
+  // ignore: deprecated_member_use_from_same_package
   List<PaymentMethod> paymentMethods;
 
   @override
@@ -42,15 +43,16 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> { // ignore
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                      // ignore: deprecated_member_use_from_same_package
-                      AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent, stripe: stripe)));
-              if (added == true) await widget.paymentMethodStore.refresh();
+                          // ignore: deprecated_member_use_from_same_package
+                          AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent, widget._paymentMethodStore,
+                              stripe: stripe)));
+              if (added == true) await widget._paymentMethodStore.refresh();
             },
           )
         ],
       ),
       body: PaymentMethodsList(
-        paymentMethodStore: widget.paymentMethodStore,
+        paymentMethodStore: widget._paymentMethodStore,
       ),
     );
   }
@@ -58,10 +60,21 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> { // ignore
   @override
   void initState() {
     super.initState();
-    widget.paymentMethodStore
-        .addListener(() => setState(() => this.paymentMethods = widget.paymentMethodStore.paymentMethods));
+    widget._paymentMethodStore
+        .addListener(_paymentMethodStoreListener);
   }
 
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget._paymentMethodStore.removeListener(_paymentMethodStoreListener);
+
+  }
+
+  void _paymentMethodStoreListener() {
+        if (mounted) setState(() => this.paymentMethods = widget._paymentMethodStore.paymentMethods);
+      }
 }
 
 class PaymentMethod {
@@ -70,32 +83,6 @@ class PaymentMethod {
   final String brand;
 
   PaymentMethod(this.id, this.last4, this.brand);
-}
-
-class PaymentMethodStore extends ChangeNotifier {
-  final List<PaymentMethod> paymentMethods = List();
-
-  PaymentMethodStore() {
-    refresh();
-  }
-
-  void clear() {
-    paymentMethods.clear();
-  }
-
-  Future<void> refresh() {
-    final paymentMethodFuture = CustomerSession.instance.listPaymentMethods();
-
-    return paymentMethodFuture.then((value) {
-      final List listData = value['data'] ?? List<PaymentMethod>();
-      paymentMethods.clear;
-      if (listData.isNotEmpty) {
-        paymentMethods.addAll(
-            listData.map((item) => PaymentMethod(item['id'], item['card']['last4'], item['card']['brand'])).toList());
-      }
-      notifyListeners();
-    });
-  }
 }
 
 class PaymentMethodsList extends StatelessWidget {
@@ -117,7 +104,6 @@ class PaymentMethodsList extends StatelessWidget {
   }
 
   Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
-    final stripeSession = CustomerSession.instance;
     if (listData.isEmpty) {
       // TODO: loading indicator
       return ListView();
@@ -159,7 +145,7 @@ class PaymentMethodsList extends StatelessWidget {
                                     Navigator.pop(rootContext);
                                     showProgressDialog(rootContext);
 
-                                    final result = await stripeSession.detachPaymentMethod(card.id);
+                                    final result = await paymentMethodStore.detachPaymentMethod(card.id);
                                     hideProgressDialog(rootContext);
                                     if (result != null) {
                                       await paymentMethods.refresh();

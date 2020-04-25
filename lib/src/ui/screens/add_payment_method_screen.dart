@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:stripe_sdk/src/ui/stores/payment_method_store.dart';
 
 import '../../customer_session.dart';
 import '../../models/card.dart';
@@ -19,14 +20,15 @@ class AddPaymentMethodScreen extends StatefulWidget {
   final CustomerSession _customerSession = CustomerSession.instance;
   final CreateSetupIntent _createSetupIntent;
   final bool _useSetupIntent;
+  final PaymentMethodStore paymentMethodStore;
 
   final CardForm form;
 
-  AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent, {Stripe stripe, this.form})
+  AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent, this.paymentMethodStore, {Stripe stripe, this.form})
       : _useSetupIntent = true,
         _stripe = stripe ?? Stripe.instance;
 
-  AddPaymentMethodScreen.withoutSetupIntent({Stripe stripe, this.form})
+  AddPaymentMethodScreen.withoutSetupIntent(this.paymentMethodStore, {Stripe stripe, this.form})
       : _useSetupIntent = false,
         _createSetupIntent = null,
         _stripe = stripe ?? Stripe.instance;
@@ -76,7 +78,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                       Navigator.pop(context, true);
                     }
                   } else {
-                    paymentMethod = await widget._customerSession.attachPaymentMethod(paymentMethod['id']);
+                    paymentMethod = await widget.paymentMethodStore.attachPaymentMethod(paymentMethod['id']);
                     Navigator.pop(context, true);
                     return;
                   }
