@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'ephemeral_key_manager.dart';
 import 'stripe_api_handler.dart';
-import 'ui/screens/payment_methods_screen.dart';
 
 class CustomerSession {
   static final int keyRefreshBufferInSeconds = 30;
@@ -13,8 +12,6 @@ class CustomerSession {
 
   final EphemeralKeyManager _keyManager;
   final String apiVersion;
-
-  final PaymentMethodStore paymentMethodStore = PaymentMethodStore();
 
   /// Create a new CustomerSession instance. Use this if you prefer to manage your own instances.
   @Deprecated("Use [initCustomerSession]. Will be removed in v3.0")
@@ -31,12 +28,10 @@ class CustomerSession {
   /// If [prefetchKey] is true, fetch the ephemeral key immediately.
   static void initCustomerSession(EphemeralKeyProvider provider,
       {String apiVersion = DEFAULT_API_VERSION, String stripeAccount, prefetchKey = true}) {
-    if (_instance == null) {
-      // ignore: deprecated_member_use_from_same_package
-      _instance = CustomerSession(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
-      if (prefetchKey) {
-        _instance._keyManager.retrieveEphemeralKey();
-      }
+    // ignore: deprecated_member_use_from_same_package
+    _instance = CustomerSession(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
+    if (prefetchKey) {
+      _instance._keyManager.retrieveEphemeralKey();
     }
   }
 
