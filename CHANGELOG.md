@@ -1,5 +1,27 @@
 # Stripe SDK Changelog
 
+## 2.8.1
+
+Please provide feedback on experimental features and examples. 
+
+* Fix misc minor bugs
+* Fix misc lint issues
+
+### Experimental: PaymentMethodsScreen
+
+* Major improvements to UI and functionality
+* Use a shared cache to avoid loading all payment methods repeatedly
+* Create setup intent immediately upon entering add PM screen
+
+### Experimental: CheckoutScreen
+
+* Basic implementation of a checkout screen
+
+### Example
+
+* Misc changes related to PaymentMethodsScreen
+* Started example implementation of CheckoutScreen
+
 ## 2.8.0
 * Expose StripeApiException and StripeApiError
 * Deprecated Stripe.handlePaymentIntent. Contact me if you used this.

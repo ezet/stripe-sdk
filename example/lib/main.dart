@@ -50,6 +50,7 @@ class HomeScreen extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) {
                       final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
+                      // ignore: deprecated_member_use
                       return PaymentMethodsScreen(createSetupIntent: locator.get<NetworkService>().createSetupIntent, paymentMethodStore: paymentMethods);
                     })),
           ),

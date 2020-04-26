@@ -7,9 +7,12 @@ import '../progress_bar.dart';
 import 'add_payment_method_screen.dart';
 
 @Deprecated("Experimental")
-class PaymentMethodsScreen extends StatefulWidget {
+class
+PaymentMethodsScreen extends StatefulWidget {
   final String title;
   final CreateSetupIntent createSetupIntent;
+
+  /// The payment method store to use.
   final PaymentMethodStore _paymentMethodStore;
 
   PaymentMethodsScreen(
@@ -24,6 +27,7 @@ class PaymentMethodsScreen extends StatefulWidget {
   _PaymentMethodsScreenState createState() => _PaymentMethodsScreenState();
 }
 
+// ignore: deprecated_member_use_from_same_package
 class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
   // ignore: deprecated_member_use_from_same_package
   List<PaymentMethod> paymentMethods;
