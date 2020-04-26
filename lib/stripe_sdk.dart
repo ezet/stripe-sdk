@@ -1,3 +1,4 @@
+/// A library to communicate with the Stripe API from Dart.
 library stripe_sdk;
 
 export 'src/customer_session.dart';
