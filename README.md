@@ -6,6 +6,11 @@ A native dart package for Stripe. There are various other flutter plugins that w
 but this package uses a different approach.
 It does not wrap existing Stripe libraries, but instead accesses the Stripe API directly.
 
+Flutter support:
+* [x] iOS
+* [x] Android
+* [x] Web
+
 See *example/main.dart* for additional short examples.
 
 See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete demo application,
