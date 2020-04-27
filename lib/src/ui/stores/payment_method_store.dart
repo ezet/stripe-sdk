@@ -16,6 +16,15 @@ class PaymentMethodStore extends ChangeNotifier {
   /// The customer session the store operates on.
   final CustomerSession _customerSession;
 
+  static PaymentMethodStore _instance;
+
+  /// Access the singleton instance of [StripeApi].
+  /// Throws an [Exception] if [StripeApi.init] hasn't been called previously.
+  static PaymentMethodStore get instance {
+    if (_instance == null) _instance = PaymentMethodStore();
+    return _instance;
+  }
+
   PaymentMethodStore({CustomerSession customerSession})
       : _customerSession = customerSession ?? CustomerSession.instance;
 

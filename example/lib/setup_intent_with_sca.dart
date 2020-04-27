@@ -48,6 +48,7 @@ class SetupIntentWithScaScreen extends StatelessWidget {
       hideProgressDialog(context);
       Navigator.pop(context, true);
 
+      /// A new payment method has been attached, so refresh the store
       // ignore: unawaited_futures
       paymentMethods.refresh();
 

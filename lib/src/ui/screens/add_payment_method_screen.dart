@@ -29,22 +29,25 @@ class AddPaymentMethodScreen extends StatefulWidget {
   final bool _useSetupIntent;
 
   /// The payment method store used to manage payment methods.
-  final PaymentMethodStore paymentMethodStore;
+  final PaymentMethodStore _paymentMethodStore;
 
   /// The card form used to collect payment method details.
   final CardForm form;
 
   /// Add a payment method using a Stripe Setup Intent
-  AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent, this.paymentMethodStore, {Stripe stripe, this.form})
+  AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent,
+      {PaymentMethodStore paymentMethodStore, Stripe stripe, this.form})
       : _useSetupIntent = true,
+        _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         _stripe = stripe ?? Stripe.instance;
 
   /// Add a payment method without using a Stripe Setup Intent
   @Deprecated(
       "Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]")
-  AddPaymentMethodScreen.withoutSetupIntent(this.paymentMethodStore, {Stripe stripe, this.form})
+  AddPaymentMethodScreen.withoutSetupIntent({PaymentMethodStore paymentMethodStore, Stripe stripe, this.form})
       : _useSetupIntent = false,
         _createSetupIntent = null,
+        _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         _stripe = stripe ?? Stripe.instance;
 
   @override
@@ -94,12 +97,12 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                     if (setupIntent['status'] == 'succeeded') {
                       /// A new payment method has been attached, so refresh the store.
                       // ignore: unawaited_futures
-                      widget.paymentMethodStore.refresh();
+                      widget._paymentMethodStore.refresh();
                       Navigator.pop(context, true);
                       return;
                     }
                   } else {
-                    paymentMethod = await widget.paymentMethodStore.attachPaymentMethod(paymentMethod['id']);
+                    paymentMethod = await widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id']);
                     hideProgressDialog(context);
                     Navigator.pop(context, true);
                     return;

@@ -7,8 +7,7 @@ import '../progress_bar.dart';
 import 'add_payment_method_screen.dart';
 
 @Deprecated("Experimental")
-class
-PaymentMethodsScreen extends StatefulWidget {
+class PaymentMethodsScreen extends StatefulWidget {
   final String title;
   final CreateSetupIntent createSetupIntent;
 
@@ -48,7 +47,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                   MaterialPageRoute(
                       builder: (context) =>
                           // ignore: deprecated_member_use_from_same_package
-                          AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent, widget._paymentMethodStore,
+                          AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent,
                               stripe: stripe)));
               if (added == true) await widget._paymentMethodStore.refresh();
             },
@@ -63,22 +62,19 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
 
   @override
   void initState() {
+    widget._paymentMethodStore.addListener(_paymentMethodStoreListener);
     super.initState();
-    widget._paymentMethodStore
-        .addListener(_paymentMethodStoreListener);
   }
-
 
   @override
   void dispose() {
-    super.dispose();
     widget._paymentMethodStore.removeListener(_paymentMethodStoreListener);
-
+    super.dispose();
   }
 
   void _paymentMethodStoreListener() {
-        if (mounted) setState(() => this.paymentMethods = widget._paymentMethodStore.paymentMethods);
-      }
+    if (mounted) setState(() => this.paymentMethods = widget._paymentMethodStore.paymentMethods);
+  }
 }
 
 class PaymentMethod {

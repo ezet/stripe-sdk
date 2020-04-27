@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Stripe SDK Demo'),
@@ -45,14 +44,13 @@ class HomeScreen extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text('Payment Methods Screen'),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) {
-                      final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
-                      // ignore: deprecated_member_use
-                      return PaymentMethodsScreen(createSetupIntent: locator.get<NetworkService>().createSetupIntent, paymentMethodStore: paymentMethods);
-                    })),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) {
+              final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
+              // ignore: deprecated_member_use
+              return PaymentMethodsScreen(
+                  createSetupIntent: locator.get<NetworkService>().createSetupIntent,
+                  paymentMethodStore: paymentMethods);
+            })),
           ),
         ),
         Card(
@@ -85,24 +83,20 @@ class HomeScreen extends StatelessWidget {
 
   void createPaymentMethodWithSetupIntent(BuildContext context) async {
     final networkService = locator.get<NetworkService>();
-    final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
-    final added = await Navigator.push(
+    await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
                 // ignore: deprecated_member_use
-                AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent, paymentMethods)));
-    if (added == true) await paymentMethods.refresh();
+                AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent)));
   }
 
   void createPaymentMethodWithoutSetupIntent(BuildContext context) async {
-    final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
-    final added = await Navigator.push(
+    await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
                 // ignore: deprecated_member_use
-                AddPaymentMethodScreen.withoutSetupIntent(paymentMethods)));
-    if (added == true) await paymentMethods.refresh();
+                AddPaymentMethodScreen.withoutSetupIntent()));
   }
 }

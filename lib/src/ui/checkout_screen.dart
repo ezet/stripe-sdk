@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 import '../stripe.dart';
 import 'models.dart';
+import 'progress_bar.dart';
 import 'screens/payment_methods_screen.dart';
 import 'stores/payment_method_store.dart';
 
 @Deprecated("Experimental")
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends StatefulWidget {
   final Iterable<CheckoutItem> items;
-  final Iterable<PaymentMethod> paymentMethods;
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
 
@@ -21,38 +21,88 @@ class CheckoutScreen extends StatelessWidget {
       @required this.items,
       PaymentMethodStore paymentMethods,
       @required this.createPaymentIntent})
-      : this.paymentMethods = paymentMethods ?? PaymentMethodStore().paymentMethods,
-        super(key: key);
+      : super(key: key);
+
+  @override
+  _CheckoutScreenState createState() => _CheckoutScreenState();
+}
+
+class _CheckoutScreenState extends State<CheckoutScreen> {
+  final PaymentMethodStore paymentMethodStore = PaymentMethodStore.instance;
+
+  String _selectedPaymentMethod;
+  Future<IntentResponse> _createIntentResponse;
+  int _total;
+
+  @override
+  void initState() {
+    _total = widget.items.fold(0, (value, item) => value + item.price * item.count);
+    _createIntentResponse = widget.createPaymentIntent(_total);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final int total = items.fold(0, (value, item) => value + item.price * item.count);
-    final intentResponseFuture = createPaymentIntent(total);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(child: CheckoutItemList(items: items, total: total)),
+          Container(child: CheckoutItemList(items: widget.items, total: _total)),
           SizedBox(
             height: 40,
           ),
           Center(
             child: PaymentMethodSelector(
-                paymentMethods: paymentMethods, selectedPaymentMethod: null, onChanged: (value) => debugPrint(value)),
+                paymentMethodStore: paymentMethodStore,
+                selectedPaymentMethodId: null,
+                onChanged: (value) => setState(() {
+                      _selectedPaymentMethod = value;
+                    })),
           ),
           Center(
+//            child: LoadStuffButton(),
+
             child: RaisedButton(
               onPressed: () async {
-                final intentResponse = await intentResponseFuture;
-                return Stripe.instance.confirmPayment(intentResponse.clientSecret);
+                showProgressDialog(context);
+                final intentResponse = await _createIntentResponse;
+                try {
+                  final confirmationResponse = await Stripe.instance
+                      .confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
+                  hideProgressDialog(context);
+                  if (confirmationResponse['status'] == "succeeded") {
+                    await showGeneralDialog(
+                        barrierColor: Colors.black.withOpacity(0.5),
+                        transitionBuilder: (context, a1, a2, widget) {
+                          return Transform.scale(
+                            scale: a1.value,
+                            child: Opacity(
+                              opacity: a1.value,
+                              child: AlertDialog(
+                                shape: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
+                                title: Text('Success'),
+                                content: Text('Payment successfully completed!'),
+                              ),
+                            ),
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 200),
+                        barrierDismissible: true,
+                        barrierLabel: '',
+                        context: context,
+                        pageBuilder: (context, animation1, animation2) {});
+                    return;
+                  }
+                } catch (e) {
+                  hideProgressDialog(context);
+                }
               },
-              child: Text('Pay ${(total / 100).toStringAsFixed(2)}'),
+              child: Text('Pay ${(_total / 100).toStringAsFixed(2)}'),
             ),
           )
         ],
@@ -113,37 +163,77 @@ class CheckoutItem extends StatelessWidget {
   }
 }
 
-class PaymentMethodSelector extends StatelessWidget {
+class PaymentMethodSelector extends StatefulWidget {
   PaymentMethodSelector(
-      {Key key, @required this.paymentMethods, @required this.selectedPaymentMethod, @required this.onChanged})
+      {Key key, @required this.paymentMethodStore, @required this.selectedPaymentMethodId, @required this.onChanged})
       : super(key: key);
 
-  final String selectedPaymentMethod;
+  final String selectedPaymentMethodId;
   final void Function(String) onChanged;
-  final Iterable<PaymentMethod> paymentMethods;
+  final PaymentMethodStore paymentMethodStore;
+
+  @override
+  _PaymentMethodSelectorState createState() => _PaymentMethodSelectorState();
+}
+
+class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
+  Iterable<PaymentMethod> paymentMethods;
+  String _selectedPaymentMethodId;
 
   @override
   Widget build(BuildContext context) {
-    final method = paymentMethods?.singleWhere((item) => item.id == selectedPaymentMethod, orElse: () => null);
+    PaymentMethod selectedPaymentMethod;
+    if (_selectedPaymentMethodId != null) {
+      selectedPaymentMethod =
+          paymentMethods?.singleWhere((item) => item.id == _selectedPaymentMethodId, orElse: () => null);
+    } else {
+      selectedPaymentMethod = paymentMethods?.first;
+    }
     return Container(
+//      padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         border: Border.all(),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+
       ),
       child: DropdownButton(
-        underline: null,
-        isExpanded: true,
-        value: method?.id,
+        underline: Container(),
+        isExpanded: false,
+        value: selectedPaymentMethod?.id,
         items: paymentMethods
             ?.map((item) => DropdownMenuItem(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text("**** **** **** ${item.last4}"),
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Text("${item.brand.toUpperCase()} **** **** **** ${item.last4}"),
                   ),
                   value: item.id,
                 ))
             ?.toList(),
-        onChanged: (value) => onChanged(value),
+        onChanged: (value) {
+          widget.onChanged(value);
+          setState(() {
+            _selectedPaymentMethodId = value;
+          });
+        },
       ),
     );
+  }
+
+  @override
+  void initState() {
+    widget.paymentMethodStore.addListener(listener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.paymentMethodStore.removeListener(listener);
+    super.dispose();
+  }
+
+  void listener() {
+    setState(() {
+      paymentMethods = widget.paymentMethodStore.paymentMethods;
+    });
   }
 }
