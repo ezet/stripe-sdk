@@ -16,6 +16,8 @@ dependencies:
   mask_text_input_formatter: ^1.0.6
   awesome_card: ^1.1.0
   flutter_slidable: ^0.5.4
+  simple_animations: ^2.1.0
+  supercharged: ^1.5.1
 
 dev_dependencies:
   flutter_test:

@@ -163,6 +163,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  sa_anicoto:
+    dependency: transitive
+    description:
+      name: sa_anicoto
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  sa_multi_tween:
+    dependency: transitive
+    description:
+      name: sa_multi_tween
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  sa_stateless_animation:
+    dependency: transitive
+    description:
+      name: sa_stateless_animation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  sa_v1_migration:
+    dependency: transitive
+    description:
+      name: sa_v1_migration
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
+  simple_animations:
+    dependency: "direct main"
+    description:
+      name: simple_animations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -196,6 +231,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  supercharged:
+    dependency: "direct main"
+    description:
+      name: supercharged
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.1"
   term_glyph:
     dependency: transitive
     description:
@@ -267,5 +309,5 @@ packages:
     source: hosted
     version: "3.5.0"
 sdks:
-  dart: ">=2.4.0 <3.0.0"
+  dart: ">=2.7.0 <3.0.0"
   flutter: ">=1.12.8 <2.0.0"
