@@ -1,5 +1,12 @@
 # Stripe SDK Changelog
 
+## 2.8.2
+
+* Updated readme
+* Updated uni_links
+* Added additional API documentation
+* Fixed validation for expiration month
+
 ## 2.8.1
 
 Please provide feedback on experimental features and examples. 
