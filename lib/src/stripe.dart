@@ -68,9 +68,9 @@ class Stripe {
     return 'stripesdk://3ds.stripesdk.io?requestId=$requestId';
   }
 
-  /// Confirm a SetupIntent
+  /// Authenticate a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
-  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret) async {
+  Future<Map<String, dynamic>> authenticateSetupIntent(String clientSecret) async {
     final intent = await api.confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca()});
     if (intent['status'] == 'requires_action') {
       // ignore: deprecated_member_use_from_same_package
@@ -80,9 +80,9 @@ class Stripe {
     }
   }
 
-  /// Confirm a SetupIntent with a PaymentMethod
+  /// Confirm and authenticate a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
-  Future<Map<String, dynamic>> confirmSetupIntentWithPaymentMethod(String clientSecret, String paymentMethod) async {
+  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, String paymentMethod) async {
     final intent = await api
         .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethod});
     if (intent['status'] == 'requires_action') {

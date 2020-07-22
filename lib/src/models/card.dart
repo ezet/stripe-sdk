@@ -63,8 +63,6 @@ class StripeCard {
   ];
   static const List<String> PREFIXES_UNIONPAY = ['62'];
 
-  ///
-
   static const int MAX_LENGTH_STANDARD = 16;
   static const int MAX_LENGTH_AMERICAN_EXPRESS = 15;
   static const int MAX_LENGTH_DINERS_CLUB = 14;

@@ -3,9 +3,11 @@
 ## 2.8.3
 
 * Support for custom decorations in card form
-* Removed `Card.toMap()`
-* Removed support for non-card properties on Card (billing details)
+* *BREAKING*: Removed `Card.toMap()`
+* *BREAKING*: Removed support for non-card properties on Card (billing details)
   * See https://github.com/ezet/stripe-sdk/issues/61#issuecomment-662657924 
+* *BREAKING*: Rename `confirmSetupIntentWithPaymentMethod` to `confirmSetupIntent` as this is the default, general case.
+* *BREAKING*: Rename `confirmSetupIntent` to `authenticateSetupIntent` so it aligns more with `authenticatePaymentIntent`, as they share similar behavior.
  
 
 ## 2.8.2
