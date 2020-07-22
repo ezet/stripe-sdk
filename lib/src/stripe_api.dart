@@ -63,6 +63,10 @@ class StripeApi {
     return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 
+  /// Create a PaymentMethod from a card.
+  /// This will only create a PaymentMethod with the minimum required properties.
+  /// To include additional properties such as billing details, use [StripeCard.toPaymentMethod], add additional details
+  /// and then use [createPaymentMethod].
   Future<Map<String, dynamic>> createPaymentMethodFromCard(StripeCard card) async {
     return createPaymentMethod(card.toPaymentMethod());
   }
