@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,10 +17,12 @@ class Stripe {
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
   ///
-  /// [returnUrlForSca] can be used to use your own return url for
+  /// [returnUrlForSca] should be used to specify a unique return url for
   /// Strong Customer Authentication (SCA) such as 3DS, 3DS2, BankID and others.
-  /// It is recommended to use your own app specific url scheme and host.
-  Stripe(String publishableKey, {String stripeAccount, String returnUrlForSca})
+  /// It is required to use your own app specific url scheme and host. This
+  /// parameter must match your "android/app/src/main/AndroidManifest.xml"
+  /// and "ios/Runner/Info.plist" configuration.
+  Stripe(String publishableKey, {String stripeAccount, @required String returnUrlForSca})
       : api = StripeApi(publishableKey, stripeAccount: stripeAccount),
         _returnUrlForSca = returnUrlForSca ?? 'stripesdk://3ds.stripesdk.io';
 
@@ -45,12 +48,12 @@ class Stripe {
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
   ///
-  /// [returnUrlForSca] can be used to use your own return url for
+  /// [returnUrlForSca] should be used to specify a unique return url for
   /// Strong Customer Authentication (SCA) such as 3DS, 3DS2, BankID and others.
-  /// It is recommended to use your own app specific url scheme and host. This
+  /// It is required to use your own app specific url scheme and host. This
   /// parameter must match your "android/app/src/main/AndroidManifest.xml"
   /// and "ios/Runner/Info.plist" configuration.
-  static void init(String publishableKey, {String stripeAccount, String returnUrlForSca}) {
+  static void init(String publishableKey, {String stripeAccount, @required String returnUrlForSca}) {
     _instance = Stripe(publishableKey, stripeAccount: stripeAccount, returnUrlForSca: returnUrlForSca);
     StripeApi.init(publishableKey, stripeAccount: stripeAccount);
   }

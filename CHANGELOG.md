@@ -11,6 +11,7 @@
   * See https://github.com/ezet/stripe-sdk/issues/61#issuecomment-662657924 
 * Rename `confirmSetupIntentWithPaymentMethod` to `confirmSetupIntent` as this is the default, general case.
 * Rename `confirmSetupIntent` to `authenticateSetupIntent` so it aligns more with `authenticatePaymentIntent`, as they share similar behavior.
+* Make `returnUrlForSca` a required parameter for Stripe
 
 #### Removed following deprecated functions and classes
 * class: CardNumberFormatter
