@@ -69,90 +69,25 @@ class StripeCard {
   static const int MAX_LENGTH_AMERICAN_EXPRESS = 15;
   static const int MAX_LENGTH_DINERS_CLUB = 14;
 
-  static const String VALUE_CARD = 'card';
-
-  static const String FIELD_OBJECT = 'object';
-  static const String FIELD_NUMBER = 'number';
-  static const String FIELD_CVC = 'cvc';
-  static const String FIELD_ADDRESS_CITY = 'address_city';
-  static const String FIELD_ADDRESS_COUNTRY = 'address_country';
-  static const String FIELD_ADDRESS_LINE1 = 'address_line1';
-  static const String FIELD_ADDRESS_LINE1_CHECK = 'address_line1_check';
-  static const String FIELD_ADDRESS_LINE2 = 'address_line2';
-  static const String FIELD_ADDRESS_STATE = 'address_state';
-  static const String FIELD_ADDRESS_ZIP = 'address_zip';
-  static const String FIELD_ADDRESS_ZIP_CHECK = 'address_zip_check';
-  static const String FIELD_BRAND = 'brand';
-  static const String FIELD_COUNTRY = 'country';
-  static const String FIELD_CURRENCY = 'currency';
-  static const String FIELD_CUSTOMER = 'customer';
-  static const String FIELD_CVC_CHECK = 'cvc_check';
-  static const String FIELD_EXP_MONTH = 'exp_month';
-  static const String FIELD_EXP_YEAR = 'exp_year';
-  static const String FIELD_FINGERPRINT = 'fingerprint';
-  static const String FIELD_FUNDING = 'funding';
-  static const String FIELD_NAME = 'name';
-  static const String FIELD_LAST4 = 'last4';
-  static const String FIELD_ID = 'id';
-  static const String FIELD_TOKENIZATION_METHOD = 'tokenization_method';
-
   String number;
   String cvc;
   int expMonth;
   int expYear;
-  String name;
-  String addressLine1;
-  String addressLine1Check;
-  String addressLine2;
-  String addressCity;
-  String addressState;
-  String addressZip;
-  String addressZipCheck;
-  String addressCountry;
   String last4;
   String _brand;
-  String funding;
-  String fingerprint;
-  String country;
-  String currency;
-  String customerId;
-  String cvcCheck;
-  String id;
-  List<String> loggingTokens = [];
-  String tokenizationMethod;
 
   StripeCard({
     this.number,
     this.cvc,
     this.expMonth,
     this.expYear,
-    this.name,
-    this.addressLine1,
-    this.addressLine1Check,
-    this.addressLine2,
-    this.addressCity,
-    this.addressState,
-    this.addressZip,
-    this.addressZipCheck,
-    this.addressCountry,
     this.last4,
-    String brand,
-    this.funding,
-    this.fingerprint,
-    this.country,
-    this.currency,
-    this.customerId,
-    this.cvcCheck,
-    this.id,
-    this.loggingTokens,
-    this.tokenizationMethod,
-  }) : _brand = brand;
+  });
 
   String get brand {
     if (isBlank(_brand) && !isBlank(number)) {
       _brand = getPossibleCardType(number);
     }
-
     return _brand;
   }
 
@@ -203,50 +138,19 @@ class StripeCard {
     }
   }
 
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
-      FIELD_NUMBER: number,
-      FIELD_CVC: cvc,
-      FIELD_NAME: name,
-      FIELD_ADDRESS_CITY: addressCity,
-      FIELD_ADDRESS_COUNTRY: addressCountry,
-      FIELD_ADDRESS_LINE1: addressLine1,
-      FIELD_ADDRESS_LINE1_CHECK: addressLine1Check,
-      FIELD_ADDRESS_LINE2: addressLine2,
-      FIELD_ADDRESS_STATE: addressState,
-      FIELD_ADDRESS_ZIP: addressZip,
-      FIELD_ADDRESS_ZIP_CHECK: addressZipCheck,
-      FIELD_CURRENCY: currency,
-      FIELD_COUNTRY: country,
-      FIELD_CUSTOMER: customerId,
-      FIELD_EXP_MONTH: expMonth,
-      FIELD_EXP_YEAR: expYear,
-      FIELD_FINGERPRINT: fingerprint,
-      FIELD_FUNDING: funding,
-      FIELD_ID: id,
-      FIELD_LAST4: last4,
-      FIELD_TOKENIZATION_METHOD: tokenizationMethod,
-      FIELD_OBJECT: VALUE_CARD
-    };
-
-    removeNullAndEmptyParams(map);
-    return map;
-  }
-
+  /// Returns a stripe hash that represents this card.
+  /// It only sets the type and card details. In order to add additional details such as name and address,
+  /// you need to insert these keys into the hash before submitting it.
   Map<String, dynamic> toPaymentMethod() {
     var map = <String, dynamic>{
       'type': 'card',
       'card': {
-        FIELD_NUMBER: number,
-        FIELD_CVC: cvc,
-        FIELD_EXP_MONTH: expMonth,
-        FIELD_EXP_YEAR: expYear,
+        'number': number,
+        'cvc': cvc,
+        'exp_mont': expMonth,
+        'exp_year': expYear,
       },
-      'billing_details': {
-        FIELD_NAME: name,
-      }
     };
-
     removeNullAndEmptyParams(map);
     return map;
   }

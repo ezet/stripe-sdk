@@ -21,7 +21,7 @@ class Stripe {
   /// It is recommended to use your own app specific url scheme and host.
   Stripe(String publishableKey, {String stripeAccount, String returnUrlForSca})
       : api = StripeApi(publishableKey, stripeAccount: stripeAccount),
-        _returnUrlForSca = returnUrlForSca ?? "stripesdk://3ds.stripesdk.io";
+        _returnUrlForSca = returnUrlForSca ?? 'stripesdk://3ds.stripesdk.io';
 
   final StripeApi api;
   final String _returnUrlForSca;
@@ -31,7 +31,7 @@ class Stripe {
   /// Throws an [Exception] if [Stripe.init] hasn't been called previously.
   static Stripe get instance {
     if (_instance == null) {
-      throw Exception("Attempted to get singleton instance of Stripe without initialization");
+      throw Exception('Attempted to get singleton instance of Stripe without initialization');
     }
     return _instance;
   }
@@ -59,13 +59,13 @@ class Stripe {
   /// This should be set on the intent before attempting to authenticate it.
   String getReturnUrlForSca() {
     final requestId = Random.secure().nextInt(99999999);
-    return "$_returnUrlForSca?requestId=$requestId";
+    return '$_returnUrlForSca?requestId=$requestId';
   }
 
-  @Deprecated("Use `Stripe.instance.getReturnUrlForSca()` instead. Will be removed in v3.0.")
+  @Deprecated('Use `Stripe.instance.getReturnUrlForSca()` instead. Will be removed in v3.0.')
   static String getReturnUrl() {
     final requestId = Random.secure().nextInt(99999999);
-    return "stripesdk://3ds.stripesdk.io?requestId=$requestId";
+    return 'stripesdk://3ds.stripesdk.io?requestId=$requestId';
   }
 
   /// Confirm a SetupIntent
@@ -98,9 +98,9 @@ class Stripe {
   /// https://stripe.com/docs/payments/payment-intents/android
   Future<Map<String, dynamic>> confirmPayment(String paymentIntentClientSecret, {String paymentMethodId}) async {
     final data = {'return_url': getReturnUrlForSca()};
-    if (paymentMethodId != null) data["payment_method"] = paymentMethodId;
+    if (paymentMethodId != null) data['payment_method'] = paymentMethodId;
     final paymentIntent = await api.confirmPaymentIntent(paymentIntentClientSecret, data: data);
-    if (paymentIntent['status'] == "requires_action") {
+    if (paymentIntent['status'] == 'requires_action') {
       // ignore: deprecated_member_use_from_same_package
       return handlePaymentIntent(paymentIntent['next_action']);
     } else {
@@ -113,7 +113,7 @@ class Stripe {
   /// https://stripe.com/docs/payments/payment-intents/android-manual
   Future<Map<String, dynamic>> authenticatePayment(String paymentIntentClientSecret) async {
     final paymentIntent = await api.retrievePaymentIntent(paymentIntentClientSecret);
-    if (paymentIntent['status'] != "requires_action") return Future.value(paymentIntent);
+    if (paymentIntent['status'] != 'requires_action') return Future.value(paymentIntent);
     final nextAction = paymentIntent['next_action'];
     // ignore: deprecated_member_use_from_same_package
     return handlePaymentIntent(nextAction);
@@ -130,7 +130,7 @@ class Stripe {
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe PaymentIntent when the user completes or cancels authentication.
-  @Deprecated("Use [authenticatePaymentWithNextAction] instead. Will be removed in v3.0.")
+  @Deprecated('Use [authenticatePaymentWithNextAction] instead. Will be removed in v3.0.')
   Future<Map<String, dynamic>> handlePaymentIntent(Map action) async {
     return _authenticateIntent(
         action,
@@ -141,8 +141,7 @@ class Stripe {
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe SetupIntent when the user completes or cancels authentication.
-  @Deprecated(
-      "This will be removed in v3.0. Contact the maintainer if you use this and want it to remain public.")
+  @Deprecated('This will be removed in v3.0. Contact the maintainer if you use this and want it to remain public.')
   Future<Map<String, dynamic>> handleSetupIntent(Map action) async {
     return _authenticateIntent(
         action,

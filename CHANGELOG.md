@@ -3,7 +3,10 @@
 ## 2.8.3
 
 * Support for custom decorations in card form
-* 
+* Removed `Card.toMap()`
+* Removed support for non-card properties on Card (billing details)
+  * See https://github.com/ezet/stripe-sdk/issues/61#issuecomment-662657924 
+ 
 
 ## 2.8.2
 

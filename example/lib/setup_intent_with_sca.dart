@@ -2,10 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
-import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import 'locator.dart';
-import 'network/network_service.dart';
 import 'ui/progress_bar.dart';
 
 class SetupIntentWithScaScreen extends StatelessWidget {
@@ -38,12 +36,12 @@ class SetupIntentWithScaScreen extends StatelessWidget {
     );
   }
 
-  completeSetupIntent(BuildContext context, String paymentMethod) async {
-    final Stripe stripe = Stripe.instance;
-    final NetworkService networkService = locator.get();
+  Future<void> completeSetupIntent(BuildContext context, String paymentMethod) async {
+    final stripe = Stripe.instance;
+    final networkService = locator.get();
     showProgressDialog(context);
     final createSetupIntentResponse = await networkService.createSetupIntentWithPaymentMethod(paymentMethod);
-    final PaymentMethodStore paymentMethods = Provider.of(context, listen: false);
+    final paymentMethods = Provider.of(context, listen: false);
     if (createSetupIntentResponse.status == 'succeeded') {
       hideProgressDialog(context);
       Navigator.pop(context, true);
