@@ -62,19 +62,12 @@ class Stripe {
     return '$_returnUrlForSca?requestId=$requestId';
   }
 
-  @Deprecated('Use `Stripe.instance.getReturnUrlForSca()` instead. Will be removed in v3.0.')
-  static String getReturnUrl() {
-    final requestId = Random.secure().nextInt(99999999);
-    return 'stripesdk://3ds.stripesdk.io?requestId=$requestId';
-  }
-
   /// Authenticate a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
   Future<Map<String, dynamic>> authenticateSetupIntent(String clientSecret) async {
     final intent = await api.confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca()});
     if (intent['status'] == 'requires_action') {
-      // ignore: deprecated_member_use_from_same_package
-      return handleSetupIntent(intent['next_action']);
+      return _handleSetupIntent(intent['next_action']);
     } else {
       return Future.value(intent);
     }
@@ -86,8 +79,7 @@ class Stripe {
     final intent = await api
         .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethod});
     if (intent['status'] == 'requires_action') {
-      // ignore: deprecated_member_use_from_same_package
-      return handleSetupIntent(intent['next_action']);
+      return _handleSetupIntent(intent['next_action']);
     } else {
       return Future.value(intent);
     }
@@ -101,8 +93,7 @@ class Stripe {
     if (paymentMethodId != null) data['payment_method'] = paymentMethodId;
     final paymentIntent = await api.confirmPaymentIntent(paymentIntentClientSecret, data: data);
     if (paymentIntent['status'] == 'requires_action') {
-      // ignore: deprecated_member_use_from_same_package
-      return handlePaymentIntent(paymentIntent['next_action']);
+      return authenticatePaymentWithNextAction(paymentIntent['next_action']);
     } else {
       return Future.value(paymentIntent);
     }
@@ -115,8 +106,7 @@ class Stripe {
     final paymentIntent = await api.retrievePaymentIntent(paymentIntentClientSecret);
     if (paymentIntent['status'] != 'requires_action') return Future.value(paymentIntent);
     final nextAction = paymentIntent['next_action'];
-    // ignore: deprecated_member_use_from_same_package
-    return handlePaymentIntent(nextAction);
+    return authenticatePaymentWithNextAction(nextAction);
   }
 
   /// Authenticate a payment with [nextAction].
@@ -124,16 +114,8 @@ class Stripe {
   /// as it avoids the request to the Stripe API to retrieve the action.
   /// To use this, return the complete [nextAction] from your server.
   Future<Map<String, dynamic>> authenticatePaymentWithNextAction(Map nextAction) async {
-    // ignore: deprecated_member_use_from_same_package
-    return handlePaymentIntent(nextAction);
-  }
-
-  /// Launch 3DS in a new browser window.
-  /// Returns a [Future] with the Stripe PaymentIntent when the user completes or cancels authentication.
-  @Deprecated('Use [authenticatePaymentWithNextAction] instead. Will be removed in v3.0.')
-  Future<Map<String, dynamic>> handlePaymentIntent(Map action) async {
     return _authenticateIntent(
-        action,
+        nextAction,
         (uri) => api.retrievePaymentIntent(
               uri.queryParameters['payment_intent_client_secret'],
             ));
@@ -141,8 +123,7 @@ class Stripe {
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe SetupIntent when the user completes or cancels authentication.
-  @Deprecated('This will be removed in v3.0. Contact the maintainer if you use this and want it to remain public.')
-  Future<Map<String, dynamic>> handleSetupIntent(Map action) async {
+  Future<Map<String, dynamic>> _handleSetupIntent(Map action) async {
     return _authenticateIntent(
         action,
         (uri) => api.retrieveSetupIntent(

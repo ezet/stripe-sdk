@@ -43,7 +43,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
 
   /// Add a payment method without using a Stripe Setup Intent
   @Deprecated(
-      "Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]")
+      'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
   AddPaymentMethodScreen.withoutSetupIntent({PaymentMethodStore paymentMethodStore, Stripe stripe, this.form})
       : _useSetupIntent = false,
         _createSetupIntent = null,

@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'stripe_error.dart';
 
-const String DEFAULT_API_VERSION = "2020-03-02";
+const String DEFAULT_API_VERSION = '2020-03-02';
 
 enum RequestMethod { get, post, put, delete, option }
 

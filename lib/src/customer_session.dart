@@ -14,14 +14,11 @@ class CustomerSession {
   final String apiVersion;
 
   /// Create a new CustomerSession instance. Use this if you prefer to manage your own instances.
-  @Deprecated("Use [initCustomerSession]. Will be removed in v3.0")
-  CustomerSession(EphemeralKeyProvider provider, {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
+  CustomerSession._(EphemeralKeyProvider provider, {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
       : _keyManager = EphemeralKeyManager(provider, keyRefreshBufferInSeconds),
         _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _apiHandler.apiVersion = apiVersion;
-    if (_instance == null) {
-      _instance = this;
-    }
+    _instance ??= this;
   }
 
   /// Initiate the customer session singleton instance.
@@ -29,7 +26,7 @@ class CustomerSession {
   static void initCustomerSession(EphemeralKeyProvider provider,
       {String apiVersion = DEFAULT_API_VERSION, String stripeAccount, prefetchKey = true}) {
     // ignore: deprecated_member_use_from_same_package
-    _instance = CustomerSession(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
+    _instance = CustomerSession._(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
     if (prefetchKey) {
       _instance._keyManager.retrieveEphemeralKey();
     }
