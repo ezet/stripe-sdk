@@ -5,74 +5,63 @@ import '../util/stripe_text_utils.dart';
 //enum CardType { UNKNOWN, AMERICAN_EXPRESS, DISCOVER, JCB, DINERS_CLUB, VISA, MASTERCARD, UNIONPAY }
 
 class StripeCard {
-  static const String AMERICAN_EXPRESS = "American Express";
-  static const String DISCOVER = "Discover";
-  static const String JCB = "JCB";
-  static const String DINERS_CLUB = "Diners Club";
-  static const String VISA = "Visa";
-  static const String MASTERCARD = "MasterCard";
-  static const String UNIONPAY = "UnionPay";
-  static const String UNKNOWN = "Unknown";
+  static const String AMERICAN_EXPRESS = 'American Express';
+  static const String DISCOVER = 'Discover';
+  static const String JCB = 'JCB';
+  static const String DINERS_CLUB = 'Diners Club';
+  static const String VISA = 'Visa';
+  static const String MASTERCARD = 'MasterCard';
+  static const String UNIONPAY = 'UnionPay';
+  static const String UNKNOWN = 'Unknown';
 
   static const int CVC_LENGTH_AMERICAN_EXPRESS = 4;
   static const int CVC_LENGTH_COMMON = 3;
 
-  static const String FUNDING_CREDIT = "credit";
-  static const String FUNDING_DEBIT = "debit";
-  static const String FUNDING_PREPAID = "prepaid";
-  static const String FUNDING_UNKNOWN = "unknown";
+  static const String FUNDING_CREDIT = 'credit';
+  static const String FUNDING_DEBIT = 'debit';
+  static const String FUNDING_PREPAID = 'prepaid';
+  static const String FUNDING_UNKNOWN = 'unknown';
 
   ///
   // Based on http://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29
-  static const List<String> PREFIXES_AMERICAN_EXPRESS = ["34", "37"];
-  static const List<String> PREFIXES_DISCOVER = ["60", "64", "65"];
-  static const List<String> PREFIXES_JCB = ["35"];
-  static const List<String> PREFIXES_DINERS_CLUB = [
-    "300",
-    "301",
-    "302",
-    "303",
-    "304",
-    "305",
-    "309",
-    "36",
-    "38",
-    "39"
-  ];
-  static const List<String> PREFIXES_VISA = ["4"];
+  static const List<String> PREFIXES_AMERICAN_EXPRESS = ['34', '37'];
+  static const List<String> PREFIXES_DISCOVER = ['60', '64', '65'];
+  static const List<String> PREFIXES_JCB = ['35'];
+  static const List<String> PREFIXES_DINERS_CLUB = ['300', '301', '302', '303', '304', '305', '309', '36', '38', '39'];
+  static const List<String> PREFIXES_VISA = ['4'];
   static const List<String> PREFIXES_MASTERCARD = [
-    "2221",
-    "2222",
-    "2223",
-    "2224",
-    "2225",
-    "2226",
-    "2227",
-    "2228",
-    "2229",
-    "223",
-    "224",
-    "225",
-    "226",
-    "227",
-    "228",
-    "229",
-    "23",
-    "24",
-    "25",
-    "26",
-    "270",
-    "271",
-    "2720",
-    "50",
-    "51",
-    "52",
-    "53",
-    "54",
-    "55",
-    "67"
+    '2221',
+    '2222',
+    '2223',
+    '2224',
+    '2225',
+    '2226',
+    '2227',
+    '2228',
+    '2229',
+    '223',
+    '224',
+    '225',
+    '226',
+    '227',
+    '228',
+    '229',
+    '23',
+    '24',
+    '25',
+    '26',
+    '270',
+    '271',
+    '2720',
+    '50',
+    '51',
+    '52',
+    '53',
+    '54',
+    '55',
+    '67'
   ];
-  static const List<String> PREFIXES_UNIONPAY = ["62"];
+  static const List<String> PREFIXES_UNIONPAY = ['62'];
 
   ///
 
@@ -80,32 +69,32 @@ class StripeCard {
   static const int MAX_LENGTH_AMERICAN_EXPRESS = 15;
   static const int MAX_LENGTH_DINERS_CLUB = 14;
 
-  static const String VALUE_CARD = "card";
+  static const String VALUE_CARD = 'card';
 
-  static const String FIELD_OBJECT = "object";
-  static const String FIELD_NUMBER = "number";
-  static const String FIELD_CVC = "cvc";
-  static const String FIELD_ADDRESS_CITY = "address_city";
-  static const String FIELD_ADDRESS_COUNTRY = "address_country";
-  static const String FIELD_ADDRESS_LINE1 = "address_line1";
-  static const String FIELD_ADDRESS_LINE1_CHECK = "address_line1_check";
-  static const String FIELD_ADDRESS_LINE2 = "address_line2";
-  static const String FIELD_ADDRESS_STATE = "address_state";
-  static const String FIELD_ADDRESS_ZIP = "address_zip";
-  static const String FIELD_ADDRESS_ZIP_CHECK = "address_zip_check";
-  static const String FIELD_BRAND = "brand";
-  static const String FIELD_COUNTRY = "country";
-  static const String FIELD_CURRENCY = "currency";
-  static const String FIELD_CUSTOMER = "customer";
-  static const String FIELD_CVC_CHECK = "cvc_check";
-  static const String FIELD_EXP_MONTH = "exp_month";
-  static const String FIELD_EXP_YEAR = "exp_year";
-  static const String FIELD_FINGERPRINT = "fingerprint";
-  static const String FIELD_FUNDING = "funding";
-  static const String FIELD_NAME = "name";
-  static const String FIELD_LAST4 = "last4";
-  static const String FIELD_ID = "id";
-  static const String FIELD_TOKENIZATION_METHOD = "tokenization_method";
+  static const String FIELD_OBJECT = 'object';
+  static const String FIELD_NUMBER = 'number';
+  static const String FIELD_CVC = 'cvc';
+  static const String FIELD_ADDRESS_CITY = 'address_city';
+  static const String FIELD_ADDRESS_COUNTRY = 'address_country';
+  static const String FIELD_ADDRESS_LINE1 = 'address_line1';
+  static const String FIELD_ADDRESS_LINE1_CHECK = 'address_line1_check';
+  static const String FIELD_ADDRESS_LINE2 = 'address_line2';
+  static const String FIELD_ADDRESS_STATE = 'address_state';
+  static const String FIELD_ADDRESS_ZIP = 'address_zip';
+  static const String FIELD_ADDRESS_ZIP_CHECK = 'address_zip_check';
+  static const String FIELD_BRAND = 'brand';
+  static const String FIELD_COUNTRY = 'country';
+  static const String FIELD_CURRENCY = 'currency';
+  static const String FIELD_CUSTOMER = 'customer';
+  static const String FIELD_CVC_CHECK = 'cvc_check';
+  static const String FIELD_EXP_MONTH = 'exp_month';
+  static const String FIELD_EXP_YEAR = 'exp_year';
+  static const String FIELD_FINGERPRINT = 'fingerprint';
+  static const String FIELD_FUNDING = 'funding';
+  static const String FIELD_NAME = 'name';
+  static const String FIELD_LAST4 = 'last4';
+  static const String FIELD_ID = 'id';
+  static const String FIELD_TOKENIZATION_METHOD = 'tokenization_method';
 
   String number;
   String cvc;
@@ -197,12 +186,11 @@ class StripeCard {
     if (isBlank(cvc)) {
       return false;
     }
-    String cvcValue = cvc.trim();
-    String updatedType = brand;
-    bool validLength =
-        (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
-            (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
-            cvcValue.length == 3;
+    var cvcValue = cvc.trim();
+    var updatedType = brand;
+    var validLength = (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
+        (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
+        cvcValue.length == 3;
 
     return ModelUtils.isWholePositiveNumber(cvcValue) && validLength;
   }
@@ -216,7 +204,7 @@ class StripeCard {
   }
 
   Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {
+    var map = <String, dynamic>{
       FIELD_NUMBER: number,
       FIELD_CVC: cvc,
       FIELD_NAME: name,
@@ -246,7 +234,7 @@ class StripeCard {
   }
 
   Map<String, dynamic> toPaymentMethod() {
-    Map<String, dynamic> map = {
+    var map = <String, dynamic>{
       'type': 'card',
       'card': {
         FIELD_NUMBER: number,
@@ -314,7 +302,7 @@ class StripeCard {
   static void removeNullAndEmptyParams(Map<String, Object> mapToEdit) {
 // Remove all null values; they cause validation errors
     final keys = mapToEdit.keys.toList(growable: false);
-    for (String key in keys) {
+    for (var key in keys) {
       final value = mapToEdit[key];
       if (value == null) {
         mapToEdit.remove(key);
