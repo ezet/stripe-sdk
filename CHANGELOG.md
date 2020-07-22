@@ -1,5 +1,10 @@
 # Stripe SDK Changelog
 
+## 2.8.3
+
+* Support for custom decorations in card form
+* 
+
 ## 2.8.2
 
 * Updated readme
