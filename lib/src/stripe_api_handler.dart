@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'stripe_error.dart';
 
-const String DEFAULT_API_VERSION = "2019-08-14 ";
+const String DEFAULT_API_VERSION = "2020-03-02";
 
 enum RequestMethod { get, post, put, delete, option }
 
@@ -21,16 +21,13 @@ class StripeApiHandler {
   static const String TOKENS = "tokens";
   static const String SOURCES = "sources";
 
-  static const String VERSION_NAME = "27";
-
   static const String HEADER_KEY_REQUEST_ID = "Request-Id";
   static const String FIELD_ERROR = "error";
   static const String FIELD_SOURCE = "source";
 
   String apiVersion = DEFAULT_API_VERSION;
 
-  static const String MALFORMED_RESPONSE_MESSAGE =
-      "An improperly formatted error response was found.";
+  static const String MALFORMED_RESPONSE_MESSAGE = "An improperly formatted error response was found.";
 
   final http.Client _client = http.Client();
 
@@ -38,17 +35,13 @@ class StripeApiHandler {
 
   StripeApiHandler({this.stripeAccount});
 
-  Future<Map<String, dynamic>> request(
-      RequestMethod method, String path, String key, String apiVersion,
+  Future<Map<String, dynamic>> request(RequestMethod method, String path, String key, String apiVersion,
       {final Map<String, dynamic> params}) {
-    final options = RequestOptions(
-        key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
-    return _getStripeResponse(method, LIVE_API_PATH + path, options,
-        params: params);
+    final options = RequestOptions(key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
+    return _getStripeResponse(method, LIVE_API_PATH + path, options, params: params);
   }
 
-  Future<Map<String, dynamic>> _getStripeResponse(
-      RequestMethod method, final String url, final RequestOptions options,
+  Future<Map<String, dynamic>> _getStripeResponse(RequestMethod method, final String url, final RequestOptions options,
       {final Map<String, dynamic> params}) async {
     final headers = _headers(options: options);
 
@@ -85,8 +78,7 @@ class StripeApiHandler {
     try {
       resp = json.decode(response.body);
     } catch (error) {
-      final stripeError = StripeApiError(requestId,
-          {StripeApiError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
+      final stripeError = StripeApiError(requestId, {StripeApiError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
       throw StripeApiException(stripeError);
     }
 
@@ -107,7 +99,7 @@ class StripeApiHandler {
     headers["Accept-Charset"] = CHARSET;
     headers["Accept"] = "application/json";
     headers["Content-Type"] = "application/x-www-form-urlencoded";
-    headers["User-Agent"] = "Stripe/v1 DartBindings/$VERSION_NAME";
+    headers["User-Agent"] = "StripeSDK/v2";
 
     if (options != null) {
       headers["Authorization"] = "Bearer ${options.key}";
@@ -116,8 +108,6 @@ class StripeApiHandler {
     // debug headers
     Map<String, String> propertyMap = Map();
     propertyMap["os.name"] = defaultTargetPlatform.toString();
-    //propertyMap["os.version"] = String.valueOf(Build.VERSION.SDK_INT));
-    propertyMap["bindings.version"] = VERSION_NAME;
     propertyMap["lang"] = "Dart";
     propertyMap["publisher"] = "lars.dahl@gmail.com";
 
@@ -142,8 +132,7 @@ class StripeApiHandler {
 
   static String _encodeMap(Map<String, dynamic> params) {
     return params.keys
-        .map((key) =>
-            '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
+        .map((key) => '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
         .join('&');
   }
 
