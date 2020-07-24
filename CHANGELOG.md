@@ -1,5 +1,9 @@
 # Stripe SDK Changelog
 
+## 3.0.1
+
+* Fix unhandled exception due to unknown parameter: exp_mont
+
 ## 3.0.0
 
 * Added Support for custom decorations in card form
