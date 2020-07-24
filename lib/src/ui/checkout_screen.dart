@@ -9,7 +9,7 @@ import 'progress_bar.dart';
 import 'screens/payment_methods_screen.dart';
 import 'stores/payment_method_store.dart';
 
-@Deprecated("Experimental")
+@Deprecated('Experimental')
 class CheckoutScreen extends StatefulWidget {
   final Iterable<CheckoutItem> items;
   final String title;
@@ -27,6 +27,7 @@ class CheckoutScreen extends StatefulWidget {
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
 
+// ignore: deprecated_member_use_from_same_package
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final PaymentMethodStore paymentMethodStore = PaymentMethodStore.instance;
 
@@ -52,6 +53,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
+          // ignore: deprecated_member_use_from_same_package
           Container(child: CheckoutItemList(items: widget.items, total: _total)),
           SizedBox(
             height: 40,
@@ -75,7 +77,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   final confirmationResponse = await Stripe.instance
                       .confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
                   hideProgressDialog(context);
-                  if (confirmationResponse['status'] == "succeeded") {
+                  if (confirmationResponse['status'] == 'succeeded') {
                     await showGeneralDialog(
                         barrierColor: Colors.black.withOpacity(0.5),
                         transitionBuilder: (context, a1, a2, widget) {
@@ -111,7 +113,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 }
 
-@Deprecated("Experimental")
+@Deprecated('Experimental')
 class CheckoutItemList extends StatelessWidget {
   final List<CheckoutItem> items;
   final int total;
@@ -120,7 +122,7 @@ class CheckoutItemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> list = List<Widget>.from(items);
+    final list = List<Widget>.from(items);
     list.add(CheckoutSumItem(total: total));
     return ListView(
       children: list,
@@ -137,7 +139,7 @@ class CheckoutSumItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text("Total"),
+      title: Text('Total'),
       trailing: Text((total / 100).toStringAsFixed(2)),
     );
   }
@@ -157,7 +159,7 @@ class CheckoutItem extends StatelessWidget {
     return ListTile(
       dense: false,
       title: Text(name),
-      subtitle: Text("x $count"),
+      subtitle: Text('x $count'),
       trailing: Text((price / 100).toStringAsFixed(2)),
     );
   }
@@ -194,7 +196,6 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.all(Radius.circular(10)),
-
       ),
       child: DropdownButton(
         underline: Container(),
@@ -204,7 +205,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
             ?.map((item) => DropdownMenuItem(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text("${item.brand.toUpperCase()} **** **** **** ${item.last4}"),
+                    child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
                   ),
                   value: item.id,
                 ))

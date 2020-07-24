@@ -60,7 +60,6 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   final GlobalKey<FormState> _formKey;
   final CardForm _form;
 
-  // ignore: deprecated_member_use_from_same_package
   Future<IntentResponse> setupIntent;
 
   _AddPaymentMethodScreenState(this._form)

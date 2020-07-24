@@ -10,12 +10,12 @@ class NetworkService {
 
   NetworkService(this._cf);
 
-  NetworkService.defaultInstance() : _cf = CloudFunctions(region: "europe-west2");
+  NetworkService.defaultInstance() : _cf = CloudFunctions(region: 'europe-west2');
 
   /// Utility function to call a Firebase Function
   Future<T> _call<T>(String name, Map params) async {
     log('NetworkService._call, $name, $params');
-    final HttpsCallable callable = _cf.getHttpsCallable(
+    final callable = _cf.getHttpsCallable(
       functionName: name,
     );
     try {
@@ -38,36 +38,30 @@ class NetworkService {
     return jsonKey;
   }
 
-  // ignore: deprecated_member_use
   Future<IntentResponse> createSetupIntent() async {
     final response = await _call('createSetupIntent', {});
-    // ignore: deprecated_member_use
     return IntentResponse(response['status'], response['clientSecret']);
   }
 
-  // ignore: deprecated_member_use
   Future<IntentResponse> createSetupIntentWithPaymentMethod(paymentMethod) async {
-    final params = {'paymentMethod': paymentMethod, "returnUrl": Stripe.instance.getReturnUrlForSca()};
+    final params = {'paymentMethod': paymentMethod, 'returnUrl': Stripe.instance.getReturnUrlForSca()};
     final response = await _call('createSetupIntent', params);
-    // ignore: deprecated_member_use
     return IntentResponse(response['status'], response['clientSecret']);
   }
 
-  // ignore: deprecated_member_use
   Future<IntentResponse> createAutomaticPaymentIntent(int amount) async {
     final params = {
-      "amount": amount,
+      'amount': amount,
     };
     final response = await _call('createAutomaticPaymentIntent', params);
-    // ignore: deprecated_member_use
     return IntentResponse(response['status'], response['clientSecret']);
   }
 
   Future<Map> createManualPaymentIntent(int amount, String paymentMethod) {
     final params = {
-      "amount": amount,
-      "paymentMethod": paymentMethod,
-      "returnUrl": Stripe.instance.getReturnUrlForSca()
+      'amount': amount,
+      'paymentMethod': paymentMethod,
+      'returnUrl': Stripe.instance.getReturnUrlForSca()
     };
     return _call('createManualPaymentIntent', params);
   }
