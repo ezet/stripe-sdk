@@ -97,7 +97,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         barrierDismissible: true,
                         barrierLabel: '',
                         context: context,
-                        pageBuilder: (context, animation1, animation2) {});
+                        pageBuilder: (context, animation1, animation2) {
+                          return null;
+                        });
                     return;
                   }
                 } catch (e) {

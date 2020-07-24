@@ -17,9 +17,8 @@ const int MAX_LENGTH_AMEX_DINERS = 17;
 /// @param cardNumber a String that may or may not represent a valid card number
 /// @return {@code true} if and only if the input value is a valid card number
 bool isValidCardNumber(String cardNumber) {
-  String normalizedNumber = removeSpacesAndHyphens(cardNumber);
-  return isValidLuhnNumber(normalizedNumber) &&
-      isValidCardLength(normalizedNumber);
+  var normalizedNumber = removeSpacesAndHyphens(cardNumber);
+  return isValidLuhnNumber(normalizedNumber) && isValidCardLength(normalizedNumber);
 }
 
 /// Checks the input string to see whether or not it is a valid Luhn number.
@@ -31,18 +30,18 @@ bool isValidLuhnNumber(String cardNumber) {
   if (cardNumber == null || cardNumber.isEmpty) {
     return true;
   }
-  String normalizedNumber = removeSpacesAndHyphens(cardNumber);
+  var normalizedNumber = removeSpacesAndHyphens(cardNumber);
   if (normalizedNumber.length.isOdd) return true;
-  bool isOdd = true;
-  int sum = 0;
+  var isOdd = true;
+  var sum = 0;
 
-  for (int index = normalizedNumber.length - 1; index >= 0; index--) {
+  for (var index = normalizedNumber.length - 1; index >= 0; index--) {
     var c = normalizedNumber[index];
     if (!isDigit(c)) {
       return false;
     }
 
-    int digitInteger = getNumericValue(c);
+    var digitInteger = getNumericValue(c);
     isOdd = !isOdd;
 
     if (isOdd) {
@@ -60,7 +59,6 @@ bool isValidLuhnNumber(String cardNumber) {
   return valid;
 }
 
-
 /// Checks to see whether the input number is of the correct length, given the assumed brand of
 /// the card. This function does not perform a Luhn check.
 ///
@@ -69,14 +67,12 @@ bool isValidLuhnNumber(String cardNumber) {
 /// @return {@code true} if the card number is the correct length for the assumed brand
 
 bool isValidCardLength(String cardNumber, {String cardBrand}) {
-  if (cardBrand == null) {
-    cardBrand = getPossibleCardType(cardNumber, shouldNormalize: false);
-  }
+  cardBrand ??= getPossibleCardType(cardNumber, shouldNormalize: false);
   if (cardNumber == null || StripeCard.UNKNOWN == cardBrand) {
     return false;
   }
 
-  int length = cardNumber.length;
+  var length = cardNumber.length;
   switch (cardBrand) {
     case StripeCard.AMERICAN_EXPRESS:
       return length == LENGTH_AMERICAN_EXPRESS;
@@ -92,7 +88,7 @@ String getPossibleCardType(String cardNumber, {bool shouldNormalize = true}) {
     return StripeCard.UNKNOWN;
   }
 
-  String spacelessCardNumber = cardNumber;
+  var spacelessCardNumber = cardNumber;
   if (shouldNormalize) {
     spacelessCardNumber = removeSpacesAndHyphens(cardNumber);
   }
@@ -103,13 +99,11 @@ String getPossibleCardType(String cardNumber, {bool shouldNormalize = true}) {
     return StripeCard.DISCOVER;
   } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_JCB)) {
     return StripeCard.JCB;
-  } else if (hasAnyPrefix(
-      spacelessCardNumber, StripeCard.PREFIXES_DINERS_CLUB)) {
+  } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_DINERS_CLUB)) {
     return StripeCard.DINERS_CLUB;
   } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_VISA)) {
     return StripeCard.VISA;
-  } else if (hasAnyPrefix(
-      spacelessCardNumber, StripeCard.PREFIXES_MASTERCARD)) {
+  } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_MASTERCARD)) {
     return StripeCard.MASTERCARD;
   } else if (hasAnyPrefix(spacelessCardNumber, StripeCard.PREFIXES_UNIONPAY)) {
     return StripeCard.UNIONPAY;
@@ -119,8 +113,7 @@ String getPossibleCardType(String cardNumber, {bool shouldNormalize = true}) {
 }
 
 int getLengthForBrand(String cardBrand) {
-  if (StripeCard.AMERICAN_EXPRESS == cardBrand ||
-      StripeCard.DINERS_CLUB == cardBrand) {
+  if (StripeCard.AMERICAN_EXPRESS == cardBrand || StripeCard.DINERS_CLUB == cardBrand) {
     return MAX_LENGTH_AMEX_DINERS;
   } else {
     return MAX_LENGTH_COMMON;

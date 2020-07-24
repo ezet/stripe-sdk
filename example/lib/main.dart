@@ -10,7 +10,7 @@ import 'ui/edit_customer_screen.dart';
 import 'ui/payment_screen.dart';
 
 const _stripePublishableKey = 'pk_test_FlC2pf2JCTgKLcgG0aScSQmp00XqfTJL8s';
-const _returnUrl = "stripesdk://demo.stripesdk.ezet.io";
+const _returnUrl = 'stripesdk://demo.stripesdk.ezet.io';
 
 void main() {
   initializeLocator();
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
-    final app = MaterialApp(title: "Stripe SDK Demo", home: HomeScreen());
+    final app = MaterialApp(title: 'Stripe SDK Demo', home: HomeScreen());
     return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
 }
@@ -56,13 +56,13 @@ class HomeScreen extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text('Add Payment Method with Setup Intent'),
-            onTap: () async => await this.createPaymentMethodWithSetupIntent(context),
+            onTap: () async => await createPaymentMethodWithSetupIntent(context),
           ),
         ),
         Card(
           child: ListTile(
             title: Text('Add Payment Method without Setup Intent'),
-            onTap: () async => await this.createPaymentMethodWithoutSetupIntent(context),
+            onTap: () async => await createPaymentMethodWithoutSetupIntent(context),
           ),
         ),
         Card(

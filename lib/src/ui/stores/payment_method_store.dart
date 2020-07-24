@@ -11,7 +11,7 @@ import '../screens/payment_methods_screen.dart';
 ///
 ///
 class PaymentMethodStore extends ChangeNotifier {
-  final List<PaymentMethod> paymentMethods = List();
+  final List<PaymentMethod> paymentMethods = [];
 
   /// The customer session the store operates on.
   final CustomerSession _customerSession;
@@ -21,7 +21,7 @@ class PaymentMethodStore extends ChangeNotifier {
   /// Access the singleton instance of [StripeApi].
   /// Throws an [Exception] if [StripeApi.init] hasn't been called previously.
   static PaymentMethodStore get instance {
-    if (_instance == null) _instance = PaymentMethodStore();
+    _instance ??= PaymentMethodStore();
     return _instance;
   }
 
@@ -56,7 +56,7 @@ class PaymentMethodStore extends ChangeNotifier {
 
     final paymentMethodFuture = _customerSession.listPaymentMethods();
     return paymentMethodFuture.then((value) {
-      final List listData = value['data'] ?? List<PaymentMethod>();
+      final List listData = value['data'] ?? <PaymentMethod>[];
       paymentMethods.clear();
       if (listData.isNotEmpty) {
         paymentMethods.addAll(

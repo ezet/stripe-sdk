@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'network/network_service.dart';
 
-const _cloudFunctionsRegion = "europe-west2";
+const _cloudFunctionsRegion = 'europe-west2';
 
 GetIt locator = GetIt();
 

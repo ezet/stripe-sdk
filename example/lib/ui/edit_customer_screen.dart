@@ -33,7 +33,7 @@ class CustomerData {
 class EditCustomerForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final CustomerData customerData = Provider.of(context);
+    final customerData = Provider.of(context);
     if (customerData == null) return Container();
 
     final nameController = TextEditingController(text: customerData.name);
@@ -49,18 +49,18 @@ class EditCustomerForm extends StatelessWidget {
               TextField(
                 controller: nameController,
                 readOnly: true,
-                decoration: InputDecoration(labelText: "Name"),
+                decoration: InputDecoration(labelText: 'Name'),
               ),
               TextField(
                 controller: emailController,
                 readOnly: true,
-                decoration: InputDecoration(labelText: "Email"),
+                decoration: InputDecoration(labelText: 'Email'),
               ),
               TextField(
                 controller: phoneController,
                 readOnly: true,
                 enableInteractiveSelection: false,
-                decoration: InputDecoration(labelText: "Phone"),
+                decoration: InputDecoration(labelText: 'Phone'),
               )
             ],
           ),

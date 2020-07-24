@@ -11,23 +11,23 @@ const String DEFAULT_API_VERSION = '2020-03-02';
 enum RequestMethod { get, post, put, delete, option }
 
 class StripeApiHandler {
-  static const String LIVE_API_BASE = "https://api.stripe.com";
-  static const String LIVE_LOGGING_BASE = "https://q.stripe.com";
-  static const String LOGGING_ENDPOINT = "https://m.stripe.com/4";
-  static const String LIVE_API_PATH = LIVE_API_BASE + "/v1";
+  static const String LIVE_API_BASE = 'https://api.stripe.com';
+  static const String LIVE_LOGGING_BASE = 'https://q.stripe.com';
+  static const String LOGGING_ENDPOINT = 'https://m.stripe.com/4';
+  static const String LIVE_API_PATH = LIVE_API_BASE + '/v1';
 
-  static const String CHARSET = "UTF-8";
-  static const String CUSTOMERS = "customers";
-  static const String TOKENS = "tokens";
-  static const String SOURCES = "sources";
+  static const String CHARSET = 'UTF-8';
+  static const String CUSTOMERS = 'customers';
+  static const String TOKENS = 'tokens';
+  static const String SOURCES = 'sources';
 
-  static const String HEADER_KEY_REQUEST_ID = "Request-Id";
-  static const String FIELD_ERROR = "error";
-  static const String FIELD_SOURCE = "source";
+  static const String HEADER_KEY_REQUEST_ID = 'Request-Id';
+  static const String FIELD_ERROR = 'error';
+  static const String FIELD_SOURCE = 'source';
 
   String apiVersion = DEFAULT_API_VERSION;
 
-  static const String MALFORMED_RESPONSE_MESSAGE = "An improperly formatted error response was found.";
+  static const String MALFORMED_RESPONSE_MESSAGE = 'An improperly formatted error response was found.';
 
   final http.Client _client = http.Client();
 
@@ -49,9 +49,9 @@ class StripeApiHandler {
 
     switch (method) {
       case RequestMethod.get:
-        String fUrl = url;
+        var fUrl = url;
         if (params != null && params.isNotEmpty) {
-          fUrl = "$url?${_encodeMap(params)}";
+          fUrl = '$url?${_encodeMap(params)}';
         }
         response = await _client.get(fUrl, headers: headers);
         break;
@@ -68,7 +68,7 @@ class StripeApiHandler {
         response = await _client.delete(url, headers: headers);
         break;
       default:
-        throw Exception("Request Method: $method not implemented");
+        throw Exception('Request Method: $method not implemented');
     }
 
     final requestId = response.headers[HEADER_KEY_REQUEST_ID];
@@ -95,35 +95,35 @@ class StripeApiHandler {
   ///
   ///
   static Map<String, String> _headers({RequestOptions options}) {
-    final Map<String, String> headers = Map();
-    headers["Accept-Charset"] = CHARSET;
-    headers["Accept"] = "application/json";
-    headers["Content-Type"] = "application/x-www-form-urlencoded";
-    headers["User-Agent"] = "StripeSDK/v2";
+    final headers = <String, String>{};
+    headers['Accept-Charset'] = CHARSET;
+    headers['Accept'] = 'application/json';
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    headers['User-Agent'] = 'StripeSDK/v2';
 
     if (options != null) {
-      headers["Authorization"] = "Bearer ${options.key}";
+      headers['Authorization'] = 'Bearer ${options.key}';
     }
 
     // debug headers
-    Map<String, String> propertyMap = Map();
-    propertyMap["os.name"] = defaultTargetPlatform.toString();
-    propertyMap["lang"] = "Dart";
-    propertyMap["publisher"] = "lars.dahl@gmail.com";
+    var propertyMap = <String, String>{};
+    propertyMap['os.name'] = defaultTargetPlatform.toString();
+    propertyMap['lang'] = 'Dart';
+    propertyMap['publisher'] = 'lars.dahl@gmail.com';
 
-    headers["X-Stripe-Client-User-Agent"] = json.encode(propertyMap);
+    headers['X-Stripe-Client-User-Agent'] = json.encode(propertyMap);
 
     if (options != null) {
       if (options.apiVersion != null) {
-        headers["Stripe-Version"] = options.apiVersion;
+        headers['Stripe-Version'] = options.apiVersion;
       }
 
       if (options.stripeAccount != null) {
-        headers["Stripe-Account"] = options.stripeAccount;
+        headers['Stripe-Account'] = options.stripeAccount;
       }
 
       if (options.idempotencyKey != null) {
-        headers["Idempotency-Key"] = options.idempotencyKey;
+        headers['Idempotency-Key'] = options.idempotencyKey;
       }
     }
 
@@ -137,38 +137,38 @@ class StripeApiHandler {
   }
 
   static String _urlEncodeMap(dynamic data) {
-    StringBuffer urlData = StringBuffer("");
-    bool first = true;
+    var urlData = StringBuffer('');
+    var first = true;
     void urlEncode(dynamic sub, String path) {
       if (sub is List) {
-        for (int i = 0; i < sub.length; i++) {
-          urlEncode(sub[i], "$path%5B%5D");
+        for (var i = 0; i < sub.length; i++) {
+          urlEncode(sub[i], '$path%5B%5D');
         }
       } else if (sub is Map) {
         sub.forEach((k, v) {
-          if (path == "") {
-            urlEncode(v, "${Uri.encodeQueryComponent(k)}");
+          if (path == '') {
+            urlEncode(v, '${Uri.encodeQueryComponent(k)}');
           } else {
-            urlEncode(v, "$path%5B${Uri.encodeQueryComponent(k)}%5D");
+            urlEncode(v, '$path%5B${Uri.encodeQueryComponent(k)}%5D');
           }
         });
       } else {
         if (!first) {
-          urlData.write("&");
+          urlData.write('&');
         }
         first = false;
-        urlData.write("$path=${Uri.encodeQueryComponent(sub.toString())}");
+        urlData.write('$path=${Uri.encodeQueryComponent(sub.toString())}');
       }
     }
 
-    urlEncode(data, "");
+    urlEncode(data, '');
     return urlData.toString();
   }
 }
 
 class RequestOptions {
-  static const String TYPE_QUERY = "source";
-  static const String TYPE_JSON = "json_data";
+  static const String TYPE_QUERY = 'source';
+  static const String TYPE_JSON = 'json_data';
 
   final String apiVersion;
   final String guid;
