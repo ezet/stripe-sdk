@@ -23,8 +23,8 @@ class CardForm extends StatefulWidget {
       this.cardExpiryErrorText,
       this.cardCvcErrorText,
       this.cardDecoration})
-      : this.card = card ?? StripeCard(),
-        this.formKey = formKey ?? GlobalKey(),
+      : card = card ?? StripeCard(),
+        formKey = formKey ?? GlobalKey(),
         super(key: key);
 
   final GlobalKey<FormState> formKey;
@@ -44,17 +44,12 @@ class CardForm extends StatefulWidget {
 }
 
 class _CardFormState extends State<CardForm> {
-  StripeCard _validationModel = StripeCard();
+  final StripeCard _validationModel = StripeCard();
   bool cvcHasFocus = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var cardExpiry = "MM/YY";
+    var cardExpiry = 'MM/YY';
     if (_validationModel.expMonth != null) {
       cardExpiry =
           "${_validationModel.expMonth}/${_validationModel.expYear ?? 'YY'}";
@@ -68,9 +63,9 @@ class _CardFormState extends State<CardForm> {
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
               child: CreditCard(
-                cardNumber: _validationModel.number ?? "",
+                cardNumber: _validationModel.number ?? '',
                 cardExpiry: cardExpiry,
-                cvv: _validationModel.cvc ?? "",
+                cvv: _validationModel.cvc ?? '',
                 frontBackground: widget.cardDecoration != null
                     ? Container(
                         width: double.maxFinite,
@@ -144,7 +139,7 @@ class _CardFormState extends State<CardForm> {
                       child: FocusScope(
                         skipTraversal: false,
                         onFocusChange: (value) =>
-                            setState(() => this.cvcHasFocus = value),
+                            setState(() => cvcHasFocus = value),
                         child: CardCvcFormField(
                           initialValue: _validationModel.cvc ?? widget.card.cvc,
                           onChanged: (text) =>

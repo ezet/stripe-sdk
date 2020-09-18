@@ -32,14 +32,14 @@ class ModelUtils {
   /// @return {@code true} if the input year has passed the year of the specified current time
   ///  {@code false} otherwise.
   static bool hasYearPassed(int year, DateTime now) {
-    int normalized = normalizeYear(year, now);
+    final normalized = normalizeYear(year, now);
     return normalized < now.year;
   }
 
   static int normalizeYear(int year, DateTime now) {
     if (year < 100 && year >= 0) {
-      String currentYear = now.year.toString();
-      String prefix = currentYear.substring(0, currentYear.length - 2);
+      final currentYear = now.year.toString();
+      final prefix = currentYear.substring(0, currentYear.length - 2);
       year = int.parse('$prefix$year');
     }
     return year;

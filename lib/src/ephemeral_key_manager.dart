@@ -6,20 +6,20 @@ import 'stripe_error.dart';
 import 'util/stripe_json_utils.dart';
 
 /// Function that takes a apiVersion and returns a Stripe ephemeral key response
-typedef Future<String> EphemeralKeyProvider(String apiVersion);
+typedef EphemeralKeyProvider = Future<String> Function(String apiVersion);
 
 /// Represents a Stripe Ephemeral Key
 class EphemeralKey {
-  static const String FIELD_CREATED = "created";
-  static const String FIELD_EXPIRES = "expires";
-  static const String FIELD_SECRET = "secret";
-  static const String FIELD_LIVEMODE = "livemode";
-  static const String FIELD_OBJECT = "object";
-  static const String FIELD_ID = "id";
-  static const String FIELD_ASSOCIATED_OBJECTS = "associated_objects";
-  static const String FIELD_TYPE = "type";
+  static const String FIELD_CREATED = 'created';
+  static const String FIELD_EXPIRES = 'expires';
+  static const String FIELD_SECRET = 'secret';
+  static const String FIELD_LIVEMODE = 'livemode';
+  static const String FIELD_OBJECT = 'object';
+  static const String FIELD_ID = 'id';
+  static const String FIELD_ASSOCIATED_OBJECTS = 'associated_objects';
+  static const String FIELD_TYPE = 'type';
 
-  static const String NULL = "null";
+  static const String NULL = 'null';
 
   String _id;
   int _created;
@@ -83,7 +83,7 @@ class EphemeralKeyManager {
       } catch (error) {
         final e = StripeApiError(null, {
           StripeApiError.FIELD_MESSAGE:
-              "Failed to retrive ephemeralKey from server",
+              'Failed to retrive ephemeralKey from server',
         });
         throw StripeApiException(e);
       }
@@ -94,7 +94,7 @@ class EphemeralKeyManager {
       } catch (error) {
         final e = StripeApiError(null, {
           StripeApiError.FIELD_MESSAGE:
-              "Failed to parse Ephemeral Key, Please return the response as it is as you recieved from stripe server",
+              'Failed to parse Ephemeral Key, Please return the response as it is as you recieved from stripe server',
         });
         throw StripeApiException(e);
       }
@@ -110,7 +110,7 @@ class EphemeralKeyManager {
       return true;
     }
 
-    DateTime now = DateTime.now();
+    final now = DateTime.now();
     final diff = _ephemeralKey.expiresAt.difference(now);
     return diff.inSeconds < timeBufferInSeconds;
   }

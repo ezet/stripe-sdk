@@ -37,9 +37,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void initState() {
-    _total = widget.items.fold(0, (value, item) => value + item.price * item.count);
-    _createIntentResponse = widget.createPaymentIntent(_total);
     super.initState();
+    _total =
+        widget.items.fold(0, (value, item) => value + item.price * item.count);
+    _createIntentResponse = widget.createPaymentIntent(_total);
   }
 
   @override
@@ -53,8 +54,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          // ignore: deprecated_member_use_from_same_package
-          Container(child: CheckoutItemList(items: widget.items, total: _total)),
+          Container(
+              // ignore: deprecated_member_use_from_same_package
+              child: CheckoutItemList(items: widget.items, total: _total)),
           SizedBox(
             height: 40,
           ),
@@ -75,7 +77,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 final intentResponse = await _createIntentResponse;
                 try {
                   final confirmationResponse = await Stripe.instance
-                      .confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
+                      .confirmPayment(intentResponse.clientSecret,
+                          paymentMethodId: _selectedPaymentMethod);
                   hideProgressDialog(context);
                   if (confirmationResponse['status'] == 'succeeded') {
                     await showGeneralDialog(
@@ -86,9 +89,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             child: Opacity(
                               opacity: a1.value,
                               child: AlertDialog(
-                                shape: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
+                                shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.0)),
                                 title: Text('Success'),
-                                content: Text('Payment successfully completed!'),
+                                content:
+                                    Text('Payment successfully completed!'),
                               ),
                             ),
                           );
@@ -97,6 +102,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         barrierDismissible: true,
                         barrierLabel: '',
                         context: context,
+                        // ignore: missing_return
                         pageBuilder: (context, animation1, animation2) {});
                     return;
                   }
@@ -118,7 +124,8 @@ class CheckoutItemList extends StatelessWidget {
   final List<CheckoutItem> items;
   final int total;
 
-  const CheckoutItemList({Key key, @required this.items, @required this.total}) : super(key: key);
+  const CheckoutItemList({Key key, @required this.items, @required this.total})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +158,12 @@ class CheckoutItem extends StatelessWidget {
   final String currency;
   final int count;
 
-  const CheckoutItem({Key key, @required this.name, @required this.price, @required this.currency, this.count = 1})
+  const CheckoutItem(
+      {Key key,
+      @required this.name,
+      @required this.price,
+      @required this.currency,
+      this.count = 1})
       : super(key: key);
 
   @override
@@ -167,7 +179,10 @@ class CheckoutItem extends StatelessWidget {
 
 class PaymentMethodSelector extends StatefulWidget {
   PaymentMethodSelector(
-      {Key key, @required this.paymentMethodStore, @required this.selectedPaymentMethodId, @required this.onChanged})
+      {Key key,
+      @required this.paymentMethodStore,
+      @required this.selectedPaymentMethodId,
+      @required this.onChanged})
       : super(key: key);
 
   final String selectedPaymentMethodId;
@@ -186,8 +201,9 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   Widget build(BuildContext context) {
     PaymentMethod selectedPaymentMethod;
     if (_selectedPaymentMethodId != null) {
-      selectedPaymentMethod =
-          paymentMethods?.singleWhere((item) => item.id == _selectedPaymentMethodId, orElse: () => null);
+      selectedPaymentMethod = paymentMethods?.singleWhere(
+          (item) => item.id == _selectedPaymentMethodId,
+          orElse: () => null);
     } else {
       selectedPaymentMethod = paymentMethods?.first;
     }
@@ -205,7 +221,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
             ?.map((item) => DropdownMenuItem(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
+                    child: Text(
+                        '${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
                   ),
                   value: item.id,
                 ))
@@ -222,8 +239,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
 
   @override
   void initState() {
-    widget.paymentMethodStore.addListener(listener);
     super.initState();
+    widget.paymentMethodStore.addListener(listener);
   }
 
   @override

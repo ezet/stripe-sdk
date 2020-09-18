@@ -13,7 +13,11 @@ class EditCustomerScreen extends StatelessWidget {
       ),
       body: FutureProvider.value(
         value: session.retrieveCurrentCustomer().then((value) => CustomerData(
-            value['id'], value['email'], value['description'], value['shipping']['name'], value['shipping']['phone'])),
+            value['id'],
+            value['email'],
+            value['description'],
+            value['shipping']['name'],
+            value['shipping']['phone'])),
         child: EditCustomerForm(),
       ),
     );
@@ -49,18 +53,18 @@ class EditCustomerForm extends StatelessWidget {
               TextField(
                 controller: nameController,
                 readOnly: true,
-                decoration: InputDecoration(labelText: "Name"),
+                decoration: InputDecoration(labelText: 'Name'),
               ),
               TextField(
                 controller: emailController,
                 readOnly: true,
-                decoration: InputDecoration(labelText: "Email"),
+                decoration: InputDecoration(labelText: 'Email'),
               ),
               TextField(
                 controller: phoneController,
                 readOnly: true,
                 enableInteractiveSelection: false,
-                decoration: InputDecoration(labelText: "Phone"),
+                decoration: InputDecoration(labelText: 'Phone'),
               )
             ],
           ),

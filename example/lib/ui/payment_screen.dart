@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
+import 'package:stripe_sdk_example/network/network_service.dart';
 
 import '../locator.dart';
-import '../network/network_service.dart';
 
 class PaymentScreen extends StatelessWidget {
   @override
@@ -41,21 +41,21 @@ class PaymentScreen extends StatelessWidget {
   Future checkout(BuildContext context) {
     var items = [
       CheckoutItem(
-        name: "Book",
+        name: 'Book',
         price: 40000,
-        currency: "\$",
+        currency: '\$',
       ),
       CheckoutItem(
-        name: "CD",
+        name: 'CD',
         price: 10000,
-        currency: "\$",
+        currency: '\$',
       )
     ];
     final NetworkService networkService = locator.get();
     return Navigator.push(context, MaterialPageRoute(builder: (context) {
       // ignore: deprecated_member_use
       return CheckoutScreen(
-        title: "Checkout",
+        title: 'Checkout',
         items: items,
 //        paymentMethods: paymentMethods.paymentMethods.map((e) => PaymentMethod(e.id, e.last4)),
         createPaymentIntent: networkService.createAutomaticPaymentIntent,
@@ -66,37 +66,39 @@ class PaymentScreen extends StatelessWidget {
   void createAutomaticPaymentIntent(BuildContext context) async {
     final NetworkService networkService = locator.get();
     final response = await networkService.createAutomaticPaymentIntent(10000);
-    if (response.status == "succeeded") {
+    if (response.status == 'succeeded') {
       // TODO: success
-      debugPrint("Success before authentication.");
+      debugPrint('Success before authentication.');
       return;
     }
-    final result = await Stripe.instance
-        .confirmPayment(response.clientSecret, paymentMethodId: "pm_card_threeDSecure2Required");
-    if (result['status'] == "succeeded") {
+    final result = await Stripe.instance.confirmPayment(response.clientSecret,
+        paymentMethodId: 'pm_card_threeDSecure2Required');
+    if (result['status'] == 'succeeded') {
       // TODO: success
-      debugPrint("Success after authentication.");
+      debugPrint('Success after authentication.');
       return;
     } else {
-      debugPrint("Error");
+      debugPrint('Error');
     }
   }
 
   void createManualPaymentIntent(BuildContext context) async {
     final NetworkService networkService = locator.get();
-    final response = await networkService.createManualPaymentIntent(10000, "pm_card_threeDSecure2Required");
-    if (response['status'] == "succeeded") {
+    final response = await networkService.createManualPaymentIntent(
+        10000, 'pm_card_threeDSecure2Required');
+    if (response['status'] == 'succeeded') {
       // TODO: success
-      debugPrint("Success before authentication.");
+      debugPrint('Success before authentication.');
       return;
     }
-    final result = await Stripe.instance.authenticatePayment(response['clientSecret']);
-    if (result['status'] == "requires_confirmation") {
+    final result =
+        await Stripe.instance.authenticatePayment(response['clientSecret']);
+    if (result['status'] == 'requires_confirmation') {
       // TODO: make call to server to confirm
-      debugPrint("Success after authentication.");
+      debugPrint('Success after authentication.');
       return;
     } else {
-      debugPrint("Error");
+      debugPrint('Error');
     }
   }
 }

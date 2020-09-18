@@ -6,7 +6,7 @@ import '../../ui/stores/payment_method_store.dart';
 import '../progress_bar.dart';
 import 'add_payment_method_screen.dart';
 
-@Deprecated("Experimental")
+@Deprecated('Experimental')
 class PaymentMethodsScreen extends StatefulWidget {
   final String title;
   final CreateSetupIntent createSetupIntent;
@@ -17,9 +17,9 @@ class PaymentMethodsScreen extends StatefulWidget {
   PaymentMethodsScreen(
       {Key key,
       @required this.createSetupIntent,
-      this.title = "Payment Methods",
+      this.title = 'Payment Methods',
       PaymentMethodStore paymentMethodStore})
-      : this._paymentMethodStore = paymentMethodStore ?? PaymentMethodStore(),
+      : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore(),
         super(key: key);
 
   @override
@@ -28,12 +28,11 @@ class PaymentMethodsScreen extends StatefulWidget {
 
 // ignore: deprecated_member_use_from_same_package
 class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
-  // ignore: deprecated_member_use_from_same_package
   List<PaymentMethod> paymentMethods;
 
   @override
   Widget build(BuildContext context) {
-    final Stripe stripe = Stripe.instance;
+    final stripe = Stripe.instance;
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +46,8 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                   MaterialPageRoute(
                       builder: (context) =>
                           // ignore: deprecated_member_use_from_same_package
-                          AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent,
+                          AddPaymentMethodScreen.withSetupIntent(
+                              widget.createSetupIntent,
                               stripe: stripe)));
               if (added == true) await widget._paymentMethodStore.refresh();
             },
@@ -62,8 +62,8 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
 
   @override
   void initState() {
-    widget._paymentMethodStore.addListener(_paymentMethodStoreListener);
     super.initState();
+    widget._paymentMethodStore.addListener(_paymentMethodStoreListener);
   }
 
   @override
@@ -73,7 +73,10 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
   }
 
   void _paymentMethodStoreListener() {
-    if (mounted) setState(() => this.paymentMethods = widget._paymentMethodStore.paymentMethods);
+    if (mounted) {
+      setState(
+          () => paymentMethods = widget._paymentMethodStore.paymentMethods);
+    }
   }
 }
 
@@ -88,7 +91,8 @@ class PaymentMethod {
 class PaymentMethodsList extends StatelessWidget {
   final PaymentMethodStore paymentMethodStore;
 
-  const PaymentMethodsList({Key key, @required this.paymentMethodStore}) : super(key: key);
+  const PaymentMethodsList({Key key, @required this.paymentMethodStore})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +107,8 @@ class PaymentMethodsList extends StatelessWidget {
     );
   }
 
-  Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
+  Widget buildListView(List<PaymentMethod> listData,
+      PaymentMethodStore paymentMethods, BuildContext rootContext) {
     if (listData.isEmpty) {
       // TODO: loading indicator
       return ListView();
@@ -122,7 +127,7 @@ class PaymentMethodsList extends StatelessWidget {
 //                  caption: "Edit",
 //                ),
                 IconSlideAction(
-                  caption: "Delete",
+                  caption: 'Delete',
                   icon: Icons.delete_forever,
 //                  color: Theme.of(context).errorColor,
                   color: Colors.red,
@@ -132,25 +137,29 @@ class PaymentMethodsList extends StatelessWidget {
                         context: rootContext,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text("Delete payment method"),
-                            content: Text("Are you sure you want to delete this payment method?"),
+                            title: Text('Delete payment method'),
+                            content: Text(
+                                'Are you sure you want to delete this payment method?'),
                             actions: <Widget>[
                               FlatButton(
-                                child: Text("Cancel"),
+                                child: Text('Cancel'),
                                 onPressed: () => Navigator.pop(rootContext),
                               ),
                               FlatButton(
-                                  child: Text("Delete"),
+                                  child: Text('Delete'),
                                   onPressed: () async {
                                     Navigator.pop(rootContext);
                                     showProgressDialog(rootContext);
 
-                                    final result = await paymentMethodStore.detachPaymentMethod(card.id);
+                                    final result = await paymentMethodStore
+                                        .detachPaymentMethod(card.id);
                                     hideProgressDialog(rootContext);
                                     if (result != null) {
                                       await paymentMethods.refresh();
-                                      Scaffold.of(rootContext).showSnackBar(SnackBar(
-                                        content: Text('Payment method successfully deleted.'),
+                                      Scaffold.of(rootContext)
+                                          .showSnackBar(SnackBar(
+                                        content: Text(
+                                            'Payment method successfully deleted.'),
                                       ));
                                     }
                                   })
@@ -164,7 +173,7 @@ class PaymentMethodsList extends StatelessWidget {
                 child: ListTile(
                   onLongPress: () async {},
 //              onTap: () => defaultPaymentMethod.set(card.id),
-                  subtitle: Text("**** **** **** ${card.last4}"),
+                  subtitle: Text('**** **** **** ${card.last4}'),
                   title: Text(card.brand.toUpperCase()),
                   leading: Icon(Icons.credit_card),
 //              trailing: card.id == defaultPaymentMethod.paymentMethodId ? Icon(Icons.check_circle) : null,

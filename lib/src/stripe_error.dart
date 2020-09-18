@@ -1,13 +1,13 @@
 import 'util/stripe_json_utils.dart';
 
 class StripeApiError {
-  static const String FIELD_TYPE = "type";
-  static const String FIELD_CHARGE = "charge";
-  static const String FIELD_CODE = "code";
-  static const String FIELD_DECLINE_CODE = "decline_code";
-  static const String FIELD_DOC_URL = "doc_url";
-  static const String FIELD_MESSAGE = "message";
-  static const String FIELD_PARAM = "param";
+  static const String FIELD_TYPE = 'type';
+  static const String FIELD_CHARGE = 'charge';
+  static const String FIELD_CODE = 'code';
+  static const String FIELD_DECLINE_CODE = 'decline_code';
+  static const String FIELD_DOC_URL = 'doc_url';
+  static const String FIELD_MESSAGE = 'message';
+  static const String FIELD_PARAM = 'param';
 
   final String requestId;
   final String type;

@@ -24,14 +24,16 @@ class CardExpiryFormField extends StatefulWidget {
   final void Function(int, int) onChanged;
   final String Function(String) validator;
 
-  static const defaultLabelText = "Expiration Date";
-  static const defaultHintText = "MM/YY";
-  static const defaultErrorText = "Invalid expiration date";
-  static const defaultMonthMask = "##";
-  static const defaultYearMask = "##";
+  static const defaultLabelText = 'Expiration Date';
+  static const defaultHintText = 'MM/YY';
+  static const defaultErrorText = 'Invalid expiration date';
+  static const defaultMonthMask = '##';
+  static const defaultYearMask = '##';
 
-  static const defaultDecoration =
-      InputDecoration(border: OutlineInputBorder(), labelText: defaultLabelText, hintText: defaultHintText);
+  static const defaultDecoration = InputDecoration(
+      border: OutlineInputBorder(),
+      labelText: defaultLabelText,
+      hintText: defaultHintText);
   static const defaultTextStyle = TextStyle(color: Colors.black);
 
   @override
@@ -39,25 +41,34 @@ class CardExpiryFormField extends StatefulWidget {
 }
 
 class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
-  final maskFormatter =
-      MaskTextInputFormatter(mask: '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
+  final maskFormatter = MaskTextInputFormatter(
+      mask:
+          '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
 
   @override
   Widget build(BuildContext context) {
-    final month = widget.initialMonth?.toString()?.padLeft(CardExpiryFormField.defaultMonthMask.length, "0");
-    final year = widget.initialYear?.toString()?.substring(widget.initialYear.toString().length -
-        min(CardExpiryFormField.defaultYearMask.length, widget.initialYear.toString().length));
-    final initial = (month ?? "") + (year ?? "");
+    final month = widget.initialMonth
+        ?.toString()
+        ?.padLeft(CardExpiryFormField.defaultMonthMask.length, '0');
+    final year = widget.initialYear?.toString()?.substring(
+        widget.initialYear.toString().length -
+            min(CardExpiryFormField.defaultYearMask.length,
+                widget.initialYear.toString().length));
+    final initial = (month ?? '') + (year ?? '');
 
-    final initialMaskFormatter =
-        MaskTextInputFormatter(mask: '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
+    final initialMaskFormatter = MaskTextInputFormatter(
+        mask:
+            '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
 
     return Container(
       child: TextFormField(
         validator: widget.validator,
-        initialValue: initialMaskFormatter.formatEditUpdate(TextEditingValue(), TextEditingValue(text: initial)).text,
+        initialValue: initialMaskFormatter
+            .formatEditUpdate(
+                TextEditingValue(), TextEditingValue(text: initial))
+            .text,
         onChanged: (text) {
-          final arr = text.split("/");
+          final arr = text.split('/');
           final month = int.tryParse(arr[0]);
           var year;
           if (arr.length == 2) {
@@ -66,7 +77,7 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
           widget.onChanged(month, year);
         },
         onSaved: (text) {
-          final arr = text.split("/");
+          final arr = text.split('/');
           final month = int.tryParse(arr[0]);
           final year = int.tryParse(arr[1]);
           widget.onSaved(month, year);

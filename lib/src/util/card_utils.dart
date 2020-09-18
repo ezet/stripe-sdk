@@ -17,7 +17,7 @@ const int MAX_LENGTH_AMEX_DINERS = 17;
 /// @param cardNumber a String that may or may not represent a valid card number
 /// @return {@code true} if and only if the input value is a valid card number
 bool isValidCardNumber(String cardNumber) {
-  String normalizedNumber = removeSpacesAndHyphens(cardNumber);
+  final normalizedNumber = removeSpacesAndHyphens(cardNumber);
   return isValidLuhnNumber(normalizedNumber) &&
       isValidCardLength(normalizedNumber);
 }
@@ -31,18 +31,18 @@ bool isValidLuhnNumber(String cardNumber) {
   if (cardNumber == null || cardNumber.isEmpty) {
     return true;
   }
-  String normalizedNumber = removeSpacesAndHyphens(cardNumber);
+  final normalizedNumber = removeSpacesAndHyphens(cardNumber);
   if (normalizedNumber.length.isOdd) return true;
-  bool isOdd = true;
-  int sum = 0;
+  var isOdd = true;
+  var sum = 0;
 
-  for (int index = normalizedNumber.length - 1; index >= 0; index--) {
-    var c = normalizedNumber[index];
+  for (var index = normalizedNumber.length - 1; index >= 0; index--) {
+    final c = normalizedNumber[index];
     if (!isDigit(c)) {
       return false;
     }
 
-    int digitInteger = getNumericValue(c);
+    var digitInteger = getNumericValue(c);
     isOdd = !isOdd;
 
     if (isOdd) {
@@ -60,7 +60,6 @@ bool isValidLuhnNumber(String cardNumber) {
   return valid;
 }
 
-
 /// Checks to see whether the input number is of the correct length, given the assumed brand of
 /// the card. This function does not perform a Luhn check.
 ///
@@ -69,14 +68,12 @@ bool isValidLuhnNumber(String cardNumber) {
 /// @return {@code true} if the card number is the correct length for the assumed brand
 
 bool isValidCardLength(String cardNumber, {String cardBrand}) {
-  if (cardBrand == null) {
-    cardBrand = getPossibleCardType(cardNumber, shouldNormalize: false);
-  }
+  cardBrand ??= getPossibleCardType(cardNumber, shouldNormalize: false);
   if (cardNumber == null || StripeCard.UNKNOWN == cardBrand) {
     return false;
   }
 
-  int length = cardNumber.length;
+  final length = cardNumber.length;
   switch (cardBrand) {
     case StripeCard.AMERICAN_EXPRESS:
       return length == LENGTH_AMERICAN_EXPRESS;
@@ -92,7 +89,7 @@ String getPossibleCardType(String cardNumber, {bool shouldNormalize = true}) {
     return StripeCard.UNKNOWN;
   }
 
-  String spacelessCardNumber = cardNumber;
+  var spacelessCardNumber = cardNumber;
   if (shouldNormalize) {
     spacelessCardNumber = removeSpacesAndHyphens(cardNumber);
   }

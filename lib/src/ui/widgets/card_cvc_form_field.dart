@@ -20,9 +20,9 @@ class CardCvcFormField extends StatefulWidget {
   final void Function(String) onChanged;
   final String Function(String) validator;
 
-  static const defaultErrorText = "Invalid CVV";
+  static const defaultErrorText = 'Invalid CVV';
   static const defaultDecoration = InputDecoration(
-      border: OutlineInputBorder(), labelText: "CVV", hintText: "XXX");
+      border: OutlineInputBorder(), labelText: 'CVV', hintText: 'XXX');
   static const defaultTextStyle = TextStyle(color: Colors.black);
 
   @override
@@ -34,7 +34,6 @@ class _CardCvcFormFieldState extends State<CardCvcFormField> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       child: TextFormField(
         initialValue: widget.initialValue,
