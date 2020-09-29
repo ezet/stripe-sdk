@@ -18,12 +18,8 @@ class PaymentMethodsNotifier extends ChangeNotifier {
     return _instance ??= PaymentMethodsNotifier();
   }
 
-  PaymentMethodsNotifier() : _customerSession = CustomerSession.instance {
-    if (_customerSession == null) {
-      throw Exception(
-          'CustomerSession instance needs to be initialized before accessing PaymentMethodsNotifier class');
-    }
-  }
+  //No need to check null for _customerSession, if its null, an exception will be thrown from low level
+  PaymentMethodsNotifier() : _customerSession = CustomerSession.instance;
 
   /// Attach a payment method and refresh the store if there are any active listeners.
   Future<Map> attachPaymentMethod(String paymentMethodId) {
