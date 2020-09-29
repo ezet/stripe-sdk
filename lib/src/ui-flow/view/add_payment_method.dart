@@ -16,7 +16,7 @@ typedef SetupIntent = Future<SetupIntentModel> Function();
 
 class AddPaymentMethod extends StatefulWidget {
   /// Used to create a setup intent when required.
-  final SetupIntent _createSetupIntent;
+  final SetupIntent _setupIntent;
 
   /// True if a setup intent should be used to set up the payment method.
   final bool _useSetupIntent;
@@ -36,9 +36,8 @@ class AddPaymentMethod extends StatefulWidget {
   final Color appBarBackgroundColor;
 
   /// Add a payment method using a Stripe Setup Intent
-  AddPaymentMethod.withSetupIntent(this._createSetupIntent,
-      {PaymentMethodsNotifier paymentMethodsNotifier,
-      this.form,
+  AddPaymentMethod.withSetupIntent(this._setupIntent,
+      {this.form,
       this.appBarTitle,
       this.appBarElevation,
       this.appBarBackgroundColor})
@@ -48,14 +47,12 @@ class AddPaymentMethod extends StatefulWidget {
   @Deprecated(
       'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
   AddPaymentMethod.withoutSetupIntent(
-      {PaymentMethodsNotifier paymentMethodsNotifier,
-      Stripe stripe,
-      this.form,
+      {this.form,
       this.appBarTitle,
       this.appBarElevation,
       this.appBarBackgroundColor})
       : _useSetupIntent = false,
-        _createSetupIntent = null;
+        _setupIntent = null;
   @override
   _AddPaymentMethodState createState() => _AddPaymentMethodState();
 }
@@ -68,8 +65,8 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
   @override
   void initState() {
     super.initState();
-    _setupIntent = widget._createSetupIntent();
-    _form = widget.form;
+    _setupIntent = widget._setupIntent();
+    _form = widget.form ?? CardForm();
   }
 
   @override
