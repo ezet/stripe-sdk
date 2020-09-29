@@ -24,7 +24,7 @@ class PaymentMethodsNotifier extends ChangeNotifier {
   /// Attach a payment method and refresh the store if there are any active listeners.
   Future<Map> attachPaymentMethod(String paymentMethodId) {
     //Check paymentMethodId isn't null before api request
-    if (isBlank(paymentMethodId)) {
+    if (!isBlank(paymentMethodId)) {
       final paymentMethodFuture =
           _customerSession.attachPaymentMethod(paymentMethodId);
       refresh();
@@ -35,7 +35,7 @@ class PaymentMethodsNotifier extends ChangeNotifier {
 
   /// Detach a payment method and refresh the store if there are any active listeners.
   Future<Map> detachPaymentMethod(String paymentMethodId) {
-    if (isBlank(paymentMethodId)) {
+    if (!isBlank(paymentMethodId)) {
       final paymentMethodFuture =
           _customerSession.detachPaymentMethod(paymentMethodId);
       refresh();

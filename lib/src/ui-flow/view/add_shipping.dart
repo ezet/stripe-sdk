@@ -3,12 +3,8 @@ import 'package:stripe_sdk/src/ui-flow/model/payment_method_models.dart';
 import 'payment_methods.dart';
 
 class AttachShippingToPayment extends StatefulWidget {
-
   ///if this false, shipping details will not be in the ui flow
   final bool attachShipping;
-
-  ///change app bar title
-  final Widget appBarTitle;
 
   ///change app bar elevation
   final double appBarElevation;
@@ -23,7 +19,6 @@ class AttachShippingToPayment extends StatefulWidget {
     this.paymentMethod, {
     Key key,
     this.attachShipping = false,
-    this.appBarTitle = const Text('Add an Address'),
     this.appBarElevation,
     this.appBarBackgroundColor,
     @required this.checkoutBuilder,
@@ -44,7 +39,7 @@ class _AttachShippingToPaymentState extends State<AttachShippingToPayment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.appBarTitle,
+        title: const Text('Add an Address'),
         elevation: widget.appBarElevation,
         backgroundColor: widget.appBarBackgroundColor,
         actions: <Widget>[

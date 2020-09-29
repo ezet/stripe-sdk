@@ -292,13 +292,11 @@ class PaymentMethodCard extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
   final void Function(PaymentMethodModel paymentMethod) paymentMethodCallBack;
   final String paymentMethodId;
-  final void Function(String message) scafoldCallBack;
 
   const PaymentMethodCard(
       {Key key,
       this.paymentMethod,
       this.paymentMethodCallBack,
-      this.scafoldCallBack,
       this.paymentMethodId,
       this.scaffoldKey})
       : super(key: key);
@@ -483,6 +481,7 @@ class PaymentMethodCard extends StatelessWidget {
                                     paymentMethod.paymentMethodId)
                                 .then((value) {
                               if (value != null) {
+
                                 var snackbar = SnackBar(
                                     content:
                                         Text('Card successfully deleted!'));
