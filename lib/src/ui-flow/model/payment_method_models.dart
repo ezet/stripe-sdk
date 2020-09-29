@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 
+import '../../util/model_utils.dart';
+
 //Payment Methods List
 class PaymentMethodsListModel {
   final List<PaymentMethodModel> data;
@@ -162,6 +164,9 @@ class AttachShippingToPaymentModel {
   String country, name, address, apt, city, state, phone, zipCode;
 
   Map<String, dynamic> toJson() {
+    //catch AssertionError()
+    assert(ModelUtils.isWholePositiveNumber(phone));
+
     return <String, dynamic>{
       'name': name,
       'phone': phone,

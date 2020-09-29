@@ -1,4 +1,3 @@
-
 import 'payment_method_models.dart';
 //The purpose of including most of these datas here is so if needed, you can store some of these datas in your database after receiving them from stripe. The idea is, the more option, the better.
 
@@ -59,7 +58,7 @@ class PaymentIntentModel {
       statementDescriptor,
       transferGroup,
       review;
-  final Map<String, dynamic> metadata, transferData, nextAction,charges;
+  final Map<String, dynamic> metadata, transferData, nextAction, charges;
   final int amount,
       amountCapturable,
       applicationFee,
@@ -195,6 +194,9 @@ class SetupIntentModel {
   });
 
   factory SetupIntentModel.fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      return null;
+    }
     return SetupIntentModel(
       id: json['id'],
       clientSecret: json['client_secret'],
