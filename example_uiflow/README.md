@@ -12,14 +12,16 @@ The UI Flow has a built in handling of errors, exceptions, and also provides a s
 
 Here, you will be able to see the UI flow in order from start to end.
 
-<img src="https://raw.githubusercontent.com/eyoeldefare/textfield_tags/master/images/0_pay.png" width="350">
+<img src="https://raw.githubusercontent.com/eyoeldefare/stripe-sdk/ui-flow/example_uiflow/images/0_pay.png.png" width="350">
 
-<img src="https://raw.githubusercontent.com/eyoeldefare/textfield_tags/master/images/1_payment_methods.png" width="350">
+<img src="https://raw.githubusercontent.com/eyoeldefare/stripe-sdk/ui-flow/example_uiflow/images/1_payment_methods.png" width="350">
 
-<img src="https://raw.githubusercontent.com/eyoeldefare/textfield_tags/master/images/2_add_card.png" width="350">
+<img src="https://raw.githubusercontent.com/eyoeldefare/stripe-sdk/ui-flow/example_uiflow/images/2_add_card.png" width="350">
 
-<img src="https://raw.githubusercontent.com/eyoeldefare/textfield_tags/master/images/3_error_handle.png" width="350">
+<img src="https://raw.githubusercontent.com/eyoeldefare/stripe-sdk/ui-flow/example_uiflow/images/3_error_handle.png" width="350">
 
-<img src="https://raw.githubusercontent.com/eyoeldefare/textfield_tags/master/images/4_add_address.png" width="350">
+<img src="https://raw.githubusercontent.com/eyoeldefare/stripe-sdk/ui-flow/example_uiflow/images/4_add_address.png" width="350">
 
-<img src="https://raw.githubusercontent.com/eyoeldefare/textfield_tags/master/images/5_final_checkout_display.png" width="350">
+<img src="https://raw.githubusercontent.com/eyoeldefare/stripe-sdk/ui-flow/example_uiflow/images/5_confirm_payment.png.png" width="350">
+
+<img src="https://raw.githubusercontent.com/eyoeldefare/stripe-sdk/ui-flow/example_uiflow/images/6_final_checkout_display.png" width="350">
