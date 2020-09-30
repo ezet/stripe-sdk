@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_sdk/stripe_sdk_ui.dart';
 import 'package:stripe_sdk/stripe_sdk_uiflow.dart';
 
 import 'api_service.dart';
@@ -70,6 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   return PaymentMethods(
                     ///This will attach a shipping address with the payment intent if [true]
                     withShippingPage: false,
+                    setupIntent: ApiService.createSetupIntent,
+                    cardForm: CardForm(
+                      cardDecoration: BoxDecoration(color: const Color.fromARGB(255,14,86,159)),
+                    ),
                     checkoutBuilder: (context, shippingDetail, paymentMethod) {
                       return Scaffold(
                         body: Center(
@@ -167,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       );
                     },
-                    setupIntent: ApiService.createSetupIntent,
+                    
                   );
                 }),
               );

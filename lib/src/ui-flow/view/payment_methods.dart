@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:stripe_sdk/src/ui-flow/model/payment_method_models.dart';
 import 'package:stripe_sdk/src/ui-flow/service/payment_methods_notifier.dart';
+import '../../../stripe_sdk_ui.dart';
 import 'add_payment_method.dart';
 import 'add_shipping.dart';
 
@@ -19,6 +20,9 @@ class PaymentMethods extends StatefulWidget {
 
   ///change app bar title
   final Widget appBarTitle;
+
+  ///add your own customized card form
+  final CardForm cardForm;
 
   ///change app bar elevation
   final double appBarElevation;
@@ -39,6 +43,7 @@ class PaymentMethods extends StatefulWidget {
     this.appBarTitle = const Text('Payment Methods'),
     this.appBarElevation,
     this.appBarBackgroundColor,
+    this.cardForm,
     PaymentMethodsNotifier paymentMethodsNotifier,
     //By default set to ask the user shipping address entry, you can override this when invoking the object
     this.withShippingPage = true,
@@ -198,6 +203,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                       // ignore: deprecated_member_use
                       AddPaymentMethod.withSetupIntent(
                     widget.setupIntent,
+                    form: widget.cardForm,
                     appBarTitle: widget.appBarTitle,
                     appBarElevation: widget.appBarElevation,
                     appBarBackgroundColor: widget.appBarBackgroundColor,

@@ -74,7 +74,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Add payment method'),
+        title: Text('Add a Card'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.check),
