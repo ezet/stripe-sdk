@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 import 'package:stripe_sdk/stripe_sdk_uiflow.dart';
@@ -21,7 +22,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: ChangeNotifierProvider(
+        create: (context) => PaymentMethodsNotifier(),
+        child: MyHomePage(title: 'Flutter Demo Home Page'),
+      ),
     );
   }
 }
@@ -73,7 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     withShippingPage: false,
                     setupIntent: ApiService.createSetupIntent,
                     cardForm: CardForm(
-                      cardDecoration: BoxDecoration(color: const Color.fromARGB(255,14,86,159)),
+                      cardDecoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 14, 86, 159)),
                     ),
                     checkoutBuilder: (context, shippingDetail, paymentMethod) {
                       return Scaffold(
@@ -81,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: RaisedButton(
                             onPressed: () {
                               try {
+                                
                                 ApiService.createAutomaticPaymentIntent(
                                   100, //Should come from database not client for real world application
                                   paymentMethod,
@@ -131,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       });
                                     }
                                   } else {
-                                    //Its a map and this error is due to failed charge from the server.
+                                    //This error is due to failed charge from the server after the payment is sent to stripe api
                                     //It has {type: 'StripeCardError',...}
                                     final error = value as Map<String, dynamic>;
                                     final errorMessage = error['message'];
@@ -172,7 +178,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       );
                     },
-                    
                   );
                 }),
               );
@@ -194,7 +199,10 @@ class ShowMessage extends StatelessWidget {
           Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 30.0, horizontal: 10.0),
-            child: Text(message, style: TextStyle(fontSize: 15.0),),
+            child: Text(
+              message,
+              style: TextStyle(fontSize: 15.0),
+            ),
           ),
         ],
       ),
