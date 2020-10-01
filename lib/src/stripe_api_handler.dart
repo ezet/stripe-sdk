@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert' show json;
+import 'dart:io';
 
+import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import 'stripe_error.dart';
@@ -27,21 +30,30 @@ class StripeApiHandler {
 
   String apiVersion = DEFAULT_API_VERSION;
 
-  static const String MALFORMED_RESPONSE_MESSAGE = "An improperly formatted error response was found.";
+  static const String MALFORMED_RESPONSE_MESSAGE =
+      "An improperly formatted error response was found.";
 
   final http.Client _client = http.Client();
+
+  //Using the device info to create stronger security to help Stripe identify where the request is coming
+  static final _deviceInfo = DeviceInfoPlugin();
+  static String _deviceUniqueId;
 
   final String stripeAccount;
 
   StripeApiHandler({this.stripeAccount});
 
-  Future<Map<String, dynamic>> request(RequestMethod method, String path, String key, String apiVersion,
+  Future<Map<String, dynamic>> request(
+      RequestMethod method, String path, String key, String apiVersion,
       {final Map<String, dynamic> params}) {
-    final options = RequestOptions(key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
-    return _getStripeResponse(method, LIVE_API_PATH + path, options, params: params);
+    final options = RequestOptions(
+        key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
+    return _getStripeResponse(method, LIVE_API_PATH + path, options,
+        params: params);
   }
 
-  Future<Map<String, dynamic>> _getStripeResponse(RequestMethod method, final String url, final RequestOptions options,
+  Future<Map<String, dynamic>> _getStripeResponse(
+      RequestMethod method, final String url, final RequestOptions options,
       {final Map<String, dynamic> params}) async {
     final headers = _headers(options: options);
 
@@ -53,19 +65,19 @@ class StripeApiHandler {
         if (params != null && params.isNotEmpty) {
           fUrl = "$url?${_encodeMap(params)}";
         }
-        response = await _client.get(fUrl, headers: headers);
+        response = await _client.get(fUrl, headers: await headers);
         break;
 
       case RequestMethod.post:
         response = await _client.post(
           url,
-          headers: headers,
+          headers: await headers,
           body: params != null ? _urlEncodeMap(params) : null,
         );
         break;
 
       case RequestMethod.delete:
-        response = await _client.delete(url, headers: headers);
+        response = await _client.delete(url, headers: await headers);
         break;
       default:
         throw Exception("Request Method: $method not implemented");
@@ -78,7 +90,8 @@ class StripeApiHandler {
     try {
       resp = json.decode(response.body);
     } catch (error) {
-      final stripeError = StripeApiError(requestId, {StripeApiError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
+      final stripeError = StripeApiError(requestId,
+          {StripeApiError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
       throw StripeApiException(stripeError);
     }
 
@@ -91,10 +104,32 @@ class StripeApiHandler {
     }
   }
 
+  //Using the device info to create stronger security to help Stripe identify where the request is coming
+  static Future<String> getDeviceId() async {
+    if (_deviceUniqueId == null) {
+      try {
+        if (Platform.isAndroid) {
+          var androidDeviceInfo = await _deviceInfo.androidInfo;
+          _deviceUniqueId =
+              '${androidDeviceInfo.device}-${androidDeviceInfo.id}';
+        } else if (Platform.isIOS) {
+          var iosDeviceInfo = await _deviceInfo.iosInfo;
+          _deviceUniqueId =
+              '${iosDeviceInfo.model}-${iosDeviceInfo.identifierForVendor}';
+        }
+      } on PlatformException {
+        _deviceUniqueId = 'unknown';
+      } catch (error) {
+        rethrow;
+      }
+    }
+    return _deviceUniqueId;
+  }
+
   ///
   ///
   ///
-  static Map<String, String> _headers({RequestOptions options}) {
+  static Future<Map<String, String>> _headers({RequestOptions options}) async {
     final Map<String, String> headers = Map();
     headers["Accept-Charset"] = CHARSET;
     headers["Accept"] = "application/json";
@@ -106,10 +141,12 @@ class StripeApiHandler {
     }
 
     // debug headers
+    var deviceId = await getDeviceId();
     Map<String, String> propertyMap = Map();
     propertyMap["os.name"] = defaultTargetPlatform.toString();
     propertyMap["lang"] = "Dart";
     propertyMap["publisher"] = "lars.dahl@gmail.com";
+    propertyMap['device-id'] = deviceId;
 
     headers["X-Stripe-Client-User-Agent"] = json.encode(propertyMap);
 
@@ -132,7 +169,8 @@ class StripeApiHandler {
 
   static String _encodeMap(Map<String, dynamic> params) {
     return params.keys
-        .map((key) => '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
+        .map((key) =>
+            '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
         .join('&');
   }
 

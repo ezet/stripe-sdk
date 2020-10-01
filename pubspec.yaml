@@ -19,6 +19,7 @@ dependencies:
   simple_animations: ^2.1.0
   supercharged: ^1.5.1
   intl: ^0.16.1
+  device_info: ^0.4.2+8
 
 dev_dependencies:
   flutter_test:
