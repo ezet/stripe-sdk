@@ -24,10 +24,7 @@ class AddPaymentMethod extends StatefulWidget {
   /// The card form used to collect payment method details.
   final CardForm form;
 
-  //These three properties bellow will provide moderate customization if you want to change the payment method's screen color, evelation, or/and background color.
-
-  ///change app bar title
-  final Widget appBarTitle;
+  //These two properties bellow will provide moderate customization if you want to change the payment method's screen color, evelation, or/and background color.
 
   ///change app bar elevation
   final double appBarElevation;
@@ -38,7 +35,6 @@ class AddPaymentMethod extends StatefulWidget {
   /// Add a payment method using a Stripe Setup Intent
   AddPaymentMethod.withSetupIntent(this._setupIntent,
       {this.form,
-      this.appBarTitle,
       this.appBarElevation,
       this.appBarBackgroundColor})
       : _useSetupIntent = true;
@@ -48,7 +44,6 @@ class AddPaymentMethod extends StatefulWidget {
       'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
   AddPaymentMethod.withoutSetupIntent(
       {this.form,
-      this.appBarTitle,
       this.appBarElevation,
       this.appBarBackgroundColor})
       : _useSetupIntent = false,
@@ -75,6 +70,8 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Add a Card'),
+        elevation: widget.appBarElevation,
+        backgroundColor: widget.appBarBackgroundColor,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.check),

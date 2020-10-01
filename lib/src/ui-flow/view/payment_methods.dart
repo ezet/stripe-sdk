@@ -204,7 +204,6 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                       AddPaymentMethod.withSetupIntent(
                     widget.setupIntent,
                     form: widget.cardForm,
-                    appBarTitle: widget.appBarTitle,
                     appBarElevation: widget.appBarElevation,
                     appBarBackgroundColor: widget.appBarBackgroundColor,
                   ),
