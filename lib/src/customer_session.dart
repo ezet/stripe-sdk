@@ -96,7 +96,7 @@ class CustomerSession {
   /// https://stripe.com/docs/api/sources/detach
   Future<Map<String, dynamic>> detachSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final path = '';
+    final path = '/customers/${key.customerId}/sources/$sourceId';
     return _apiHandler.request(RequestMethod.delete, path, key.secret, apiVersion);
   }
 
