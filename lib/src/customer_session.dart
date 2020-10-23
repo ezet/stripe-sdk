@@ -41,8 +41,8 @@ class CustomerSession {
   /// Get the current customer session
   static CustomerSession get instance {
     if (_instance == null) {
-      throw Exception("Attempted to get instance of CustomerSession before initialization."
-          "Please initialize a new session using [CustomerSession.initCustomerSession() first.]");
+      throw Exception('Attempted to get instance of CustomerSession before initialization.'
+          'Please initialize a new session using [CustomerSession.initCustomerSession() first.]');
     }
     return _instance;
   }
@@ -51,15 +51,15 @@ class CustomerSession {
   /// https://stripe.com/docs/api/customers/retrieve
   Future<Map<String, dynamic>> retrieveCurrentCustomer() async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final String url = "/customers/${key.customerId}";
-    return _apiHandler.request(RequestMethod.get, url, key.secret, apiVersion);
+    final path = '/customers/${key.customerId}';
+    return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion);
   }
 
   /// List a Customer's PaymentMethods.
   /// https://stripe.com/docs/api/payment_methods/list
   Future<Map<String, dynamic>> listPaymentMethods() async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final path = "/payment_methods";
+    final path = '/payment_methods';
     final params = {'customer': key.customerId, 'type': 'card'};
     return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion, params: params);
   }
@@ -68,7 +68,7 @@ class CustomerSession {
   /// https://stripe.com/docs/api/payment_methods/attach
   Future<Map<String, dynamic>> attachPaymentMethod(String paymentMethodId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final path = "/payment_methods/$paymentMethodId/attach";
+    final path = '/payment_methods/$paymentMethodId/attach';
     final params = {'customer': key.customerId};
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: params);
   }
@@ -77,7 +77,7 @@ class CustomerSession {
   /// https://stripe.com/docs/api/payment_methods/detach
   Future<Map<String, dynamic>> detachPaymentMethod(String paymentMethodId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final path = "/payment_methods/$paymentMethodId/detach";
+    final path = '/payment_methods/$paymentMethodId/detach';
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion);
   }
 
@@ -86,9 +86,9 @@ class CustomerSession {
   /// https://stripe.com/docs/api/sources/attach
   Future<Map<String, dynamic>> attachSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final String url = "/customers/${key.customerId}/sources";
+    final path = '/customers/${key.customerId}/sources';
     final params = {'source': sourceId};
-    return _apiHandler.request(RequestMethod.post, url, key.secret, apiVersion, params: params);
+    return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: params);
   }
 
   /// Detaches a Source object from a Customer.
@@ -96,15 +96,15 @@ class CustomerSession {
   /// https://stripe.com/docs/api/sources/detach
   Future<Map<String, dynamic>> detachSource(String sourceId) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final String url = "/customers/${key.customerId}/sources/$sourceId";
-    return _apiHandler.request(RequestMethod.delete, url, key.secret, apiVersion);
+    final path = '';
+    return _apiHandler.request(RequestMethod.delete, path, key.secret, apiVersion);
   }
 
   /// Updates the specified customer by setting the values of the parameters passed.
   /// https://stripe.com/docs/api/customers/update
   Future<Map<String, dynamic>> updateCustomer(Map<String, dynamic> data) async {
     final key = await _keyManager.retrieveEphemeralKey();
-    final String url = "/customers/${key.customerId}";
-    return _apiHandler.request(RequestMethod.post, url, key.secret, apiVersion, params: data);
+    final path = '/customers/${key.customerId}';
+    return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: data);
   }
 }

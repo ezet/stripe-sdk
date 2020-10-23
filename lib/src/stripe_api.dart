@@ -71,6 +71,21 @@ class StripeApi {
     return createPaymentMethod(card.toPaymentMethod());
   }
 
+  /// Create a new Source object.
+  /// https://stripe.com/docs/api/sources/create
+  Future<Map<String, dynamic>> createSource(Map<String, dynamic> data) async {
+    final path = '/sources';
+    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
+  }
+
+  /// Create a new Source object from a card.
+  /// This will only create a Source with the minimum required properties.
+  /// To include additional properties such as billing details, use [StripeCard.toPaymentMethod], add additional details
+  /// and then use [createSource].
+  Future<Map<String, dynamic>> createSourceFromCard(StripeCard card) async {
+    return createSource(card.toPaymentMethod());
+  }
+
   /// Retrieve a PaymentIntent.
   /// https://stripe.com/docs/api/payment_intents/retrieve
   Future<Map<String, dynamic>> retrievePaymentIntent(String clientSecret, {String apiVersion}) async {
