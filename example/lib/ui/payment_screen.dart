@@ -51,7 +51,7 @@ class PaymentScreen extends StatelessWidget {
         currency: '\$',
       )
     ];
-    final NetworkService networkService = locator.get();
+    final networkService = locator.get();
     return Navigator.push(context, MaterialPageRoute(builder: (context) {
       // ignore: deprecated_member_use
       return CheckoutScreen(
@@ -64,14 +64,15 @@ class PaymentScreen extends StatelessWidget {
   }
 
   void createAutomaticPaymentIntent(BuildContext context) async {
-    final NetworkService networkService = locator.get();
+    final networkService = locator.get();
     final response = await networkService.createAutomaticPaymentIntent(10000);
     if (response.status == 'succeeded') {
       // TODO: success
       debugPrint('Success before authentication.');
       return;
     }
-    final result = await Stripe.instance.confirmPayment(response.clientSecret,
+    final result =
+        await Stripe.instance.confirmPayment(response.clientSecret,
         paymentMethodId: 'pm_card_threeDSecure2Required');
     if (result['status'] == 'succeeded') {
       // TODO: success
@@ -83,7 +84,7 @@ class PaymentScreen extends StatelessWidget {
   }
 
   void createManualPaymentIntent(BuildContext context) async {
-    final NetworkService networkService = locator.get();
+    final networkService = locator.get();
     final response = await networkService.createManualPaymentIntent(
         10000, 'pm_card_threeDSecure2Required');
     if (response['status'] == 'succeeded') {

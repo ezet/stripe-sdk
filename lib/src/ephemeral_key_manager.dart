@@ -82,8 +82,7 @@ class EphemeralKeyManager {
         key = await ephemeralKeyProvider(DEFAULT_API_VERSION);
       } catch (error) {
         final e = StripeApiError(null, {
-          StripeApiError.FIELD_MESSAGE:
-              'Failed to retrive ephemeralKey from server',
+          StripeApiError.FIELD_MESSAGE: 'Failed to retrieve ephemeralKey from server',
         });
         throw StripeApiException(e);
       }
@@ -94,7 +93,7 @@ class EphemeralKeyManager {
       } catch (error) {
         final e = StripeApiError(null, {
           StripeApiError.FIELD_MESSAGE:
-              'Failed to parse Ephemeral Key, Please return the response as it is as you recieved from stripe server',
+              'Failed to parse Ephemeral Key, Please return the response as it is as you received from stripe server',
         });
         throw StripeApiException(e);
       }

@@ -103,7 +103,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         barrierLabel: '',
                         context: context,
                         // ignore: missing_return
-                        pageBuilder: (context, animation1, animation2) {});
+                        pageBuilder: (context, animation1, animation2) {
+                          return null;
+                        });
                     return;
                   }
                 } catch (e) {

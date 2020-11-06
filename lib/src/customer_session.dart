@@ -69,7 +69,7 @@ class CustomerSession {
         params: params);
   }
 
-  /// Attach a PaymenMethod.
+  /// Attach a PaymentMethod.
   /// https://stripe.com/docs/api/payment_methods/attach
   Future<Map<String, dynamic>> attachPaymentMethod(
       String paymentMethodId) async {

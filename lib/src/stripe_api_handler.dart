@@ -27,8 +27,7 @@ class StripeApiHandler {
 
   String apiVersion = DEFAULT_API_VERSION;
 
-  static const String MALFORMED_RESPONSE_MESSAGE =
-      'An improperly formatted error response was found.';
+  static const String MALFORMED_RESPONSE_MESSAGE = 'An improperly formatted error response was found.';
 
   final http.Client _client = http.Client();
 
@@ -36,17 +35,13 @@ class StripeApiHandler {
 
   StripeApiHandler({this.stripeAccount});
 
-  Future<Map<String, dynamic>> request(
-      RequestMethod method, String path, String key, String apiVersion,
+  Future<Map<String, dynamic>> request(RequestMethod method, String path, String key, String apiVersion,
       {final Map<String, dynamic> params}) {
-    final options = RequestOptions(
-        key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
-    return _getStripeResponse(method, LIVE_API_PATH + path, options,
-        params: params);
+    final options = RequestOptions(key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
+    return _getStripeResponse(method, LIVE_API_PATH + path, options, params: params);
   }
 
-  Future<Map<String, dynamic>> _getStripeResponse(
-      RequestMethod method, final String url, final RequestOptions options,
+  Future<Map<String, dynamic>> _getStripeResponse(RequestMethod method, final String url, final RequestOptions options,
       {final Map<String, dynamic> params}) async {
     final headers = _headers(options: options);
 
@@ -83,8 +78,7 @@ class StripeApiHandler {
     try {
       resp = json.decode(response.body);
     } catch (error) {
-      final stripeError = StripeApiError(requestId,
-          {StripeApiError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
+      final stripeError = StripeApiError(requestId, {StripeApiError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
       throw StripeApiException(stripeError);
     }
 
@@ -138,8 +132,7 @@ class StripeApiHandler {
 
   static String _encodeMap(Map<String, dynamic> params) {
     return params.keys
-        .map((key) =>
-            '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
+        .map((key) => '${Uri.encodeComponent(key)}=${Uri.encodeComponent(params[key].toString())}')
         .join('&');
   }
 

@@ -24,11 +24,9 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    CustomerSession.initCustomerSession(
-        (version) => locator.get<NetworkService>().getEphemeralKey(version));
+    CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
     final app = MaterialApp(title: 'Stripe SDK Demo', home: HomeScreen());
-    return ChangeNotifierProvider(
-        create: (_) => PaymentMethodStore(), child: app);
+    return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
 }
 
@@ -43,21 +41,17 @@ class HomeScreen extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text('Customer Details'),
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => EditCustomerScreen())),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditCustomerScreen())),
           ),
         ),
         Card(
           child: ListTile(
             title: Text('Payment Methods Screen'),
-            onTap: () =>
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-              final paymentMethods =
-                  Provider.of<PaymentMethodStore>(context, listen: false);
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) {
+              final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
               // ignore: deprecated_member_use
               return PaymentMethodsScreen(
-                  createSetupIntent:
-                      locator.get<NetworkService>().createSetupIntent,
+                  createSetupIntent: locator.get<NetworkService>().createSetupIntent,
                   paymentMethodStore: paymentMethods);
             })),
           ),
@@ -65,31 +59,25 @@ class HomeScreen extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text('Add Payment Method with Setup Intent'),
-            onTap: () async =>
-                await createPaymentMethodWithSetupIntent(context),
+            onTap: () async => await createPaymentMethodWithSetupIntent(context),
           ),
         ),
         Card(
           child: ListTile(
             title: Text('Add Payment Method without Setup Intent'),
-            onTap: () async =>
-                await createPaymentMethodWithoutSetupIntent(context),
+            onTap: () async => await createPaymentMethodWithoutSetupIntent(context),
           ),
         ),
         Card(
           child: ListTile(
             title: Text('Add Stripe Test Card'),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SetupIntentWithScaScreen())),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SetupIntentWithScaScreen())),
           ),
         ),
         Card(
           child: ListTile(
             title: Text('Payments'),
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PaymentScreen())),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen())),
           ),
         ),
       ]),
@@ -103,8 +91,7 @@ class HomeScreen extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) =>
                 // ignore: deprecated_member_use
-                AddPaymentMethodScreen.withSetupIntent(
-                    networkService.createSetupIntent)));
+                AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent)));
   }
 
   void createPaymentMethodWithoutSetupIntent(BuildContext context) async {

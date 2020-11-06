@@ -47,8 +47,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                       builder: (context) =>
                           // ignore: deprecated_member_use_from_same_package
                           AddPaymentMethodScreen.withSetupIntent(
-                              widget.createSetupIntent,
-                              stripe: stripe)));
+                              widget.createSetupIntent, stripe: stripe)));
               if (added == true) await widget._paymentMethodStore.refresh();
             },
           )

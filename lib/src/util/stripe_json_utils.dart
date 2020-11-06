@@ -62,7 +62,5 @@ String optCurrency(Map<String, dynamic> json, String fieldName) {
 
 ///
 String nullIfNullOrEmpty(String possibleNull) {
-  return ((NULL == possibleNull) || (EMPTY == possibleNull))
-      ? null
-      : possibleNull;
+  return ((NULL == possibleNull) || (EMPTY == possibleNull)) ? null : possibleNull;
 }
