@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/stripe_sdk.iml" filepath="$PROJECT_DIR$/stripe_sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/stripe_sdk.iml" filepath="$PROJECT_DIR$/.idea/stripe_sdk.iml" />
     </modules>
   </component>
 </project>

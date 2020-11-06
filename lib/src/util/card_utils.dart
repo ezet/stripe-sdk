@@ -18,8 +18,7 @@ const int MAX_LENGTH_AMEX_DINERS = 17;
 /// @return {@code true} if and only if the input value is a valid card number
 bool isValidCardNumber(String cardNumber) {
   final normalizedNumber = removeSpacesAndHyphens(cardNumber);
-  return isValidLuhnNumber(normalizedNumber) &&
-      isValidCardLength(normalizedNumber);
+  return isValidLuhnNumber(normalizedNumber) && isValidCardLength(normalizedNumber);
 }
 
 /// Checks the input string to see whether or not it is a valid Luhn number.
