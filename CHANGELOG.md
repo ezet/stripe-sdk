@@ -1,8 +1,9 @@
 # Stripe SDK Changelog
 
-## 3.x.x
+## 3.0.1+2
 
 * Update dependencies
+* Fix misc warnings and lint issues
 
 ## 3.0.1+1
 
