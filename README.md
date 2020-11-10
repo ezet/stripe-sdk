@@ -13,7 +13,7 @@ Flutter support:
 
 See *example/main.dart* for additional short examples.
 
-See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete demo application,
+See <https://github.com/ezet/stripe-sdk/tree/master/example> for a complete demo application,
 with a working example backend.
 
 Demo backend: <https://github.com/ezet/stripe-sdk-demo-api>
