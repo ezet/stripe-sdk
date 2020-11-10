@@ -1,5 +1,15 @@
 # Stripe SDK Changelog
 
+## 3.1.0
+
+* `CustomerSession` now implements `ChangeNotifier`, notifying listeners when the session is ended.
+* `CustomerSession` will throw an error if attempted used after the session has ended.
+* Added `CustomerSession.endSession()` instance method.
+* `PaymentMethodStore` will now be cleared, listeners notified and finally disposed when the related `CustomerSession` is ended.
+
+### Deprecated
+* `CustomerSession.endCustomerSession()` has been deprecated and replaced by `CustomerSession.instance.endSession`. 
+
 ## 3.0.1+2
 
 * Update dependencies
