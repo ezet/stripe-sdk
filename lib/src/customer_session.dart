@@ -66,8 +66,8 @@ class CustomerSession extends ChangeNotifier {
   Future<Map<String, dynamic>> retrieveCurrentCustomer() async {
     assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
-    final url = '/customers/${key.customerId}';
-    return _apiHandler.request(RequestMethod.get, url, key.secret, apiVersion);
+    final path = '/customers/${key.customerId}';
+    return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion);
   }
 
   /// List a Customer's PaymentMethods.
@@ -105,9 +105,9 @@ class CustomerSession extends ChangeNotifier {
   Future<Map<String, dynamic>> attachSource(String sourceId) async {
     assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
-    final url = '/customers/${key.customerId}/sources';
+    final path = '/customers/${key.customerId}/sources';
     final params = {'source': sourceId};
-    return _apiHandler.request(RequestMethod.post, url, key.secret, apiVersion, params: params);
+    return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: params);
   }
 
   /// Detaches a Source object from a Customer.
@@ -116,8 +116,8 @@ class CustomerSession extends ChangeNotifier {
   Future<Map<String, dynamic>> detachSource(String sourceId) async {
     assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
-    final url = '/customers/${key.customerId}/sources/$sourceId';
-    return _apiHandler.request(RequestMethod.delete, url, key.secret, apiVersion);
+    final path = '/customers/${key.customerId}/sources/$sourceId';
+    return _apiHandler.request(RequestMethod.delete, path, key.secret, apiVersion);
   }
 
   /// Updates the specified customer by setting the values of the parameters passed.
@@ -125,8 +125,8 @@ class CustomerSession extends ChangeNotifier {
   Future<Map<String, dynamic>> updateCustomer(Map<String, dynamic> data) async {
     assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
-    final url = '/customers/${key.customerId}';
-    return _apiHandler.request(RequestMethod.post, url, key.secret, apiVersion, params: data);
+    final path = '/customers/${key.customerId}';
+    return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: data);
   }
 
   bool _assertNotDisposed() {
