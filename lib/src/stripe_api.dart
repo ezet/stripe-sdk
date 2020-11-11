@@ -22,8 +22,7 @@ class StripeApi {
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
-  StripeApi(this.publishableKey,
-      {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
+  StripeApi(this.publishableKey, {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
       : _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _validateKey(publishableKey);
     _apiHandler.apiVersion = apiVersion;
@@ -37,18 +36,15 @@ class StripeApi {
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
-  static void init(String publishableKey,
-      {String apiVersion = DEFAULT_API_VERSION, String stripeAccount}) {
-    _instance ??= StripeApi(publishableKey,
-        apiVersion: apiVersion, stripeAccount: stripeAccount);
+  static void init(String publishableKey, {String apiVersion = DEFAULT_API_VERSION, String stripeAccount}) {
+    _instance ??= StripeApi(publishableKey, apiVersion: apiVersion, stripeAccount: stripeAccount);
   }
 
   /// Access the singleton instance of [StripeApi].
   /// Throws an [Exception] if [StripeApi.init] hasn't been called previously.
   static StripeApi get instance {
     if (_instance == null) {
-      throw Exception(
-          'Attempted to get singleton instance of StripeApi without initialization');
+      throw Exception('Attempted to get singleton instance of StripeApi without initialization');
     }
     return _instance;
   }
@@ -57,27 +53,21 @@ class StripeApi {
   /// https://stripe.com/docs/api/tokens
   Future<Map<String, dynamic>> createToken(Map<String, dynamic> data) async {
     final path = '/tokens';
-    return _apiHandler.request(
-        RequestMethod.post, path, publishableKey, apiVersion,
-        params: data);
+    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 
   /// Create a PaymentMethod.
   /// https://stripe.com/docs/api/payment_methods/create
-  Future<Map<String, dynamic>> createPaymentMethod(
-      Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> createPaymentMethod(Map<String, dynamic> data) async {
     final path = '/payment_methods';
-    return _apiHandler.request(
-        RequestMethod.post, path, publishableKey, apiVersion,
-        params: data);
+    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 
   /// Create a PaymentMethod from a card.
   /// This will only create a PaymentMethod with the minimum required properties.
   /// To include additional properties such as billing details, use [StripeCard.toPaymentMethod], add additional details
   /// and then use [createPaymentMethod].
-  Future<Map<String, dynamic>> createPaymentMethodFromCard(
-      StripeCard card) async {
+  Future<Map<String, dynamic>> createPaymentMethodFromCard(StripeCard card) async {
     return createPaymentMethod(card.toPaymentMethod());
   }
 
@@ -88,62 +78,42 @@ class StripeApi {
     return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 
-  /// Create a new Source object from a card.
-  /// This will only create a Source with the minimum required properties.
-  /// To include additional properties such as billing details, use [StripeCard.toPaymentMethod], add additional details
-  /// and then use [createSource].
-  Future<Map<String, dynamic>> createSourceFromCard(StripeCard card) async {
-    return createSource(card.toPaymentMethod());
-  }
-
   /// Retrieve a PaymentIntent.
   /// https://stripe.com/docs/api/payment_intents/retrieve
-  Future<Map<String, dynamic>> retrievePaymentIntent(String clientSecret,
-      {String apiVersion}) async {
+  Future<Map<String, dynamic>> retrievePaymentIntent(String clientSecret, {String apiVersion}) async {
     final intentId = _parseIdFromClientSecret(clientSecret);
     final path = '/payment_intents/$intentId';
     final params = {'client_secret': clientSecret};
-    return _apiHandler.request(
-        RequestMethod.get, path, publishableKey, apiVersion,
-        params: params);
+    return _apiHandler.request(RequestMethod.get, path, publishableKey, apiVersion, params: params);
   }
 
   /// Confirm a PaymentIntent
   /// https://stripe.com/docs/api/payment_intents/confirm
-  Future<Map<String, dynamic>> confirmPaymentIntent(String clientSecret,
-      {Map<String, dynamic> data}) async {
+  Future<Map<String, dynamic>> confirmPaymentIntent(String clientSecret, {Map<String, dynamic> data}) async {
     final params = data ?? {};
     final intent = _parseIdFromClientSecret(clientSecret);
     params['client_secret'] = clientSecret;
     final path = '/payment_intents/$intent/confirm';
-    return _apiHandler.request(
-        RequestMethod.post, path, publishableKey, apiVersion,
-        params: params);
+    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: params);
   }
 
   /// Retrieve a SetupIntent.
   /// https://stripe.com/docs/api/setup_intents/retrieve
-  Future<Map<String, dynamic>> retrieveSetupIntent(String clientSecret,
-      {String apiVersion}) async {
+  Future<Map<String, dynamic>> retrieveSetupIntent(String clientSecret, {String apiVersion}) async {
     final intentId = _parseIdFromClientSecret(clientSecret);
     final path = '/setup_intents/$intentId';
     final params = {'client_secret': clientSecret};
-    return _apiHandler.request(
-        RequestMethod.get, path, publishableKey, apiVersion,
-        params: params);
+    return _apiHandler.request(RequestMethod.get, path, publishableKey, apiVersion, params: params);
   }
 
   /// Confirm a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
-  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret,
-      {Map<String, dynamic> data}) async {
+  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, {Map<String, dynamic> data}) async {
     final params = data ?? {};
     final intent = _parseIdFromClientSecret(clientSecret);
     params['client_secret'] = clientSecret;
     final path = '/setup_intents/$intent/confirm';
-    return _apiHandler.request(
-        RequestMethod.post, path, publishableKey, apiVersion,
-        params: params);
+    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: params);
   }
 
   /// Validates the received [publishableKey] and throws a [Exception] if an
