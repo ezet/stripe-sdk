@@ -8,7 +8,8 @@ include: package:pedantic/analysis_options.yaml
 #linter:
 #  rules:
 #    deprecated_member_use_from_same_package: false
+#    missing_required_param: false
 
-# analyzer:
-#   exclude:
-#     - path/to/excluded/files/**
+analyzer:
+  errors:
+    omit_local_variable_types: ignore

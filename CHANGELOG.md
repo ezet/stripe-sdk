@@ -1,5 +1,14 @@
 # Stripe SDK Changelog
 
+## 3.0.1+2
+
+* Update dependencies
+* Fix misc warnings and lint issues
+
+## 3.0.1+1
+
+* Fix lint issues
+
 ## 3.0.1
 
 * Fix unhandled exception due to unknown parameter: exp_mont

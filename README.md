@@ -13,7 +13,7 @@ Flutter support:
 
 See *example/main.dart* for additional short examples.
 
-See <https://github.com/ezet/stripe-sdk/tree/master/example/app> for a complete demo application,
+See <https://github.com/ezet/stripe-sdk/tree/master/example> for a complete demo application,
 with a working example backend.
 
 Demo backend: <https://github.com/ezet/stripe-sdk-demo-api>
@@ -99,9 +99,9 @@ Regular instances can also be created using the constructor, which allows them t
 ### Stripe
 
 ```dart
-Stripe.init("pk_xxx");
+Stripe.init('pk_xxx');
 // or, to manage your own instance, or multiple instances
-final stripe = Stripe("pk_xxx);
+final stripe = Stripe('pk_xxx');
 ```
 
 ### CustomerSession
@@ -111,15 +111,15 @@ The function that retrieves the ephemeral key must return the JSON response as a
 ```dart
 CustomerSession.init((apiVersion) => server.getEphemeralKeyFromServer(apiVersion));
 // or, to manage your own instances
-final session = CustomerSession((apiVersion) => server.getEphemeralKeyFromServer(apiVersion))
+final session = CustomerSession((apiVersion) => server.getEphemeralKeyFromServer(apiVersion));
 ```
 
 ### StripeApi
 
 ```dart
-StripeApi.init("pk_xxx");
+StripeApi.init('pk_xxx');
 // or, to manage your own instances
-final stripeApi = StripeApi("pk_xxx);
+final stripeApi = StripeApi('pk_xxx');
 ```
 
 ## UI
@@ -130,12 +130,12 @@ Use `CardForm` to add or edit credit card details, or build your own form using 
 final formKey = GlobalKey<FormState>();
 final card = StripeCard();
 
-final form = CardForm(card:card, formKey: formKey);
+final form = CardForm(card: card, formKey: formKey);
  
-onPressed: () async {
-                if (formKey.currentState.validate()) {
-                  formKey.currentState.save();
-                }
+onPressed: () {
+  if (formKey.currentState.validate()) {
+    formKey.currentState.save();
+  }
 }
 
 
@@ -153,9 +153,9 @@ It handles SCA by launching the authentication flow in a web browser, and return
 The `returnUrlForSca` parameter must match the configuration of your `AndroidManifest.xml` and `Info.plist` as shown in the next steps.
 
 ```dart
-Stripe.init("pk_xxx", returnUrlForSca: "stripesdk://3ds.stripesdk.io");
+Stripe.init('pk_xxx', returnUrlForSca: 'stripesdk://3ds.stripesdk.io');
 final clientSecret = await server.createPaymentIntent(Stripe.instance.getReturnUrlForSca());
-final paymentIntent = await Stripe.instance.confirmPayment(clientSecret, paymentMethodId: "pm_card_visa");
+final paymentIntent = await Stripe.instance.confirmPayment(clientSecret, paymentMethodId: 'pm_card_visa');
 ```
 
 ### Android

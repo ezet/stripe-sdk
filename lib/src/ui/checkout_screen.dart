@@ -37,9 +37,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void initState() {
+    super.initState();
     _total = widget.items.fold(0, (value, item) => value + item.price * item.count);
     _createIntentResponse = widget.createPaymentIntent(_total);
-    super.initState();
   }
 
   @override
@@ -53,8 +53,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          // ignore: deprecated_member_use_from_same_package
-          Container(child: CheckoutItemList(items: widget.items, total: _total)),
+          Container(
+              // ignore: deprecated_member_use_from_same_package
+              child: CheckoutItemList(items: widget.items, total: _total)),
           SizedBox(
             height: 40,
           ),
@@ -97,7 +98,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         barrierDismissible: true,
                         barrierLabel: '',
                         context: context,
-                        pageBuilder: (context, animation1, animation2) {});
+                        // ignore: missing_return
+                        pageBuilder: (context, animation1, animation2) {
+                          return null;
+                        });
                     return;
                   }
                 } catch (e) {
@@ -222,8 +226,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
 
   @override
   void initState() {
-    widget.paymentMethodStore.addListener(listener);
     super.initState();
+    widget.paymentMethodStore.addListener(listener);
   }
 
   @override

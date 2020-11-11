@@ -2,7 +2,7 @@
 
 This is a demo project for Stripe SDK for Flutter.
 
-The backend used Firebase and TypeScript, and is available here <https://github.com/ezet/stripe-sdk-demo-api>
+The Firebase backend used for this application is available here: <https://github.com/ezet/stripe-sdk-demo-api>
 
 
 ## Getting Started

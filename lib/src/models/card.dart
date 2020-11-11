@@ -27,7 +27,18 @@ class StripeCard {
   static const List<String> PREFIXES_AMERICAN_EXPRESS = ['34', '37'];
   static const List<String> PREFIXES_DISCOVER = ['60', '64', '65'];
   static const List<String> PREFIXES_JCB = ['35'];
-  static const List<String> PREFIXES_DINERS_CLUB = ['300', '301', '302', '303', '304', '305', '309', '36', '38', '39'];
+  static const List<String> PREFIXES_DINERS_CLUB = [
+    '300',
+    '301',
+    '302',
+    '303',
+    '304',
+    '305',
+    '309',
+    '36',
+    '38',
+    '39'
+  ];
   static const List<String> PREFIXES_VISA = ['4'];
   static const List<String> PREFIXES_MASTERCARD = [
     '2221',
@@ -119,11 +130,12 @@ class StripeCard {
     if (isBlank(cvc)) {
       return false;
     }
-    var cvcValue = cvc.trim();
-    var updatedType = brand;
-    var validLength = (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
-        (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
-        cvcValue.length == 3;
+    final cvcValue = cvc.trim();
+    final updatedType = brand;
+    final validLength =
+        (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
+            (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
+            cvcValue.length == 3;
 
     return ModelUtils.isWholePositiveNumber(cvcValue) && validLength;
   }
@@ -140,7 +152,7 @@ class StripeCard {
   /// It only sets the type and card details. In order to add additional details such as name and address,
   /// you need to insert these keys into the hash before submitting it.
   Map<String, dynamic> toPaymentMethod() {
-    var map = <String, dynamic>{
+    final map = <String, dynamic>{
       'type': 'card',
       'card': {
         'number': number,
@@ -202,7 +214,7 @@ class StripeCard {
   }
 
   static void removeNullAndEmptyParams(Map<String, Object> mapToEdit) {
-// Remove all null values; they cause validation errors
+    // Remove all null values; they cause validation errors
     final keys = mapToEdit.keys.toList(growable: false);
     for (var key in keys) {
       final value = mapToEdit[key];

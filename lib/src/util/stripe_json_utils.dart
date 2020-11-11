@@ -1,5 +1,5 @@
-const String EMPTY = "";
-const String NULL = "null";
+const String EMPTY = '';
+const String NULL = 'null';
 
 /// Calls through to {@link JSONObject#optString(String)} while safely
 /// converting the raw string "null" and the empty string to {@code null}. Will not throw
@@ -9,7 +9,7 @@ const String NULL = "null";
 /// @param fieldName the optional field name
 /// @return the value stored in the field, or {@code null} if the field isn't present
 String optString(Map<String, dynamic> json, String fieldName) {
-  return nullIfNullOrEmpty(json[fieldName] ?? "");
+  return nullIfNullOrEmpty(json[fieldName] ?? '');
 }
 
 /// Calls through to {@link JSONObject#optInt(String)} only in the case that the
@@ -39,7 +39,7 @@ int optInteger(Map<String, dynamic> json, String fieldName) {
 /// @param fieldName the name of the field in which the country code is stored
 /// @return a two-letter country code if one is found, or {@code null}
 String optCountryCode(Map<String, dynamic> json, String fieldName) {
-  String value = optString(json, fieldName);
+  final value = optString(json, fieldName);
   if (value != null && value.length == 2) {
     return value;
   }
@@ -53,7 +53,7 @@ String optCountryCode(Map<String, dynamic> json, String fieldName) {
 /// @param fieldName the name of the field in which the currency code is stored
 /// @return a three-letter currency code if one is found, or {@code null}
 String optCurrency(Map<String, dynamic> json, String fieldName) {
-  String value = optString(json, fieldName);
+  final value = optString(json, fieldName);
   if (value != null && value.length == 3) {
     return value;
   }
@@ -62,7 +62,5 @@ String optCurrency(Map<String, dynamic> json, String fieldName) {
 
 ///
 String nullIfNullOrEmpty(String possibleNull) {
-  return ((NULL == possibleNull) || (EMPTY == possibleNull))
-      ? null
-      : possibleNull;
+  return ((NULL == possibleNull) || (EMPTY == possibleNull)) ? null : possibleNull;
 }

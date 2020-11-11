@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+
 import 'ephemeral_key_manager.dart';
 import 'stripe_api_handler.dart';
 
-class CustomerSession {
+class CustomerSession extends ChangeNotifier {
   static final int keyRefreshBufferInSeconds = 30;
 
   static CustomerSession _instance;
@@ -12,6 +14,8 @@ class CustomerSession {
 
   final EphemeralKeyManager _keyManager;
   final String apiVersion;
+
+  bool isDisposed = false;
 
   /// Create a new CustomerSession instance. Use this if you prefer to manage your own instances.
   CustomerSession._(EphemeralKeyProvider provider, {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
@@ -25,7 +29,6 @@ class CustomerSession {
   /// If [prefetchKey] is true, fetch the ephemeral key immediately.
   static void initCustomerSession(EphemeralKeyProvider provider,
       {String apiVersion = DEFAULT_API_VERSION, String stripeAccount, prefetchKey = true}) {
-    // ignore: deprecated_member_use_from_same_package
     _instance = CustomerSession._(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
     if (prefetchKey) {
       _instance._keyManager.retrieveEphemeralKey();
@@ -34,8 +37,18 @@ class CustomerSession {
 
   /// End the managed singleton customer session.
   /// Call this when the current user logs out.
+  @Deprecated('Use CustomerSession.instance.endSession instead.')
   static void endCustomerSession() {
-    _instance = null;
+    _instance.endSession();
+  }
+
+  /// End the managed singleton customer session.
+  /// Call this when the current user logs out.
+  void endSession() {
+    notifyListeners();
+    dispose();
+    isDisposed = true;
+    if (this == _instance) _instance = null;
   }
 
   /// Get the current customer session
@@ -44,12 +57,14 @@ class CustomerSession {
       throw Exception('Attempted to get instance of CustomerSession before initialization.'
           'Please initialize a new session using [CustomerSession.initCustomerSession() first.]');
     }
+    assert(_instance._assertNotDisposed());
     return _instance;
   }
 
   /// Retrieves the details for the current customer.
   /// https://stripe.com/docs/api/customers/retrieve
   Future<Map<String, dynamic>> retrieveCurrentCustomer() async {
+    assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
     final path = '/customers/${key.customerId}';
     return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion);
@@ -58,15 +73,17 @@ class CustomerSession {
   /// List a Customer's PaymentMethods.
   /// https://stripe.com/docs/api/payment_methods/list
   Future<Map<String, dynamic>> listPaymentMethods() async {
+    assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
     final path = '/payment_methods';
     final params = {'customer': key.customerId, 'type': 'card'};
     return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion, params: params);
   }
 
-  /// Attach a PaymenMethod.
+  /// Attach a PaymentMethod.
   /// https://stripe.com/docs/api/payment_methods/attach
   Future<Map<String, dynamic>> attachPaymentMethod(String paymentMethodId) async {
+    assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
     final path = '/payment_methods/$paymentMethodId/attach';
     final params = {'customer': key.customerId};
@@ -76,6 +93,7 @@ class CustomerSession {
   /// Detach a PaymentMethod.
   /// https://stripe.com/docs/api/payment_methods/detach
   Future<Map<String, dynamic>> detachPaymentMethod(String paymentMethodId) async {
+    assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
     final path = '/payment_methods/$paymentMethodId/detach';
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion);
@@ -85,6 +103,7 @@ class CustomerSession {
   /// The source must be in a chargeable or pending state.
   /// https://stripe.com/docs/api/sources/attach
   Future<Map<String, dynamic>> attachSource(String sourceId) async {
+    assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
     final path = '/customers/${key.customerId}/sources';
     final params = {'source': sourceId};
@@ -95,6 +114,7 @@ class CustomerSession {
   /// The status of a source is changed to consumed when it is detached and it can no longer be used to create a charge.
   /// https://stripe.com/docs/api/sources/detach
   Future<Map<String, dynamic>> detachSource(String sourceId) async {
+    assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
     final path = '/customers/${key.customerId}/sources/$sourceId';
     return _apiHandler.request(RequestMethod.delete, path, key.secret, apiVersion);
@@ -103,8 +123,20 @@ class CustomerSession {
   /// Updates the specified customer by setting the values of the parameters passed.
   /// https://stripe.com/docs/api/customers/update
   Future<Map<String, dynamic>> updateCustomer(Map<String, dynamic> data) async {
+    assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
     final path = '/customers/${key.customerId}';
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: data);
+  }
+
+  bool _assertNotDisposed() {
+    assert(() {
+      if (isDisposed) {
+        throw FlutterError('A $runtimeType was used after being disposed.\n'
+            'Once you have called dispose() on a $runtimeType, it can no longer be used.');
+      }
+      return true;
+    }());
+    return true;
   }
 }

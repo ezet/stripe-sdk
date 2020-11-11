@@ -1,6 +1,6 @@
 /// Util Array for converting bytes to a hex string.
 /// {@url http://stackoverflow.com/questions/9655181/convert-from-byte-array-to-hex-string-in-java}
-const String HEX_ARRAY = "0123456789ABCDEF";
+const String HEX_ARRAY = '0123456789ABCDEF';
 
 ///Swap {@code null} for blank text values.
 ///
@@ -34,7 +34,7 @@ String removeSpacesAndHyphens(String cardNumberWithSpaces) {
   if (isBlank(cardNumberWithSpaces)) {
     return null;
   }
-  return cardNumberWithSpaces.replaceAll(RegExp(r"\s+|\-+"), "");
+  return cardNumberWithSpaces.replaceAll(RegExp(r'\s+|\-+'), '');
 }
 
 /// Check to see if the input number has any of the given prefixes.
@@ -47,7 +47,7 @@ bool hasAnyPrefix(String number, List<String> prefixes) {
     return false;
   }
 
-  for (String prefix in prefixes) {
+  for (var prefix in prefixes) {
     if (number.startsWith(prefix)) {
       return true;
     }

@@ -10,15 +10,14 @@ import '../progress_bar.dart';
 import '../widgets/card_form.dart';
 
 ///
-@Deprecated("Experimental")
-// ignore: deprecated_member_use_from_same_package
-typedef Future<IntentResponse> CreateSetupIntent();
+@Deprecated('Experimental')
+typedef CreateSetupIntent = Future<IntentResponse> Function();
 
 /// A screen that collects, creates and attaches a payment method to a stripe customer.
 ///
 /// Payment methods can be created with and without a Setup Intent. Using a Setup Intent is highly recommended.
 ///
-@Deprecated("Experimental")
+@Deprecated('Experimental')
 class AddPaymentMethodScreen extends StatefulWidget {
   final Stripe _stripe;
 
@@ -51,7 +50,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
         _stripe = stripe ?? Stripe.instance;
 
   @override
-  _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState(this.form ?? CardForm());
+  _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState(form ?? CardForm());
 }
 
 // ignore: deprecated_member_use_from_same_package
@@ -68,8 +67,8 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
 
   @override
   void initState() {
-    if (widget._useSetupIntent) setupIntent = widget._createSetupIntent();
     super.initState();
+    if (widget._useSetupIntent) setupIntent = widget._createSetupIntent();
   }
 
   @override
@@ -86,12 +85,10 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
 
                   showProgressDialog(context);
 
-                  var paymentMethod = await this.widget._stripe.api.createPaymentMethodFromCard(_cardData);
-                  if (this.widget._useSetupIntent) {
+                  var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(_cardData);
+                  if (widget._useSetupIntent) {
                     final createSetupIntentResponse = await this.setupIntent;
-                    var setupIntent = await this
-                        .widget
-                        ._stripe
+                    final setupIntent = await widget._stripe
                         .confirmSetupIntent(createSetupIntentResponse.clientSecret, paymentMethod['id']);
 
                     hideProgressDialog(context);
