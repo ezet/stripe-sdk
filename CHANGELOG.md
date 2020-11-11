@@ -1,5 +1,9 @@
 # Stripe SDK Changelog
 
+## 3.2.0
+
+* Add new method: `StripeApi.createSource()`
+
 ## 3.1.0
 
 * `CustomerSession` now implements `ChangeNotifier`, notifying listeners when the session is ended.
