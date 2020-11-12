@@ -11,4 +11,3 @@ export 'src/ui/widgets/card_cvc_form_field.dart';
 export 'src/ui/widgets/card_expiry_form_field.dart';
 export 'src/ui/widgets/card_form.dart';
 export 'src/ui/widgets/card_number_form_field.dart';
-export 'src/util/card_utils.dart';
