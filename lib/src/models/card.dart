@@ -193,26 +193,6 @@ class StripeCard {
     }
   }
 
-  /// Converts an unchecked String value to a {@link FundingType} or {@code null}.
-  ///
-  /// @param possibleFundingType a String that might match a {@link FundingType} or be empty
-  /// @return {@code null} if the input is blank, else the appropriate {@link FundingType}
-  static String asFundingType(String possibleFundingType) {
-    if (possibleFundingType == null || possibleFundingType.trim().isEmpty) {
-      return null;
-    }
-
-    if (StripeCard.FUNDING_CREDIT == possibleFundingType) {
-      return StripeCard.FUNDING_CREDIT;
-    } else if (StripeCard.FUNDING_DEBIT == possibleFundingType) {
-      return StripeCard.FUNDING_DEBIT;
-    } else if (StripeCard.FUNDING_PREPAID == possibleFundingType) {
-      return StripeCard.FUNDING_PREPAID;
-    } else {
-      return StripeCard.FUNDING_UNKNOWN;
-    }
-  }
-
   static void removeNullAndEmptyParams(Map<String, Object> mapToEdit) {
     // Remove all null values; they cause validation errors
     final keys = mapToEdit.keys.toList(growable: false);
