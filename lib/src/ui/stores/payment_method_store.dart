@@ -55,7 +55,7 @@ class PaymentMethodStore extends ChangeNotifier {
   Future<void> refresh() {
     if (!hasListeners) return Future.value();
 
-    final paymentMethodFuture = _customerSession.listPaymentMethods();
+    final paymentMethodFuture = _customerSession.listPaymentMethods(limit: 100);
     return paymentMethodFuture.then((value) {
       final List listData = value['data'] ?? <PaymentMethod>[];
       paymentMethods.clear();
