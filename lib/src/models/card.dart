@@ -1,10 +1,8 @@
-import '../util/card_utils.dart';
-import '../util/model_utils.dart';
-import '../util/stripe_text_utils.dart';
-
-//enum CardType { UNKNOWN, AMERICAN_EXPRESS, DISCOVER, JCB, DINERS_CLUB, VISA, MASTERCARD, UNIONPAY }
+import 'package:credit_card_validator/credit_card_validator.dart';
 
 class StripeCard {
+  final _ccValidator = CreditCardValidator();
+
   static const String AMERICAN_EXPRESS = 'American Express';
   static const String DISCOVER = 'Discover';
   static const String JCB = 'JCB';
@@ -14,31 +12,12 @@ class StripeCard {
   static const String UNIONPAY = 'UnionPay';
   static const String UNKNOWN = 'Unknown';
 
-  static const int CVC_LENGTH_AMERICAN_EXPRESS = 4;
-  static const int CVC_LENGTH_COMMON = 3;
-
-  static const String FUNDING_CREDIT = 'credit';
-  static const String FUNDING_DEBIT = 'debit';
-  static const String FUNDING_PREPAID = 'prepaid';
-  static const String FUNDING_UNKNOWN = 'unknown';
-
   ///
   // Based on http://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29
   static const List<String> PREFIXES_AMERICAN_EXPRESS = ['34', '37'];
   static const List<String> PREFIXES_DISCOVER = ['60', '64', '65'];
   static const List<String> PREFIXES_JCB = ['35'];
-  static const List<String> PREFIXES_DINERS_CLUB = [
-    '300',
-    '301',
-    '302',
-    '303',
-    '304',
-    '305',
-    '309',
-    '36',
-    '38',
-    '39'
-  ];
+  static const List<String> PREFIXES_DINERS_CLUB = ['300', '301', '302', '303', '304', '305', '309', '36', '38', '39'];
   static const List<String> PREFIXES_VISA = ['4'];
   static const List<String> PREFIXES_MASTERCARD = [
     '2221',
@@ -93,26 +72,11 @@ class StripeCard {
     this.last4,
   });
 
-  String get brand {
-    if (isBlank(_brand) && !isBlank(number)) {
-      _brand = getPossibleCardType(number);
-    }
-    return _brand;
-  }
-
-  /// Checks whether {@code this} represents a valid card.
-  ///
-  /// @return {@code true} if valid, {@code false} otherwise.
-
-  bool validateCard() {
-    return _validateCard();
-  }
-
   /// Checks whether or not the {@link #number} field is valid.
   ///
   /// @return {@code true} if valid, {@code false} otherwise.
   bool validateNumber() {
-    return isValidCardNumber(number);
+    return _ccValidator.validateCCNum(number).isValid;
   }
 
   /// Checks whether or not the {@link #expMonth} and {@link #expYear} fields represent a valid
@@ -120,32 +84,16 @@ class StripeCard {
   ///
   /// @return {@code true} if valid, {@code false} otherwise
   bool validateDate() {
-    return validateExpiryDate(expMonth, expYear);
+    return _ccValidator.validateExpDate('$expMonth/$expYear').isValid;
   }
 
   /// Checks whether or not the {@link #cvc} field is valid.
   ///
   /// @return {@code true} if valid, {@code false} otherwise
   bool validateCVC() {
-    if (isBlank(cvc)) {
-      return false;
-    }
-    final cvcValue = cvc.trim();
-    final updatedType = brand;
-    final validLength =
-        (updatedType == null && cvcValue.length >= 3 && cvcValue.length <= 4) ||
-            (AMERICAN_EXPRESS == updatedType && cvcValue.length == 4) ||
-            cvcValue.length == 3;
-
-    return ModelUtils.isWholePositiveNumber(cvcValue) && validLength;
-  }
-
-  bool _validateCard() {
-    if (cvc == null) {
-      return validateNumber() && validateDate();
-    } else {
-      return validateNumber() && validateDate() && validateCVC();
-    }
+    if (cvc == null) return false;
+    final cardType = _ccValidator.validateCCNum(number).ccType;
+    return _ccValidator.validateCVV(cvc, cardType: cardType).isValid;
   }
 
   /// Returns a stripe hash that represents this card.
