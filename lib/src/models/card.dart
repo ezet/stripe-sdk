@@ -8,6 +8,7 @@ class StripeCard {
   int expMonth;
   int expYear;
   String last4;
+  String postalCode;
 
   StripeCard({
     this.number,
@@ -20,8 +21,15 @@ class StripeCard {
   /// Checks whether or not the {@link #number} field is valid.
   ///
   /// @return {@code true} if valid, {@code false} otherwise.
+  bool isPostalCodeValid() {
+    return (postalCode != null && postalCode.isNotEmpty) ? int.tryParse(postalCode) != null : false;
+  }
+
+  /// Checks whether or not the {@link #number} field is valid.
+  ///
+  /// @return {@code true} if valid, {@code false} otherwise.
   bool validateNumber() {
-    return _ccValidator.validateCCNum(number).isValid;
+    return number != null ? _ccValidator.validateCCNum(number).isValid : false;
   }
 
   /// Checks whether or not the {@link #expMonth} and {@link #expYear} fields represent a valid
@@ -37,8 +45,12 @@ class StripeCard {
   /// @return {@code true} if valid, {@code false} otherwise
   bool validateCVC() {
     if (cvc == null) return false;
-    final cardType = _ccValidator.validateCCNum(number).ccType;
-    return _ccValidator.validateCVV(cvc, cardType: cardType).isValid;
+    if (number != null) {
+      final cardType = _ccValidator.validateCCNum(number).ccType;
+      return _ccValidator.validateCVV(cvc, cardType: cardType).isValid;
+    } else {
+      return _ccValidator.validateCVV(cvc).isValid;
+    }
   }
 
   /// Returns a stripe hash that represents this card.
@@ -53,6 +65,9 @@ class StripeCard {
         'exp_month': expMonth,
         'exp_year': expYear,
       },
+      'billing_details': {
+        'address': {'postal_code': postalCode}
+      }
     };
     _removeNullAndEmptyParams(map);
     return map;

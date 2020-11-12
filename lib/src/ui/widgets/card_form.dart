@@ -22,7 +22,10 @@ class CardForm extends StatefulWidget {
       this.cardNumberErrorText,
       this.cardExpiryErrorText,
       this.cardCvcErrorText,
-      this.cardDecoration})
+      this.cardDecoration,
+      this.postalCodeDecoration,
+      this.postalCodeTextStyle,
+      this.postalCodeErrorText})
       : card = card ?? StripeCard(),
         formKey = formKey ?? GlobalKey(),
         super(key: key);
@@ -35,10 +38,14 @@ class CardForm extends StatefulWidget {
   final TextStyle cardExpiryTextStyle;
   final InputDecoration cardCvcDecoration;
   final TextStyle cardCvcTextStyle;
+  final InputDecoration postalCodeDecoration;
+  final TextStyle postalCodeTextStyle;
   final String cardNumberErrorText;
+  final String postalCodeErrorText;
   final String cardExpiryErrorText;
   final String cardCvcErrorText;
   final Decoration cardDecoration;
+
   @override
   _CardFormState createState() => _CardFormState();
 }
@@ -124,8 +131,7 @@ class _CardFormState extends State<CardForm> {
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   margin: const EdgeInsets.only(top: 8),
-                  child: FocusScope(
-                    skipTraversal: false,
+                  child: Focus(
                     onFocusChange: (value) => setState(() => cvcHasFocus = value),
                     child: CardCvcFormField(
                       initialValue: _validationModel.cvc ?? widget.card.cvc,
@@ -139,6 +145,24 @@ class _CardFormState extends State<CardForm> {
                     ),
                   ),
                 ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  margin: const EdgeInsets.only(top: 8),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    initialValue: _validationModel.postalCode ?? widget.card.postalCode,
+                    onChanged: (text) => setState(() => _validationModel.postalCode = text),
+                    onSaved: (text) => widget.card.postalCode = text,
+                    autofillHints: [AutofillHints.postalCode],
+                    validator: (text) => _validationModel.isPostalCodeValid()
+                        ? null
+                        : widget.postalCodeErrorText ?? "Invalid postal code",
+                    style: widget.postalCodeTextStyle ?? TextStyle(color: Colors.black),
+                    decoration: widget.postalCodeDecoration ??
+                        InputDecoration(border: OutlineInputBorder(), labelText: 'Postal code'),
+                  ),
+                )
               ],
             ),
           ),
