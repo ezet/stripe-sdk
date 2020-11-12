@@ -23,7 +23,7 @@ class CardNumberFormField extends StatefulWidget {
   final TextEditingController textEditingController;
 
   static const defaultLabelText = 'Card number';
-  static const defaultHintText = 'xxxx xxxx xxxx xxxx';
+  static const defaultHintText = 'XXXX XXXX XXXX XXXX';
   static const defaultErrorText = 'Invalid card number';
 
   static const defaultDecoration = InputDecoration(
