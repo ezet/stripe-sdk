@@ -10,14 +10,12 @@ import '../progress_bar.dart';
 import '../widgets/card_form.dart';
 
 ///
-@Deprecated('Experimental')
 typedef CreateSetupIntent = Future<IntentResponse> Function();
 
 /// A screen that collects, creates and attaches a payment method to a stripe customer.
 ///
 /// Payment methods can be created with and without a Setup Intent. Using a Setup Intent is highly recommended.
 ///
-@Deprecated('Experimental')
 class AddPaymentMethodScreen extends StatefulWidget {
   final Stripe _stripe;
 
