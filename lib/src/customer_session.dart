@@ -72,11 +72,15 @@ class CustomerSession extends ChangeNotifier {
 
   /// List a Customer's PaymentMethods.
   /// https://stripe.com/docs/api/payment_methods/list
-  Future<Map<String, dynamic>> listPaymentMethods() async {
+  Future<Map<String, dynamic>> listPaymentMethods(
+      {type = 'card', int limit, String ending_before, String starting_after}) async {
     assert(_assertNotDisposed());
     final key = await _keyManager.retrieveEphemeralKey();
     final path = '/payment_methods';
-    final params = {'customer': key.customerId, 'type': 'card'};
+    final params = {'customer': key.customerId, 'type': type};
+    if (limit != null) params['limit'] = limit;
+    if (starting_after != null) params['starting_after'] = starting_after;
+    if (ending_before != null) params['ending_before'] = ending_before;
     return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion, params: params);
   }
 
