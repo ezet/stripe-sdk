@@ -52,32 +52,31 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
     final initialMaskFormatter =
         MaskTextInputFormatter(mask: '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
 
-    return Container(
-      child: TextFormField(
-        validator: widget.validator,
-        initialValue: initialMaskFormatter.formatEditUpdate(TextEditingValue(), TextEditingValue(text: initial)).text,
-        onChanged: (text) {
-          final arr = text.split('/');
-          final month = int.tryParse(arr[0]);
-          var year;
-          if (arr.length == 2) {
-            year = int.tryParse(arr[1]);
-          }
-          widget.onChanged(month, year);
-        },
-        onSaved: (text) {
-          final arr = text.split('/');
-          final month = int.tryParse(arr[0]);
-          final year = int.tryParse(arr[1]);
-          widget.onSaved(month, year);
-        },
-        inputFormatters: [maskFormatter],
-        style: widget.textStyle,
-        decoration: widget.decoration,
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.next,
-        onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
-      ),
+    return TextFormField(
+      validator: widget.validator,
+      initialValue: initialMaskFormatter.formatEditUpdate(TextEditingValue(), TextEditingValue(text: initial)).text,
+      autofillHints: [AutofillHints.creditCardExpirationDate],
+      onChanged: (text) {
+        final arr = text.split('/');
+        final month = int.tryParse(arr[0]);
+        var year;
+        if (arr.length == 2) {
+          year = int.tryParse(arr[1]);
+        }
+        widget.onChanged(month, year);
+      },
+      onSaved: (text) {
+        final arr = text.split('/');
+        final month = int.tryParse(arr[0]);
+        final year = int.tryParse(arr[1]);
+        widget.onSaved(month, year);
+      },
+      inputFormatters: [maskFormatter],
+      style: widget.textStyle,
+      decoration: widget.decoration,
+      keyboardType: TextInputType.number,
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
     );
   }
 }

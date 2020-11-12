@@ -42,21 +42,19 @@ class _CardNumberFormFieldState extends State<CardNumberFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextFormField(
-        initialValue: widget.initialValue,
-        controller: widget.textEditingController,
-        inputFormatters: [maskFormatter],
-        autofocus: true,
-        onSaved: widget.onSaved,
-        validator: widget.validator,
-        onChanged: widget.onChanged,
-        decoration: widget.decoration,
-        style: widget.textStyle,
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.next,
-        onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
-      ),
+    return TextFormField(
+      initialValue: widget.initialValue,
+      controller: widget.textEditingController,
+      inputFormatters: [maskFormatter],
+      autofocus: true,
+      autofillHints: [AutofillHints.creditCardNumber],
+      onSaved: widget.onSaved,
+      validator: widget.validator,
+      onChanged: widget.onChanged,
+      decoration: widget.decoration,
+      style: widget.textStyle,
+      keyboardType: TextInputType.number,
+      textInputAction: TextInputAction.next,
     );
   }
 }

@@ -33,18 +33,17 @@ class _CardCvcFormFieldState extends State<CardCvcFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextFormField(
-        initialValue: widget.initialValue,
-        inputFormatters: [maskFormatter],
-        onChanged: widget.onChanged,
-        validator: widget.validator,
-        onSaved: widget.onSaved,
-        style: widget.textStyle,
-        decoration: widget.decoration,
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.done,
-      ),
+    return TextFormField(
+      initialValue: widget.initialValue,
+      autofillHints: [AutofillHints.creditCardSecurityCode],
+      inputFormatters: [maskFormatter],
+      onChanged: widget.onChanged,
+      validator: widget.validator,
+      onSaved: widget.onSaved,
+      style: widget.textStyle,
+      decoration: widget.decoration,
+      keyboardType: TextInputType.number,
+      textInputAction: TextInputAction.next,
     );
   }
 }
