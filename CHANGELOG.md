@@ -7,6 +7,7 @@
 * Removed experimental status of `AddPaymentMethodScreen` and `PaymentMethodsScreen`
 * List up to 100 payment methods in `PaymentMethodsScreen`, up from 10
 * Add support for additional request parameters in `CustomerSession.listPaymentMethods`
+* Misc UI improvements on `AddPaymentMethodScreen`, e.g proper autofill hints and more.
 
 ### Breaking changes
 
