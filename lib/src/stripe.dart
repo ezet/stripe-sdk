@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,7 +25,11 @@ class Stripe {
   /// and "ios/Runner/Info.plist" configuration.
   Stripe(String publishableKey, {String stripeAccount, @required String returnUrlForSca})
       : api = StripeApi(publishableKey, stripeAccount: stripeAccount),
-        _returnUrlForSca = returnUrlForSca ?? 'stripesdk://3ds.stripesdk.io';
+        _returnUrlForSca = returnUrlForSca ?? 'stripesdk://3ds.stripesdk.io' {
+    // TODO: Throw real exception in 5.0
+    assert(!kIsWeb != ['http', 'https'].contains(_returnUrlForSca.split(':')[0]),
+        'Return URL schema must be http/https for web, and NOT http/https for otherwise.');
+  }
 
   final StripeApi api;
   final String _returnUrlForSca;

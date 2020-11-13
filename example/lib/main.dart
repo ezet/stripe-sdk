@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
@@ -12,6 +13,11 @@ import 'ui/payment_screen.dart';
 
 const _stripePublishableKey = 'pk_test_FlC2pf2JCTgKLcgG0aScSQmp00XqfTJL8s';
 const _returnUrl = 'stripesdk://demo.stripesdk.ezet.io';
+const _returnUrlWeb = 'http://demo.stripesdk.ezet.io';
+
+String getScaReturnUrl() {
+  return kIsWeb ? _returnUrlWeb : _returnUrl;
+}
 
 void main() async {
   initializeLocator();
