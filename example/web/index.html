@@ -16,6 +16,25 @@
 
   <title>stripe_sdk_example</title>
   <link rel="manifest" href="manifest.json">
+
+  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-functions.js"></script>
+  <script type="application/javascript">
+    /*
+      These values are from the google-services.json,
+      so technically they're for the mobile sdk, but it seems to work great.
+    */
+    const firebaseConfig = {
+      apiKey: "AIzaSyCPnGRTRxrUO_vgyBW8cfTEDywTrwzJg4M",
+      databaseURL: "https://stripe-sdk-demo.firebaseio.com",
+      projectId: "stripe-sdk-demo",
+      storageBucket: "stripe-sdk-demo.appspot.com",
+      appId: "1:345345135463:android:bd3d9b5f5796cffb8315c2",
+    };
+
+    // Initialize Firebase
+    let firebaseApp = firebase.initializeApp(firebaseConfig);
+  </script>
 </head>
 <body>
   <!-- This script installs service_worker.js to provide PWA functionality to
