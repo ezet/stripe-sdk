@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
+import 'package:stripe_sdk_example/network/network_service.dart';
 
 import '../locator.dart';
 
@@ -63,7 +64,7 @@ class PaymentScreen extends StatelessWidget {
   }
 
   void createAutomaticPaymentIntent(BuildContext context) async {
-    final networkService = locator.get();
+    final networkService = locator.get<NetworkService>();
     final response = await networkService.createAutomaticPaymentIntent(10000);
     if (response.status == 'succeeded') {
       // TODO: success
@@ -82,7 +83,7 @@ class PaymentScreen extends StatelessWidget {
   }
 
   void createManualPaymentIntent(BuildContext context) async {
-    final networkService = locator.get();
+    final networkService = locator.get<NetworkService>();
     final response = await networkService.createManualPaymentIntent(10000, 'pm_card_threeDSecure2Required');
     if (response['status'] == 'succeeded') {
       // TODO: success
