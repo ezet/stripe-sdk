@@ -6,7 +6,6 @@ import '../../ui/stores/payment_method_store.dart';
 import '../progress_bar.dart';
 import 'add_payment_method_screen.dart';
 
-@Deprecated('Experimental')
 class PaymentMethodsScreen extends StatefulWidget {
   final String title;
   final CreateSetupIntent createSetupIntent;
