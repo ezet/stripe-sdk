@@ -1,5 +1,22 @@
 # Stripe SDK Changelog
 
+## 4.0.0
+
+* Refactor, simplify and improve credit card validation in `StripeCard`
+* Add support for postal code in `AddPaymentMethodScreen` and `StripeCard`
+* Removed experimental status of `AddPaymentMethodScreen` and `PaymentMethodsScreen`
+* List up to 100 payment methods in `PaymentMethodsScreen`, up from 10
+* Add support for additional request parameters in `CustomerSession.listPaymentMethods`
+
+### Breaking changes
+
+This update removes many utility methods that were public, but not strictly related to Stripe or this library.
+In most cases this will not affect you, but if you relied on any of the removed methods I recommend you copy the methods
+into your project, or find other replacements.
+
+* Removed many unused and unnecessary methods and constants on `StripeCard`
+* Removed file `card_utils.dart` and all it's contents.
+
 ## 3.2.0
 
 * Add new method: `StripeApi.createSource()`
