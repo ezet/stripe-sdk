@@ -27,8 +27,17 @@ class Stripe {
       : api = StripeApi(publishableKey, stripeAccount: stripeAccount),
         _returnUrlForSca = returnUrlForSca ?? 'stripesdk://3ds.stripesdk.io' {
     // TODO: Throw real exception in 5.0
-    assert(!kIsWeb != ['http', 'https'].contains(_returnUrlForSca.split(':')[0]),
-        'Return URL schema must be http/https for web, and NOT http/https for otherwise.');
+    assert(_isValidScheme());
+  }
+
+  bool _isValidScheme() {
+    var isHttpScheme = ['http', 'https'].contains(_returnUrlForSca.split(':')[0]);
+    if (kIsWeb) {
+      assert(isHttpScheme, 'Return URL schema must be http/https when compiled for web.');
+    } else {
+      assert(!isHttpScheme, 'Return URL schema must not http/https when compiled for mobile.');
+    }
+    return true;
   }
 
   final StripeApi api;

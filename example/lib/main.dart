@@ -21,7 +21,7 @@ String getScaReturnUrl() {
 
 void main() async {
   initializeLocator();
-  Stripe.init(_stripePublishableKey, returnUrlForSca: _returnUrl);
+  Stripe.init(_stripePublishableKey, returnUrlForSca: getScaReturnUrl());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -31,7 +31,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
-    final app = MaterialApp(title: 'Stripe SDK Demo', home: HomeScreen());
+    final app = MaterialApp(
+        title: 'Stripe SDK Demo',
+        home: HomeScreen(),
+        theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity));
     return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
 }

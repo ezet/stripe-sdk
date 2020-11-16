@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' show json;
+import 'dart:developer';
 
 import 'stripe_api_handler.dart';
 import 'stripe_error.dart';
@@ -81,6 +82,8 @@ class EphemeralKeyManager {
       try {
         key = await ephemeralKeyProvider(DEFAULT_API_VERSION);
       } catch (error) {
+        log(error);
+        rethrow;
         final e = StripeApiError(null, {
           StripeApiError.FIELD_MESSAGE: 'Failed to retrieve ephemeralKey from server',
         });
@@ -91,6 +94,7 @@ class EphemeralKeyManager {
         Map<String, dynamic> decodedKey = json.decode(key);
         _ephemeralKey = EphemeralKey.fromJson(decodedKey);
       } catch (error) {
+        log(error.toString());
         final e = StripeApiError(null, {
           StripeApiError.FIELD_MESSAGE:
               'Failed to parse Ephemeral Key, Please return the response as it is as you received from stripe server',
