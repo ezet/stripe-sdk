@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
+import 'package:stripe_sdk_example/ui/intent_complete_screen.dart';
 
 import 'locator.dart';
 import 'network/network_service.dart';
@@ -33,7 +34,21 @@ class MyApp extends StatelessWidget {
     CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
     final app = MaterialApp(
         title: 'Stripe SDK Demo',
-        home: HomeScreen(),
+        // home: HomeScreen(),
+
+        onUnknownRoute: (settings) {
+          final uri = Uri.parse(settings.name);
+          if (uri.queryParameters.containsKey('setup_intent') || uri.queryParameters.containsKey('payment_intent')) {
+            return MaterialPageRoute(builder: (context) => IntentCompleteScreen());
+          }
+          return MaterialPageRoute(builder: (context) => HomeScreen());
+        },
+        routes: {
+          '/': (context) => HomeScreen(),
+          '/3ds/complete': (context) => IntentCompleteScreen(),
+          '/payments': (context) => PaymentScreen()
+        },
+        initialRoute: '/',
         theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity));
     return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
