@@ -1,5 +1,6 @@
 import 'package:awesome_card/credit_card.dart';
 import 'package:awesome_card/style/card_background.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/card.dart';
@@ -25,13 +26,15 @@ class CardForm extends StatefulWidget {
       this.cardDecoration,
       this.postalCodeDecoration,
       this.postalCodeTextStyle,
-      this.postalCodeErrorText})
+      this.postalCodeErrorText,
+      this.displayAnimatedCard = !kIsWeb})
       : card = card ?? StripeCard(),
         formKey = formKey ?? GlobalKey(),
         super(key: key);
 
   final GlobalKey<FormState> formKey;
   final StripeCard card;
+  final bool displayAnimatedCard;
   final InputDecoration cardNumberDecoration;
   final TextStyle cardNumberTextStyle;
   final InputDecoration cardExpiryDecoration;
@@ -64,24 +67,7 @@ class _CardFormState extends State<CardForm> {
     return SingleChildScrollView(
       child:
           Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: CreditCard(
-            cardNumber: _validationModel.number ?? '',
-            cardExpiry: cardExpiry,
-            cvv: _validationModel.cvc ?? '',
-            frontBackground: widget.cardDecoration != null
-                ? Container(
-                    width: double.maxFinite,
-                    height: double.maxFinite,
-                    decoration: widget.cardDecoration,
-                  )
-                : CardBackgrounds.black,
-            backBackground: CardBackgrounds.white,
-            showBackSide: cvcHasFocus,
-            showShadow: true,
-          ),
-        ),
+        _getCreditCardView(cardExpiry),
         Form(
           key: widget.formKey,
           child: Padding(
@@ -168,6 +154,29 @@ class _CardFormState extends State<CardForm> {
           ),
         ),
       ]),
+    );
+  }
+
+  Widget _getCreditCardView(String cardExpiry) {
+    if (!widget.displayAnimatedCard) return Padding(padding: EdgeInsets.zero);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: CreditCard(
+        cardNumber: _validationModel.number ?? '',
+        cardExpiry: cardExpiry,
+        cvv: _validationModel.cvc ?? '',
+        frontBackground: widget.cardDecoration != null
+            ? Container(
+                width: double.maxFinite,
+                height: double.maxFinite,
+                decoration: widget.cardDecoration,
+              )
+            : CardBackgrounds.black,
+        backBackground: CardBackgrounds.white,
+        showBackSide: cvcHasFocus,
+        showShadow: true,
+      ),
     );
   }
 }
