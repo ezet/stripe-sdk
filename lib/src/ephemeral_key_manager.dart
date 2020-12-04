@@ -84,10 +84,6 @@ class EphemeralKeyManager {
       } catch (error) {
         log(error);
         rethrow;
-        final e = StripeApiError(null, {
-          StripeApiError.FIELD_MESSAGE: 'Failed to retrieve ephemeralKey from server',
-        });
-        throw StripeApiException(e);
       }
 
       try {

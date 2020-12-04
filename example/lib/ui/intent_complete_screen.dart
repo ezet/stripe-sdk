@@ -8,7 +8,7 @@ class IntentCompleteScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('3DS intent completed'),
       ),
-      body: Text("complete"),
+      body: Text('complete'),
     );
   }
 }

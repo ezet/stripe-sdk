@@ -143,7 +143,7 @@ class _CardFormState extends State<CardForm> {
                     autofillHints: [AutofillHints.postalCode],
                     validator: (text) => _validationModel.isPostalCodeValid()
                         ? null
-                        : widget.postalCodeErrorText ?? "Invalid postal code",
+                        : widget.postalCodeErrorText ?? 'Invalid postal code',
                     style: widget.postalCodeTextStyle ?? TextStyle(color: Colors.black),
                     decoration: widget.postalCodeDecoration ??
                         InputDecoration(border: OutlineInputBorder(), labelText: 'Postal code'),
