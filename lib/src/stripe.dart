@@ -74,15 +74,23 @@ class Stripe {
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
   /// This should be set on the intent before attempting to authenticate it.
-  String getReturnUrlForSca() {
-    final requestId = Random.secure().nextInt(99999999);
-    return '$_returnUrlForSca?requestId=$requestId';
+  String getReturnUrlForSca({String webReturnPath}) {
+    assert(kIsWeb == webReturnPath?.isNotEmpty ?? false);
+    if (kIsWeb) {
+      var webUrl = Uri.base.toString() + webReturnPath;
+      debugPrint(webUrl);
+      return webUrl;
+    } else {
+      final requestId = Random.secure().nextInt(99999999);
+      return '$_returnUrlForSca?requestId=$requestId';
+    }
   }
 
   /// Authenticate a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
-  Future<Map<String, dynamic>> authenticateSetupIntent(String clientSecret) async {
-    final intent = await api.confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca()});
+  Future<Map<String, dynamic>> authenticateSetupIntent(String clientSecret, {String webReturnPath}) async {
+    final intent = await api
+        .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca(webReturnPath: webReturnPath)});
     if (intent['status'] == 'requires_action') {
       return _handleSetupIntent(intent['next_action']);
     } else {
@@ -92,9 +100,10 @@ class Stripe {
 
   /// Confirm and authenticate a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
-  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, String paymentMethod) async {
-    final intent = await api
-        .confirmSetupIntent(clientSecret, data: {'return_url': getReturnUrlForSca(), 'payment_method': paymentMethod});
+  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, String paymentMethod,
+      {String webReturnPath}) async {
+    final intent = await api.confirmSetupIntent(clientSecret,
+        data: {'return_url': getReturnUrlForSca(webReturnPath: webReturnPath), 'payment_method': paymentMethod});
     if (intent['status'] == 'requires_action') {
       return _handleSetupIntent(intent['next_action']);
     } else {
@@ -152,20 +161,24 @@ class Stripe {
 
   Future<Map<String, dynamic>> _authenticateIntent(Map action, IntentProvider callback) async {
     final url = action['redirect_to_url']['url'];
-    final returnUrl = Uri.parse(action['redirect_to_url']['return_url']);
     final completer = Completer<Map<String, dynamic>>();
-    StreamSubscription sub;
-    sub = getUriLinksStream().listen((Uri uri) async {
-      if (uri.scheme == returnUrl.scheme &&
-          uri.host == returnUrl.host &&
-          uri.queryParameters['requestId'] == returnUrl.queryParameters['requestId']) {
-        await sub.cancel();
-        final intent = await callback(uri);
-        completer.complete(intent);
-      }
-    });
+    if (!kIsWeb) {
+      final returnUrl = Uri.parse(action['redirect_to_url']['return_url']);
+      StreamSubscription sub;
+      sub = getUriLinksStream().listen((Uri uri) async {
+        if (uri.scheme == returnUrl.scheme &&
+            uri.host == returnUrl.host &&
+            uri.queryParameters['requestId'] == returnUrl.queryParameters['requestId']) {
+          await sub.cancel();
+          final intent = await callback(uri);
+          completer.complete(intent);
+        }
+      });
+    } else {
+      completer.complete(null);
+    }
 
-    await launch(url);
+    await launch(url, webOnlyWindowName: '_self');
     return completer.future;
   }
 }
