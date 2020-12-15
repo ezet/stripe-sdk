@@ -178,7 +178,7 @@ class Stripe {
       completer.complete(null);
     }
 
-    await launch(url, webOnlyWindowName: '_self');
+    await launch(url, webOnlyWindowName: '_self', forceSafariVC: false);
     return completer.future;
   }
 }
