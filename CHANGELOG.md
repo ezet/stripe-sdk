@@ -1,7 +1,6 @@
 # Stripe SDK Changelog
 
-
-## 4.0.1-rc.1
+## 4.0.1
 
 Fix assertion for webReturnPath
 
@@ -15,17 +14,6 @@ Fix assertion for webReturnPath
 * Misc UI improvements on `AddPaymentMethodScreen`, e.g proper autofill hints and more.
 * Add new optional parameter `webReturnPath` to all SCA-capable methods. This allow specifying a custom return_url when compiled for web.
 * Fix issue with iOS not closing webview after SCA.
-
-
-## 4.0.0-rc.1
-
-* Refactor, simplify and improve credit card validation in `StripeCard`
-* Add support for postal code in `AddPaymentMethodScreen` and `StripeCard`
-* Removed experimental status of `AddPaymentMethodScreen` and `PaymentMethodsScreen`
-* List up to 100 payment methods in `PaymentMethodsScreen`, up from 10
-* Add support for additional request parameters in `CustomerSession.listPaymentMethods`
-* Misc UI improvements on `AddPaymentMethodScreen`, e.g proper autofill hints and more.
-* Add new optional parameter `webReturnPath` to all SCA-capable methods. This allow specifying a custom return_url when compiled for web.
 
 ### Breaking changes
 
