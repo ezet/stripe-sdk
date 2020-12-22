@@ -1,5 +1,10 @@
 # Stripe SDK Changelog
 
+
+## 4.0.1-rc.1
+
+Fix assertion for webReturnPath
+
 ## 4.0.0
 
 * Refactor, simplify and improve credit card validation in `StripeCard`
