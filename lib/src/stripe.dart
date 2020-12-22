@@ -75,8 +75,8 @@ class Stripe {
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
   /// This should be set on the intent before attempting to authenticate it.
   String getReturnUrlForSca({String webReturnPath}) {
-    assert(kIsWeb == webReturnPath?.isNotEmpty ?? false);
     if (kIsWeb) {
+      assert(webReturnPath?.isNotEmpty ?? false);
       var webUrl = Uri.base.toString() + webReturnPath;
       debugPrint(webUrl);
       return webUrl;
