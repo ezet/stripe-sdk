@@ -1,8 +1,12 @@
 # Stripe SDK Changelog
 
+## 4.0.2
+
+* Fix a bug with date validation
+
 ## 4.0.1
 
-Fix assertion for webReturnPath
+* Fix assertion for webReturnPath
 
 ## 4.0.0
 
