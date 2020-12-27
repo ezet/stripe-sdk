@@ -22,7 +22,9 @@ class StripeCard {
   ///
   /// @return {@code true} if valid, {@code false} otherwise.
   bool isPostalCodeValid() {
-    return (postalCode != null && postalCode.isNotEmpty) ? int.tryParse(postalCode) != null : false;
+    return (postalCode != null && postalCode.isNotEmpty)
+        ? int.tryParse(postalCode) != null
+        : false;
   }
 
   /// Checks whether or not the {@link #number} field is valid.
@@ -37,7 +39,10 @@ class StripeCard {
   ///
   /// @return {@code true} if valid, {@code false} otherwise
   bool validateDate() {
-    return _ccValidator.validateExpDate('$expMonth/$expYear').isValid;
+    return _ccValidator
+        .validateExpDate(
+            '${expMonth.toString().padLeft(2, '0')}/${expYear.toString().padLeft(2, '0')}')
+        .isValid;
   }
 
   /// Checks whether or not the {@link #cvc} field is valid.
