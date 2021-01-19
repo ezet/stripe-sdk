@@ -35,6 +35,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backwardsCompatibility: false,
         title: Text(widget.title),
         actions: <Widget>[
           IconButton(
