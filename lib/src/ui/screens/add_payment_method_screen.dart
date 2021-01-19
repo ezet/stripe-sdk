@@ -51,13 +51,12 @@ class AddPaymentMethodScreen extends StatefulWidget {
   _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState(form ?? CardForm());
 }
 
-// ignore: deprecated_member_use_from_same_package
 class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   final StripeCard _cardData;
   final GlobalKey<FormState> _formKey;
   final CardForm _form;
 
-  Future<IntentResponse> setupIntent;
+  IntentResponse setupIntent;
 
   _AddPaymentMethodScreenState(this._form)
       : _cardData = _form.card,
@@ -65,14 +64,19 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
 
   @override
   void initState() {
+    _createSetupIntent();
     super.initState();
-    if (widget._useSetupIntent) setupIntent = widget._createSetupIntent();
+  }
+
+  void _createSetupIntent() async {
+    if (widget._useSetupIntent) setupIntent = await widget._createSetupIntent();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backwardsCompatibility: false,
           title: Text('Add payment method'),
           actions: <Widget>[
             IconButton(
