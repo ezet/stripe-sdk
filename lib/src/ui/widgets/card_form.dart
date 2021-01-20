@@ -27,7 +27,7 @@ class CardForm extends StatefulWidget {
       this.postalCodeDecoration,
       this.postalCodeTextStyle,
       this.postalCodeErrorText,
-      this.displayAnimatedCard = !kIsWeb})
+      this.displayAnimatedCard = !kIsWeb && false})
       : card = card ?? StripeCard(),
         formKey = formKey ?? GlobalKey(),
         super(key: key);
