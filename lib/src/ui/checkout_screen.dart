@@ -194,7 +194,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
       selectedPaymentMethod =
           paymentMethods?.singleWhere((item) => item.id == _selectedPaymentMethodId, orElse: () => null);
     } else {
-      selectedPaymentMethod = paymentMethods?.first;
+      selectedPaymentMethod = paymentMethods != null && paymentMethods.isNotEmpty ? paymentMethods.first : null;
     }
     return Container(
 //      padding: EdgeInsets.symmetric(horizontal: 16),
