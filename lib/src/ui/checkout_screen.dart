@@ -46,7 +46,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backwardsCompatibility: false,
         title: Text(widget.title),
       ),
       body: Column(
