@@ -50,7 +50,7 @@ class StripeCard {
   /// @return {@code true} if valid, {@code false} otherwise
   bool validateCVC() {
     if (cvc == null) return false;
-    return _ccValidator.validateCVV(cvc, cardType:_ccValidator.validateCCNum(number).ccType).isValid;
+    return _ccValidator.validateCVV(cvc, _ccValidator.validateCCNum(number).ccType).isValid;
   }
 
   /// Returns a stripe hash that represents this card.
