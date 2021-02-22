@@ -50,7 +50,7 @@ class CardForm extends StatefulWidget {
   final Decoration cardDecoration;
 
   @override
-  _CardFormState createState() => _CardFormState();
+  State createState() => _CardFormState();
 }
 
 class _CardFormState extends State<CardForm> {

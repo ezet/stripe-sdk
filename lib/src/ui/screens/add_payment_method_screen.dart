@@ -22,6 +22,8 @@ class AddPaymentMethodScreen extends StatefulWidget {
   /// Used to create a setup intent when required.
   final CreateSetupIntent _createSetupIntent;
 
+  final String title;
+
   /// True if a setup intent should be used to set up the payment method.
   final bool _useSetupIntent;
 
@@ -33,7 +35,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
 
   /// Add a payment method using a Stripe Setup Intent
   AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent,
-      {PaymentMethodStore paymentMethodStore, Stripe stripe, this.form})
+      {PaymentMethodStore paymentMethodStore, Stripe stripe, this.form, this.title})
       : _useSetupIntent = true,
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         _stripe = stripe ?? Stripe.instance;
@@ -41,7 +43,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
   /// Add a payment method without using a Stripe Setup Intent
   @Deprecated(
       'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
-  AddPaymentMethodScreen.withoutSetupIntent({PaymentMethodStore paymentMethodStore, Stripe stripe, this.form})
+  AddPaymentMethodScreen.withoutSetupIntent({PaymentMethodStore paymentMethodStore, Stripe stripe, this.form, this.title})
       : _useSetupIntent = false,
         _createSetupIntent = null,
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
@@ -77,7 +79,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
     return Scaffold(
         appBar: AppBar(
           backwardsCompatibility: false,
-          title: Text('Add payment method'),
+          title: Text(widget.title ?? 'Add payment method'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.check),
