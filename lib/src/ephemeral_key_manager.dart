@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'dart:async';
 import 'dart:convert' show json;
@@ -24,26 +24,26 @@ class EphemeralKey {
 
   static const String NULL = 'null';
 
-  String _id;
-  int _created;
-  int _expires;
-  bool _liveMode;
-  String _customerId;
-  String _object;
-  String _secret;
-  String _type;
-  DateTime _createdAt;
-  DateTime _expiresAt;
+  late String _id;
+  late int _created;
+  late int _expires;
+  late bool _liveMode;
+  late String _customerId;
+  late String _object;
+  late String _secret;
+  late String _type;
+  late DateTime _createdAt;
+  late DateTime _expiresAt;
 
   EphemeralKey.fromJson(Map<String, dynamic> json) {
-    _id = optString(json, FIELD_ID);
+    _id = optString(json, FIELD_ID)!;
     _created = optInteger(json, FIELD_CREATED);
     _expires = optInteger(json, FIELD_EXPIRES);
     _liveMode = optBoolean(json, FIELD_LIVEMODE);
     _customerId = json[FIELD_ASSOCIATED_OBJECTS][0][FIELD_ID];
     _type = json[FIELD_ASSOCIATED_OBJECTS][0][FIELD_TYPE];
-    _object = optString(json, FIELD_OBJECT);
-    _secret = optString(json, FIELD_SECRET);
+    _object = optString(json, FIELD_OBJECT)!;
+    _secret = optString(json, FIELD_SECRET)!;
     _createdAt = DateTime.fromMillisecondsSinceEpoch(_created * 1000);
     _expiresAt = DateTime.fromMillisecondsSinceEpoch(_expires * 1000);
   }
@@ -70,7 +70,7 @@ class EphemeralKey {
 }
 
 class EphemeralKeyManager {
-  EphemeralKey _ephemeralKey;
+  EphemeralKey? _ephemeralKey;
   final EphemeralKeyProvider ephemeralKeyProvider;
   final int timeBufferInSeconds;
 
@@ -78,13 +78,13 @@ class EphemeralKeyManager {
 
   /// Retrieve a ephemeral key.
   /// Will fetch a new one using [EphemeralKeyProvider] if required.
-  Future<EphemeralKey> retrieveEphemeralKey() async {
+  Future<EphemeralKey?> retrieveEphemeralKey() async {
     if (_shouldRefreshKey()) {
       String key;
       try {
         key = await ephemeralKeyProvider(DEFAULT_API_VERSION);
       } catch (error) {
-        log(error);
+        log(error.toString());
         rethrow;
       }
 
@@ -112,7 +112,7 @@ class EphemeralKeyManager {
     }
 
     final now = DateTime.now();
-    final diff = _ephemeralKey.expiresAt.difference(now);
+    final diff = _ephemeralKey!.expiresAt.difference(now);
     return diff.inSeconds < timeBufferInSeconds;
   }
 }

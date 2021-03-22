@@ -104,10 +104,10 @@ class StripeApiHandler {
     headers['User-Agent'] = 'StripeSDK/v2';
 
     if (options != null) {
-      headers['Stripe-Version'] = options.apiVersion!;
+      headers['Authorization'] = 'Bearer ${options.key}';
 
-      if (options.key != null) {
-        headers['Authorization'] = 'Bearer ${options.key}';
+      if (options.apiVersion != null) {
+        headers['Stripe-Version'] = options.apiVersion!;
       }
 
       if (options.stripeAccount != null) {
