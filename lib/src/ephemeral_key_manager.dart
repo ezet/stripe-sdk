@@ -38,9 +38,9 @@ class EphemeralKey {
   EphemeralKey.fromJson(Map<String, dynamic> json) {
     // TODO might throw an error if ephemeralKey doesn't provide all fields.
     _id = optString(json, FIELD_ID)!;
-    _created = optInteger(json, FIELD_CREATED);
-    _expires = optInteger(json, FIELD_EXPIRES);
-    _liveMode = optBoolean(json, FIELD_LIVEMODE);
+    _created = optInteger(json, FIELD_CREATED)!;
+    _expires = optInteger(json, FIELD_EXPIRES)!;
+    _liveMode = optBoolean(json, FIELD_LIVEMODE)!;
     _customerId = json[FIELD_ASSOCIATED_OBJECTS][0][FIELD_ID];
     _type = json[FIELD_ASSOCIATED_OBJECTS][0][FIELD_TYPE];
     _object = optString(json, FIELD_OBJECT)!;
