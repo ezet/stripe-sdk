@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'models/card.dart';
@@ -6,7 +8,7 @@ import 'stripe_api_handler.dart';
 typedef IntentProvider = Future<Map<String, dynamic>> Function(Uri uri);
 
 class StripeApi {
-  static StripeApi _instance;
+  static StripeApi? _instance;
 
   final StripeApiHandler _apiHandler;
 
@@ -22,7 +24,7 @@ class StripeApi {
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
-  StripeApi(this.publishableKey, {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
+  StripeApi(this.publishableKey, {this.apiVersion = DEFAULT_API_VERSION, String? stripeAccount})
       : _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _validateKey(publishableKey);
     _apiHandler.apiVersion = apiVersion;
@@ -36,7 +38,7 @@ class StripeApi {
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
-  static void init(String publishableKey, {String apiVersion = DEFAULT_API_VERSION, String stripeAccount}) {
+  static void init(String publishableKey, {String apiVersion = DEFAULT_API_VERSION, String? stripeAccount}) {
     _instance ??= StripeApi(publishableKey, apiVersion: apiVersion, stripeAccount: stripeAccount);
   }
 
@@ -46,7 +48,7 @@ class StripeApi {
     if (_instance == null) {
       throw Exception('Attempted to get singleton instance of StripeApi without initialization');
     }
-    return _instance;
+    return _instance!;
   }
 
   /// Create a stripe Token
@@ -80,7 +82,7 @@ class StripeApi {
 
   /// Retrieve a PaymentIntent.
   /// https://stripe.com/docs/api/payment_intents/retrieve
-  Future<Map<String, dynamic>> retrievePaymentIntent(String clientSecret, {String apiVersion}) async {
+  Future<Map<String, dynamic>> retrievePaymentIntent(String clientSecret, {String? apiVersion}) async {
     final intentId = _parseIdFromClientSecret(clientSecret);
     final path = '/payment_intents/$intentId';
     final params = {'client_secret': clientSecret};
@@ -89,17 +91,16 @@ class StripeApi {
 
   /// Confirm a PaymentIntent
   /// https://stripe.com/docs/api/payment_intents/confirm
-  Future<Map<String, dynamic>> confirmPaymentIntent(String clientSecret, {Map<String, dynamic> data}) async {
-    final params = data ?? {};
+  Future<Map<String, dynamic>> confirmPaymentIntent(String clientSecret, {Map<String, dynamic> data = const {}}) async {
     final intent = _parseIdFromClientSecret(clientSecret);
-    params['client_secret'] = clientSecret;
+    data['client_secret'] = clientSecret;
     final path = '/payment_intents/$intent/confirm';
-    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: params);
+    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 
   /// Retrieve a SetupIntent.
   /// https://stripe.com/docs/api/setup_intents/retrieve
-  Future<Map<String, dynamic>> retrieveSetupIntent(String clientSecret, {String apiVersion}) async {
+  Future<Map<String, dynamic>> retrieveSetupIntent(String clientSecret, {String? apiVersion}) async {
     final intentId = _parseIdFromClientSecret(clientSecret);
     final path = '/setup_intents/$intentId';
     final params = {'client_secret': clientSecret};
@@ -108,12 +109,11 @@ class StripeApi {
 
   /// Confirm a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
-  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, {Map<String, dynamic> data}) async {
-    final params = data ?? {};
+  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, {Map<String, dynamic> data = const {}}) async {
     final intent = _parseIdFromClientSecret(clientSecret);
-    params['client_secret'] = clientSecret;
+    data['client_secret'] = clientSecret;
     final path = '/setup_intents/$intent/confirm';
-    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: params);
+    return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 
   /// Validates the received [publishableKey] and throws a [Exception] if an

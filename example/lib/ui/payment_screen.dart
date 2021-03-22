@@ -51,7 +51,7 @@ class PaymentScreen extends StatelessWidget {
         currency: '\$',
       )
     ];
-    final networkService = locator.get();
+    final networkService = locator.get<NetworkService>();
     return Navigator.push(context, MaterialPageRoute(builder: (context) {
       // ignore: deprecated_member_use
       return CheckoutScreen(

@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 import 'dart:convert' show json;
 
@@ -31,19 +33,19 @@ class StripeApiHandler {
 
   final http.Client _client = http.Client();
 
-  final String stripeAccount;
+  final String? stripeAccount;
 
   StripeApiHandler({this.stripeAccount});
 
-  Future<Map<String, dynamic>> request(RequestMethod method, String path, String key, String apiVersion,
-      {final Map<String, dynamic> params}) {
+  Future<Map<String, dynamic>> request(RequestMethod method, String path, String key, String? apiVersion,
+      {final Map<String, dynamic>? params}) {
     final options = RequestOptions(key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
     return _getStripeResponse(method, LIVE_API_PATH + path, options, params: params);
   }
 
   Future<Map<String, dynamic>> _getStripeResponse(RequestMethod method, final String url, final RequestOptions options,
-      {final Map<String, dynamic> params}) async {
-    final headers = _headers(options: options);
+      {final Map<String, dynamic>? params}) async {
+    final Map<String, String> headers = _headers(options: options);
 
     http.Response response;
 
@@ -74,7 +76,7 @@ class StripeApiHandler {
     final requestId = response.headers[HEADER_KEY_REQUEST_ID];
 
     final statusCode = response.statusCode;
-    Map<String, dynamic> resp;
+    late Map<String, dynamic> resp;
     try {
       resp = json.decode(response.body);
     } catch (error) {
@@ -94,15 +96,27 @@ class StripeApiHandler {
   ///
   ///
   ///
-  static Map<String, String> _headers({RequestOptions options}) {
-    final headers = <String, String>{};
+  static Map<String, String> _headers({RequestOptions? options}) {
+    final Map<String, String> headers = {};
     headers['Accept-Charset'] = CHARSET;
     headers['Accept'] = 'application/json';
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
     headers['User-Agent'] = 'StripeSDK/v2';
 
     if (options != null) {
-      headers['Authorization'] = 'Bearer ${options.key}';
+      headers['Stripe-Version'] = options.apiVersion!;
+
+      if (options.key != null) {
+        headers['Authorization'] = 'Bearer ${options.key}';
+      }
+
+      if (options.stripeAccount != null) {
+        headers['Stripe-Account'] = options.stripeAccount!;
+      }
+
+      if (options.idempotencyKey != null) {
+        headers['Idempotency-Key'] = options.idempotencyKey!;
+      }
     }
 
     // debug headers
@@ -110,22 +124,7 @@ class StripeApiHandler {
     propertyMap['os.name'] = defaultTargetPlatform.toString();
     propertyMap['lang'] = 'Dart';
     propertyMap['publisher'] = 'lars.dahl@gmail.com';
-
     headers['X-Stripe-Client-User-Agent'] = json.encode(propertyMap);
-
-    if (options != null) {
-      if (options.apiVersion != null) {
-        headers['Stripe-Version'] = options.apiVersion;
-      }
-
-      if (options.stripeAccount != null) {
-        headers['Stripe-Account'] = options.stripeAccount;
-      }
-
-      if (options.idempotencyKey != null) {
-        headers['Idempotency-Key'] = options.idempotencyKey;
-      }
-    }
 
     return headers;
   }
@@ -170,18 +169,18 @@ class RequestOptions {
   static const String TYPE_QUERY = 'source';
   static const String TYPE_JSON = 'json_data';
 
-  final String apiVersion;
-  final String guid;
-  final String idempotencyKey;
+  final String? apiVersion;
+  final String? guid;
+  final String? idempotencyKey;
   final String key;
-  final String requestType;
-  final String stripeAccount;
+  final String? requestType;
+  final String? stripeAccount;
 
   RequestOptions({
-    @required this.apiVersion,
+    required this.apiVersion,
     this.guid,
     this.idempotencyKey,
-    this.key,
+    required this.key,
     this.requestType,
     this.stripeAccount,
   });

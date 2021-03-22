@@ -9,14 +9,14 @@ class StripeApiError {
   static const String FIELD_MESSAGE = 'message';
   static const String FIELD_PARAM = 'param';
 
-  final String requestId;
-  final String type;
-  final String charge;
-  final String code;
-  final String declineCode;
-  final String docUrl;
-  final String message;
-  final String param;
+  final String? requestId;
+  final String? type;
+  final String? charge;
+  final String? code;
+  final String? declineCode;
+  final String? docUrl;
+  final String? message;
+  final String? param;
 
   StripeApiError._internal(
     this.requestId,
@@ -29,7 +29,7 @@ class StripeApiError {
     this.param,
   );
 
-  factory StripeApiError(String requestId, Map<String, dynamic> json) {
+  factory StripeApiError(String? requestId, Map<String, dynamic> json) {
     final type = optString(json, FIELD_TYPE);
     final charge = optString(json, FIELD_CHARGE);
     final code = optString(json, FIELD_CODE);
@@ -57,8 +57,8 @@ class StripeApiException implements Exception {
   final String message;
 
   StripeApiException(this.error)
-      : requestId = error.requestId,
-        message = error.message;
+      : requestId = error.requestId!,
+        message = error.message!;
 
   @override
   String toString() {

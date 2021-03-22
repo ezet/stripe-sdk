@@ -1,5 +1,8 @@
 /// Util Array for converting bytes to a hex string.
 /// {@url http://stackoverflow.com/questions/9655181/convert-from-byte-array-to-hex-string-in-java}
+
+// @dart=2.9
+
 const String HEX_ARRAY = '0123456789ABCDEF';
 
 ///Swap {@code null} for blank text values.

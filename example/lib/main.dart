@@ -83,13 +83,13 @@ class HomeScreen extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text('Add Payment Method with Setup Intent'),
-            onTap: () async => await createPaymentMethodWithSetupIntent(context),
+            onTap: () => createPaymentMethodWithSetupIntent(context),
           ),
         ),
         Card(
           child: ListTile(
             title: Text('Add Payment Method without Setup Intent'),
-            onTap: () async => await createPaymentMethodWithoutSetupIntent(context),
+            onTap: () => createPaymentMethodWithoutSetupIntent(context),
           ),
         ),
         Card(

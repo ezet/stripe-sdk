@@ -1,3 +1,5 @@
+// @dart=2.9
+
 /// A library to communicate with the Stripe API from Dart.
 library stripe_sdk;
 
