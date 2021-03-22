@@ -17,7 +17,11 @@ dependencies:
   flutter_slidable: ^0.5.7
   simple_animations: ^2.4.2
   supercharged: ^1.12.0
-  awesome_card: ^1.1.0
+  # awesome_card: ^1.1.0
+  awesome_card:
+    git:
+      url: git://github.com/joaovvrodrigues/AwesomeCard.git
+      ref: master
   uni_links: ^0.4.0
   credit_card_validator: ^1.1.0
 
