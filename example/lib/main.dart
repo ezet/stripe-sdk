@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
     final app = MaterialApp(
         title: 'Stripe SDK Demo',
         onUnknownRoute: (RouteSettings settings) {
-          final Uri uri = Uri.parse(settings.name!);
-          if (uri == null && !uri.queryParameters.containsKey('setup_intent') && !uri.queryParameters.containsKey('payment_intent')) {
+          final Uri? uri = Uri.tryParse(settings.name!);
+          if (uri == null && !uri!.queryParameters.containsKey('setup_intent') && !uri.queryParameters.containsKey('payment_intent')) {
             return MaterialPageRoute(builder: (context) => HomeScreen());
           }
           return MaterialPageRoute(builder: (context) => IntentCompleteScreen());

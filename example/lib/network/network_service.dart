@@ -21,7 +21,7 @@ class NetworkService {
       print(result.data);
       return result.data;
     } on FirebaseFunctionsException catch (e) {
-      log(e.message?.toString());
+      log(e.message.toString());
       log(e.toString());
       return null;
     }
