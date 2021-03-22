@@ -73,7 +73,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           Center(
 //            child: LoadStuffButton(),
 
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () async {
                 showProgressDialog(context);
                 final intentResponse = await _createIntentResponse;
@@ -132,8 +132,8 @@ class CheckoutItemList extends StatelessWidget {
     final list = List<Widget>.from(items);
     list.add(CheckoutSumItem(total: total));
     return ListView(
-      children: list,
       shrinkWrap: true,
+      children: list,
     );
   }
 }
@@ -208,15 +208,13 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
         underline: Container(),
         isExpanded: false,
         value: selectedPaymentMethod?.id,
-        items: paymentMethods
-            ?.map((item) => DropdownMenuItem(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
-                  ),
-                  value: item.id,
-                ))
-            ?.toList(),
+        items: paymentMethods?.map((item) => DropdownMenuItem(
+          value: item.id,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
+          ),
+        ))?.toList(),
         onChanged: (value) {
           widget.onChanged(value);
           setState(() {

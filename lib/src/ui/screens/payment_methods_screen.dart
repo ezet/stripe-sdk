@@ -136,25 +136,25 @@ class PaymentMethodsList extends StatelessWidget {
                             title: Text('Delete payment method'),
                             content: Text('Are you sure you want to delete this payment method?'),
                             actions: <Widget>[
-                              FlatButton(
-                                child: Text('Cancel'),
+                              TextButton(
                                 onPressed: () => Navigator.pop(rootContext),
+                                child: Text('Cancel'),
                               ),
-                              FlatButton(
-                                  child: Text('Delete'),
-                                  onPressed: () async {
-                                    Navigator.pop(rootContext);
-                                    showProgressDialog(rootContext);
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(rootContext);
+                                  showProgressDialog(rootContext);
 
-                                    final result = await paymentMethodStore.detachPaymentMethod(card.id);
-                                    hideProgressDialog(rootContext);
-                                    if (result != null) {
-                                      await paymentMethods.refresh();
-                                      ScaffoldMessenger.of(rootContext).showSnackBar(SnackBar(
-                                        content: Text('Payment method successfully deleted.'),
-                                      ));
-                                    }
-                                  })
+                                  final result = await paymentMethodStore.detachPaymentMethod(card.id);
+                                  hideProgressDialog(rootContext);
+                                  if (result != null) {
+                                    await paymentMethods.refresh();
+                                    ScaffoldMessenger.of(rootContext).showSnackBar(SnackBar(
+                                      content: Text('Payment method successfully deleted.'),
+                                    ));
+                                  }
+                                },
+                                child: Text('Delete'),),
                             ],
                           );
                         });
