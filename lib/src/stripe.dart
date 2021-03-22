@@ -165,7 +165,7 @@ class Stripe {
     if (!kIsWeb) {
       final returnUrl = Uri.parse(action['redirect_to_url']['return_url']);
       StreamSubscription sub;
-      sub = getUriLinksStream().listen((Uri uri) async {
+      sub = uriLinkStream.listen((Uri uri) async {
         if (uri.scheme == returnUrl.scheme &&
             uri.host == returnUrl.host &&
             uri.queryParameters['requestId'] == returnUrl.queryParameters['requestId']) {
