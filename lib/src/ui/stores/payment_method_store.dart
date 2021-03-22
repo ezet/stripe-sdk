@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -18,15 +18,15 @@ class PaymentMethodStore extends ChangeNotifier {
   /// The customer session the store operates on.
   final CustomerSession _customerSession;
 
-  static PaymentMethodStore _instance;
+  static PaymentMethodStore? _instance;
 
   /// Access the singleton instance of [PaymentMethodStore].
   static PaymentMethodStore get instance {
     _instance ??= PaymentMethodStore();
-    return _instance;
+    return _instance!;
   }
 
-  PaymentMethodStore({CustomerSession customerSession})
+  PaymentMethodStore({CustomerSession? customerSession})
       : _customerSession = customerSession ?? CustomerSession.instance {
     _customerSession.addListener(() => dispose());
   }

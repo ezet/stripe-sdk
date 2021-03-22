@@ -1,7 +1,8 @@
-// @dart=2.9
+
 
 import 'dart:async';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,16 +14,16 @@ import 'stores/payment_method_store.dart';
 
 @Deprecated('Experimental')
 class CheckoutScreen extends StatefulWidget {
-  final Iterable<CheckoutItem> items;
+  final List<CheckoutItem> items;
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
 
   CheckoutScreen(
-      {Key key,
-      @required this.title,
-      @required this.items,
-      PaymentMethodStore paymentMethods,
-      @required this.createPaymentIntent})
+      {Key? key,
+      required this.title,
+      required this.items,
+      PaymentMethodStore? paymentMethods,
+      required this.createPaymentIntent})
       : super(key: key);
 
   @override
@@ -33,14 +34,14 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final PaymentMethodStore paymentMethodStore = PaymentMethodStore.instance;
 
-  String _selectedPaymentMethod;
-  Future<IntentResponse> _createIntentResponse;
-  int _total;
+  String? _selectedPaymentMethod;
+  Future<IntentResponse>? _createIntentResponse;
+  late int _total;
 
   @override
   void initState() {
     super.initState();
-    _total = widget.items.fold(0, (value, item) => value + item.price * item.count);
+    _total = widget.items.fold(0, (int? value, CheckoutItem item) => value ?? 0 + item.price * item.count);
     _createIntentResponse = widget.createPaymentIntent(_total);
   }
 
@@ -76,7 +77,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 showProgressDialog(context);
-                final intentResponse = await _createIntentResponse;
+                final intentResponse = await _createIntentResponse!;
                 try {
                   final confirmationResponse = await Stripe.instance
                       .confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
@@ -103,7 +104,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         context: context,
                         // ignore: missing_return
                         pageBuilder: (context, animation1, animation2) {
-                          return null;
+                          return SizedBox();
                         });
                     return;
                   }
@@ -125,7 +126,7 @@ class CheckoutItemList extends StatelessWidget {
   final List<CheckoutItem> items;
   final int total;
 
-  const CheckoutItemList({Key key, @required this.items, @required this.total}) : super(key: key);
+  const CheckoutItemList({Key? key, required this.items, required this.total}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +142,7 @@ class CheckoutItemList extends StatelessWidget {
 class CheckoutSumItem extends StatelessWidget {
   final int total;
 
-  const CheckoutSumItem({Key key, @required this.total}) : super(key: key);
+  const CheckoutSumItem({Key? key, required this.total}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +159,7 @@ class CheckoutItem extends StatelessWidget {
   final String currency;
   final int count;
 
-  const CheckoutItem({Key key, @required this.name, @required this.price, @required this.currency, this.count = 1})
+  const CheckoutItem({Key? key, required this.name, required this.price, required this.currency, this.count = 1})
       : super(key: key);
 
   @override
@@ -174,11 +175,11 @@ class CheckoutItem extends StatelessWidget {
 
 class PaymentMethodSelector extends StatefulWidget {
   PaymentMethodSelector(
-      {Key key, @required this.paymentMethodStore, @required this.selectedPaymentMethodId, @required this.onChanged})
+      {Key? key, required this.paymentMethodStore, required this.selectedPaymentMethodId, required this.onChanged})
       : super(key: key);
 
-  final String selectedPaymentMethodId;
-  final void Function(String) onChanged;
+  final String? selectedPaymentMethodId;
+  final void Function(String?) onChanged;
   final PaymentMethodStore paymentMethodStore;
 
   @override
@@ -186,17 +187,17 @@ class PaymentMethodSelector extends StatefulWidget {
 }
 
 class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
-  Iterable<PaymentMethod> paymentMethods;
-  String _selectedPaymentMethodId;
+  List<PaymentMethod>? paymentMethods;
+  String? _selectedPaymentMethodId;
 
   @override
   Widget build(BuildContext context) {
-    PaymentMethod selectedPaymentMethod;
+    PaymentMethod? selectedPaymentMethod;
     if (_selectedPaymentMethodId != null) {
       selectedPaymentMethod =
-          paymentMethods?.singleWhere((item) => item.id == _selectedPaymentMethodId, orElse: () => null);
+          paymentMethods?.singleWhereOrNull((item) => item.id == _selectedPaymentMethodId);
     } else {
-      selectedPaymentMethod = paymentMethods != null && paymentMethods.isNotEmpty ? paymentMethods.first : null;
+      selectedPaymentMethod = paymentMethods != null && paymentMethods!.isNotEmpty ? paymentMethods!.first : null;
     }
     return Container(
 //      padding: EdgeInsets.symmetric(horizontal: 16),
@@ -204,7 +205,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
         border: Border.all(),
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      child: DropdownButton(
+      child: DropdownButton<String>(
         underline: Container(),
         isExpanded: false,
         value: selectedPaymentMethod?.id,
@@ -214,7 +215,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
           ),
-        ))?.toList(),
+        )).toList(),
         onChanged: (value) {
           widget.onChanged(value);
           setState(() {
