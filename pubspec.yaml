@@ -3,7 +3,7 @@ description: The only native Stripe library for Flutter. Has complete support fo
 version: 4.0.2
 homepage: https://github.com/ezet/stripe_sdk
 
-publish_to: 'none' # temporary to remove warnings for the use of git repositories
+publish_to: 'none' # TODO temporary to remove warnings for the use of git repositories
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -20,12 +20,12 @@ dependencies:
   simple_animations: ^3.0.3
   supercharged: ^2.0.0
   # awesome_card: ^1.1.0
-  awesome_card:
+  awesome_card: # TODO use pub.dev version
     git:
       url: git://github.com/joaovvrodrigues/AwesomeCard.git
       ref: master
   # uni_links: ^0.4.0
-  uni_links:
+  uni_links: # TODO use pub.dev version
     git:
       url: git://github.com/objectivecosta/uni_links_simplified.git
   credit_card_validator: ^2.0.0-nullsafety.0
