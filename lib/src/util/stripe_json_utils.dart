@@ -1,6 +1,5 @@
 // @dart=2.9
 
-const String EMPTY = '';
 const String NULL = 'null';
 
 /// Calls through to {@link JSONObject#optString(String)} while safely
@@ -21,7 +20,7 @@ String optString(Map<String, dynamic> json, String fieldName) {
 /// @param fieldName the required field name
 /// @return the value stored in the requested field, or {@code null} if the key is not present
 bool optBoolean(Map<String, dynamic> json, String fieldName) {
-  return json[fieldName] ?? false;
+  return json[fieldName];
 }
 
 /// Calls through to {@link JSONObject#optInt(String)} only in the case that the
@@ -31,7 +30,7 @@ bool optBoolean(Map<String, dynamic> json, String fieldName) {
 /// @param fieldName the required field name
 /// @return the value stored in the requested field, or {@code null} if the key is not present
 int optInteger(Map<String, dynamic> json, String fieldName) {
-  return json[fieldName] ?? 0;
+  return json[fieldName];
 }
 
 /// Calls through to {@link JSONObject#optString(String)} while safely converting
@@ -64,5 +63,5 @@ String optCurrency(Map<String, dynamic> json, String fieldName) {
 
 ///
 String nullIfNullOrEmpty(String possibleNull) {
-  return ((NULL == possibleNull) || (EMPTY == possibleNull)) ? null : possibleNull;
+  return ((NULL == possibleNull) || (possibleNull.isEmpty)) ? null : possibleNull;
 }

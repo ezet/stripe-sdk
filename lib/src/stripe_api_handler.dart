@@ -169,11 +169,11 @@ class RequestOptions {
   static const String TYPE_QUERY = 'source';
   static const String TYPE_JSON = 'json_data';
 
-  final String? apiVersion;
+  final String? apiVersion; // TODO might have no usage
   final String? guid;
   final String? idempotencyKey;
   final String key;
-  final String? requestType;
+  final String? requestType; // TODO might have no usage
   final String? stripeAccount;
 
   RequestOptions({
