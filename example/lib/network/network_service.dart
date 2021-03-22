@@ -12,7 +12,7 @@ class NetworkService {
   NetworkService.defaultInstance() : _cf = FirebaseFunctions.instanceFor(region: 'europe-west2');
 
   /// Utility function to call a Firebase Function
-  Future<T> _call<T>(String name, Map params) async {
+  Future<T?> _call<T>(String name, Map params) async {
     log('NetworkService._call, $name, $params');
     final callable = _cf.httpsCallable(name);
     try {
@@ -21,7 +21,7 @@ class NetworkService {
       print(result.data);
       return result.data;
     } on FirebaseFunctionsException catch (e) {
-      log(e.message);
+      log(e.message?.toString());
       log(e.toString());
       return null;
     }
@@ -54,7 +54,7 @@ class NetworkService {
     return IntentResponse(response['status'], response['clientSecret']);
   }
 
-  Future<Map> createManualPaymentIntent(int amount, String paymentMethod, String returnUrl) {
+  Future<Map?> createManualPaymentIntent(int amount, String paymentMethod, String returnUrl) {
     final params = {'amount': amount, 'paymentMethod': paymentMethod, 'returnUrl': returnUrl};
     return _call('createManualPaymentIntent', params);
   }

@@ -42,21 +42,23 @@ class SetupIntentWithScaScreen extends StatelessWidget {
     final stripe = Stripe.instance;
     final NetworkService networkService = locator.get();
     showProgressDialog(context);
+    RouteSettings? routeSettings = ModalRoute.of(context)?.settings;
     final createSetupIntentResponse = await networkService.createSetupIntentWithPaymentMethod(
-        paymentMethod, Stripe.instance.getReturnUrlForSca(webReturnPath: ModalRoute.of(context).settings.name));
+      paymentMethod,
+      Stripe.instance.getReturnUrlForSca(webReturnPath: routeSettings?.name),
+    );
     final PaymentMethodStore paymentMethods = Provider.of(context, listen: false);
     if (createSetupIntentResponse.status == 'succeeded') {
       hideProgressDialog(context);
       Navigator.pop(context, true);
 
       /// A new payment method has been attached, so refresh the store
-      // ignore: unawaited_futures
-      paymentMethods.refresh();
+      var _ = paymentMethods.refresh();
 
       return;
     }
     final setupIntent = await stripe.authenticateSetupIntent(createSetupIntentResponse.clientSecret,
-        webReturnPath: ModalRoute.of(context).settings.name);
+        webReturnPath: routeSettings?.name);
     hideProgressDialog(context);
     Navigator.pop(context, setupIntent['status'] == 'succeeded');
   }

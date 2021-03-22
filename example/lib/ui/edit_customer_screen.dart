@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,11 +24,11 @@ class EditCustomerScreen extends StatelessWidget {
 }
 
 class CustomerData {
-  final String id;
-  final String email;
-  final String description;
-  final String name;
-  final String phone;
+  final String? id;
+  final String? email;
+  final String? description;
+  final String? name;
+  final String? phone;
 
   CustomerData(this.id, this.email, this.description, this.name, this.phone);
 }
@@ -34,8 +36,13 @@ class CustomerData {
 class EditCustomerForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final customerData = Provider.of<CustomerData>(context);
-    if (customerData == null) return Container();
+    late CustomerData customerData;
+    try {
+      customerData = Provider.of<CustomerData>(context);
+    } catch (error) {
+      log(error.toString());
+      return Container();
+    }
 
     final nameController = TextEditingController(text: customerData.name);
     final emailController = TextEditingController(text: customerData.email);
