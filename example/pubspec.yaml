@@ -24,11 +24,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cloud_functions: ^0.6.0
-  firebase_core: ^0.5.0
-  get_it: ^5.0.0
-  provider: ^4.3.2+2
-  shared_preferences: ^0.5.10
+  cloud_functions: ^1.0.0
+  firebase_core: ^1.0.1
+  get_it: ^6.0.0
+  provider: ^5.0.0
+  shared_preferences: ^2.0.5
   stripe_sdk:
     path: ../
 

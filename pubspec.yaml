@@ -3,6 +3,8 @@ description: The only native Stripe library for Flutter. Has complete support fo
 version: 4.0.2
 homepage: https://github.com/ezet/stripe_sdk
 
+publish_to: 'none' # temporary to remove warnings for the use of git repositories
+
 environment:
   sdk: ">=2.7.0 <3.0.0"
   flutter: ">=1.17.0 <2.0.0"
