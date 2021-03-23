@@ -53,11 +53,11 @@ class StripeApiError {
 
 class StripeApiException implements Exception {
   final StripeApiError error;
-  final String requestId;
+  final String? requestId;
   final String message;
 
   StripeApiException(this.error)
-      : requestId = error.requestId!,
+      : requestId = error.requestId,
         message = error.message!;
 
   @override
