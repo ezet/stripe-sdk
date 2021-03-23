@@ -7,16 +7,26 @@ import 'package:stripe_sdk/stripe_sdk.dart';
 class EditCustomerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final session = CustomerSession.instance;
     return Scaffold(
       appBar: AppBar(
         title: Text('Customer'),
       ),
-      body: FutureProvider.value(
-        initialData: null,
-        value: session.retrieveCurrentCustomer().then((value) => CustomerData(
-            value['id'], value['email'], value['description'], value['shipping']['name'], value['shipping']['phone'])),
-        child: EditCustomerForm(),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: CustomerSession.instance.retrieveCurrentCustomer(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            Map<String, dynamic> map = snapshot.data;
+            CustomerData customerData = CustomerData(
+              map['id'], map['email'], map['description'],
+              map['shipping']['name'], map['shipping']['phone'],
+            );
+            return EditCustomerForm(data: customerData);
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error.toString()));
+          }
+          return Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
@@ -33,19 +43,15 @@ class CustomerData {
 }
 
 class EditCustomerForm extends StatelessWidget {
+  final CustomerData data;
+
+  const EditCustomerForm({Key? key, required this.data}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    late CustomerData customerData;
-    try {
-      customerData = Provider.of<CustomerData>(context);
-    } catch (error) {
-      log(error.toString());
-      return Container();
-    }
-
-    final nameController = TextEditingController(text: customerData.name);
-    final emailController = TextEditingController(text: customerData.email);
-    final phoneController = TextEditingController(text: customerData.phone);
+    final nameController = TextEditingController(text: data.name);
+    final emailController = TextEditingController(text: data.email);
+    final phoneController = TextEditingController(text: data.phone);
 
     return SingleChildScrollView(
       child: Padding(

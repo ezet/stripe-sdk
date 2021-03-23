@@ -67,7 +67,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/customers/retrieve
   Future<Map<String, dynamic>> retrieveCurrentCustomer() async {
     assert(_assertNotDisposed());
-    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey() as FutureOr<EphemeralKey>);
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/customers/${key.customerId}';
     return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion);
   }
@@ -77,7 +77,7 @@ class CustomerSession extends ChangeNotifier {
   Future<Map<String, dynamic>> listPaymentMethods(
       {type = 'card', int? limit, String? ending_before, String? starting_after}) async {
     assert(_assertNotDisposed());
-    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey() as FutureOr<EphemeralKey>);
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/payment_methods';
     final params = {'customer': key.customerId, 'type': type};
     if (limit != null) params['limit'] = limit;
@@ -90,7 +90,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/payment_methods/attach
   Future<Map<String, dynamic>> attachPaymentMethod(String? paymentMethodId) async {
     assert(_assertNotDisposed());
-    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey() as FutureOr<EphemeralKey>);
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/payment_methods/$paymentMethodId/attach';
     final params = {'customer': key.customerId};
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: params);
@@ -100,7 +100,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/payment_methods/detach
   Future<Map<String, dynamic>> detachPaymentMethod(String? paymentMethodId) async {
     assert(_assertNotDisposed());
-    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey() as FutureOr<EphemeralKey>);
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/payment_methods/$paymentMethodId/detach';
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion);
   }
@@ -110,7 +110,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/sources/attach
   Future<Map<String, dynamic>> attachSource(String sourceId) async {
     assert(_assertNotDisposed());
-    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey() as FutureOr<EphemeralKey>);
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/customers/${key.customerId}/sources';
     final params = {'source': sourceId};
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: params);
@@ -121,7 +121,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/sources/detach
   Future<Map<String, dynamic>> detachSource(String sourceId) async {
     assert(_assertNotDisposed());
-    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey() as FutureOr<EphemeralKey>);
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/customers/${key.customerId}/sources/$sourceId';
     return _apiHandler.request(RequestMethod.delete, path, key.secret, apiVersion);
   }
@@ -130,7 +130,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/customers/update
   Future<Map<String, dynamic>> updateCustomer(Map<String, dynamic> data) async {
     assert(_assertNotDisposed());
-    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey() as FutureOr<EphemeralKey>);
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/customers/${key.customerId}';
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: data);
   }

@@ -73,7 +73,7 @@ class StripeCard {
     return map;
   }
 
-  static void _removeNullAndEmptyParams(Map<String, Object> mapToEdit) {
+  static void _removeNullAndEmptyParams(Map<String, Object?> mapToEdit) {
     // Remove all null values; they cause validation errors
     final List<String> keys = mapToEdit.keys.toList(growable: false);
     for (String key in keys) {
@@ -85,7 +85,7 @@ class StripeCard {
           mapToEdit.remove(key);
         }
       } else if (value is Map) {
-        _removeNullAndEmptyParams(value as Map<String, Object>);
+        _removeNullAndEmptyParams(value as Map<String, Object?>);
       }
     }
   }

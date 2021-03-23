@@ -93,8 +93,10 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                   var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(_cardData);
                   if (widget._useSetupIntent) {
                     final createSetupIntentResponse = this.setupIntent;
-                    final setupIntent = await widget._stripe
-                        .confirmSetupIntent(createSetupIntentResponse.clientSecret, paymentMethod['id']);
+                    final setupIntent = await widget._stripe.confirmSetupIntent(
+                      createSetupIntentResponse.clientSecret,
+                      paymentMethod['id'],
+                    );
 
                     hideProgressDialog(context);
                     if (setupIntent['status'] == 'succeeded') {

@@ -79,7 +79,7 @@ class EphemeralKeyManager {
 
   /// Retrieve a ephemeral key.
   /// Will fetch a new one using [EphemeralKeyProvider] if required.
-  Future<EphemeralKey?> retrieveEphemeralKey() async {
+  Future<EphemeralKey> retrieveEphemeralKey() async {
     if (_shouldRefreshKey()) {
       String key;
       try {
@@ -101,9 +101,9 @@ class EphemeralKeyManager {
         throw StripeApiException(e);
       }
 
-      return _ephemeralKey;
+      return _ephemeralKey!;
     } else {
-      return _ephemeralKey;
+      return _ephemeralKey!;
     }
   }
 
