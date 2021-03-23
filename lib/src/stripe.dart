@@ -5,7 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'stripe_api.dart';
