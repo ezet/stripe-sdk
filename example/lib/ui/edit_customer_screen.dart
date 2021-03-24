@@ -1,7 +1,4 @@
-import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 
 class EditCustomerScreen extends StatelessWidget {
@@ -17,8 +14,11 @@ class EditCustomerScreen extends StatelessWidget {
           if (snapshot.hasData) {
             Map<String, dynamic> map = snapshot.data;
             CustomerData customerData = CustomerData(
-              map['id'], map['email'], map['description'],
-              map['shipping']['name'], map['shipping']['phone'],
+              map['id'],
+              map['email'],
+              map['description'],
+              map['shipping']['name'],
+              map['shipping']['phone'],
             );
             return EditCustomerForm(data: customerData);
           }
