@@ -77,6 +77,9 @@ class Stripe {
   /// This should be set on the intent before attempting to authenticate it.
   String getReturnUrlForSca({String? webReturnPath}) {
     if (kIsWeb) {
+      if(webReturnPath == null || webReturnPath.isEmpty){
+        webReturnPath = '3ds/complete'; // or app route ex: 3ds/complete
+      }
       assert(webReturnPath?.isNotEmpty ?? false);
       var webUrl = Uri.base.toString() + webReturnPath!;
       debugPrint(webUrl);
@@ -188,7 +191,7 @@ class Stripe {
         }
       });
     } else {
-      completer.complete(null);
+      completer.complete({});
     }
 
     await launch(url, webOnlyWindowName: '_self', forceSafariVC: false);
