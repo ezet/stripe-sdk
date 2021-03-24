@@ -3,8 +3,6 @@ description: The only native Stripe library for Flutter. Has complete support fo
 version: 5.0.0-nullsafety.0
 homepage: https://github.com/ezet/stripe_sdk
 
-publish_to: 'none' # TODO temporary to remove warnings for the use of git repositories
-
 environment:
   sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.17.0 <2.0.0"
@@ -19,11 +17,8 @@ dependencies:
   flutter_slidable: ^0.6.0-nullsafety.0
   simple_animations: ^3.0.3
   supercharged: ^2.0.0
-  awesome_card: # TODO use pub.dev version
-    git:
-      url: git://github.com/joaovvrodrigues/AwesomeCard.git
-      ref: master
-  uni_links2: ^0.6.0+2 # TODO change back to uni_links if possible
+  awesome_card: ^1.1.5
+  uni_links2: ^0.6.0+2
   credit_card_validator: ^2.0.0-nullsafety.0
   collection: ^1.15.0-nullsafety.4
 

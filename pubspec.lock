@@ -11,12 +11,10 @@ packages:
   awesome_card:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: "5db7e3d7cf1aec0fa007090be403835fd898106d"
-      url: "git://github.com/joaovvrodrigues/AwesomeCard.git"
-    source: git
-    version: "1.2.6"
+      name: awesome_card
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.5"
   boolean_selector:
     dependency: transitive
     description:
