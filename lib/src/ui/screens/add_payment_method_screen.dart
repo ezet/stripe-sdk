@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
   final Stripe _stripe;
 
   /// Used to create a setup intent when required.
-  final CreateSetupIntent _createSetupIntent;
+  final CreateSetupIntent? _createSetupIntent;
 
   /// True if a setup intent should be used to set up the payment method.
   final bool _useSetupIntent;
@@ -29,11 +31,15 @@ class AddPaymentMethodScreen extends StatefulWidget {
   final PaymentMethodStore _paymentMethodStore;
 
   /// The card form used to collect payment method details.
-  final CardForm form;
+  final CardForm? form;
+
+  /// Custom Title for the screen
+  final String title;
+  static const String _defaultTitle = 'Add payment method';
 
   /// Add a payment method using a Stripe Setup Intent
   AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent,
-      {PaymentMethodStore paymentMethodStore, Stripe stripe, this.form})
+      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, this.form, this.title = _defaultTitle})
       : _useSetupIntent = true,
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         _stripe = stripe ?? Stripe.instance;
@@ -41,7 +47,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
   /// Add a payment method without using a Stripe Setup Intent
   @Deprecated(
       'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
-  AddPaymentMethodScreen.withoutSetupIntent({PaymentMethodStore paymentMethodStore, Stripe stripe, this.form})
+  AddPaymentMethodScreen.withoutSetupIntent({PaymentMethodStore? paymentMethodStore, Stripe? stripe, this.form, this.title = _defaultTitle})
       : _useSetupIntent = false,
         _createSetupIntent = null,
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
@@ -56,7 +62,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   final GlobalKey<FormState> _formKey;
   final CardForm _form;
 
-  IntentResponse setupIntent;
+  late IntentResponse setupIntent;
 
   _AddPaymentMethodScreenState(this._form)
       : _cardData = _form.card,
@@ -69,7 +75,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   }
 
   void _createSetupIntent() async {
-    if (widget._useSetupIntent) setupIntent = await widget._createSetupIntent();
+    if (widget._useSetupIntent) setupIntent = await widget._createSetupIntent!();
   }
 
   @override
@@ -77,21 +83,24 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
     return Scaffold(
         appBar: AppBar(
           backwardsCompatibility: false,
-          title: Text('Add payment method'),
+          title: Text(widget.title),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.check),
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
+                FormState? formState = _formKey.currentState;
+                if (formState?.validate() ?? false) {
+                  formState!.save();
 
                   showProgressDialog(context);
 
                   var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(_cardData);
                   if (widget._useSetupIntent) {
-                    final createSetupIntentResponse = await this.setupIntent;
-                    final setupIntent = await widget._stripe
-                        .confirmSetupIntent(createSetupIntentResponse.clientSecret, paymentMethod['id']);
+                    final createSetupIntentResponse = this.setupIntent;
+                    final setupIntent = await widget._stripe.confirmSetupIntent(
+                      createSetupIntentResponse.clientSecret,
+                      paymentMethod['id'],
+                    );
 
                     hideProgressDialog(context);
                     if (setupIntent['status'] == 'succeeded') {
@@ -102,7 +111,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                       return;
                     }
                   } else {
-                    paymentMethod = await widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id']);
+                    paymentMethod = await (widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id']) as FutureOr<Map<String, dynamic>>);
                     hideProgressDialog(context);
                     Navigator.pop(context, true);
                     return;

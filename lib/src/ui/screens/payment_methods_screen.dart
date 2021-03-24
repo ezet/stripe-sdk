@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -14,10 +16,10 @@ class PaymentMethodsScreen extends StatefulWidget {
   final PaymentMethodStore _paymentMethodStore;
 
   PaymentMethodsScreen(
-      {Key key,
-      @required this.createSetupIntent,
+      {Key? key,
+      required this.createSetupIntent,
       this.title = 'Payment Methods',
-      PaymentMethodStore paymentMethodStore})
+      PaymentMethodStore? paymentMethodStore})
       : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore(),
         super(key: key);
 
@@ -27,7 +29,7 @@ class PaymentMethodsScreen extends StatefulWidget {
 
 // ignore: deprecated_member_use_from_same_package
 class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
-  List<PaymentMethod> paymentMethods;
+  List<PaymentMethod>? paymentMethods; // TODO not used -> remove?
 
   @override
   Widget build(BuildContext context) {
@@ -87,15 +89,11 @@ class PaymentMethod {
 class PaymentMethodsList extends StatelessWidget {
   final PaymentMethodStore paymentMethodStore;
 
-  const PaymentMethodsList({Key key, @required this.paymentMethodStore}) : super(key: key);
+  const PaymentMethodsList({Key? key, required this.paymentMethodStore}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final listData = paymentMethodStore.paymentMethods;
-//    final defaultPaymentMethod = Provider.of<DefaultPaymentMethod>(context);
-    if (listData == null) {
-      return Center(child: CircularProgressIndicator());
-    }
+    final List<PaymentMethod> listData = paymentMethodStore.paymentMethods;
     return RefreshIndicator(
       onRefresh: () => paymentMethodStore.refresh(),
       child: buildListView(listData, paymentMethodStore, context),
@@ -105,7 +103,7 @@ class PaymentMethodsList extends StatelessWidget {
   Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
     if (listData.isEmpty) {
       // TODO: loading indicator
-      return ListView();
+      return SizedBox();
     } else {
       return ListView.builder(
           itemCount: listData.length,
@@ -134,25 +132,23 @@ class PaymentMethodsList extends StatelessWidget {
                             title: Text('Delete payment method'),
                             content: Text('Are you sure you want to delete this payment method?'),
                             actions: <Widget>[
-                              FlatButton(
-                                child: Text('Cancel'),
+                              TextButton(
                                 onPressed: () => Navigator.pop(rootContext),
+                                child: Text('Cancel'),
                               ),
-                              FlatButton(
-                                  child: Text('Delete'),
-                                  onPressed: () async {
-                                    Navigator.pop(rootContext);
-                                    showProgressDialog(rootContext);
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(rootContext);
+                                  showProgressDialog(rootContext);
 
-                                    final result = await paymentMethodStore.detachPaymentMethod(card.id);
-                                    hideProgressDialog(rootContext);
-                                    if (result != null) {
-                                      await paymentMethods.refresh();
-                                      ScaffoldMessenger.of(rootContext).showSnackBar(SnackBar(
-                                        content: Text('Payment method successfully deleted.'),
-                                      ));
-                                    }
-                                  })
+                                  await paymentMethodStore.detachPaymentMethod(card.id);
+                                  hideProgressDialog(rootContext);
+                                  await paymentMethods.refresh();
+                                  ScaffoldMessenger.of(rootContext).showSnackBar(SnackBar(
+                                    content: Text('Payment method successfully deleted.'),
+                                  ));
+                                },
+                                child: Text('Delete'),),
                             ],
                           );
                         });

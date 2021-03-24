@@ -1,3 +1,5 @@
+
+
 import 'package:awesome_card/credit_card.dart';
 import 'package:awesome_card/style/card_background.dart';
 import 'package:flutter/foundation.dart';
@@ -11,7 +13,7 @@ import 'card_number_form_field.dart';
 /// Basic form to add or edit a credit card, with complete validation.
 class CardForm extends StatefulWidget {
   CardForm(
-      {Key key,
+      {Key? key,
       formKey,
       card,
       this.cardNumberDecoration,
@@ -35,19 +37,19 @@ class CardForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final StripeCard card;
   final bool displayAnimatedCard;
-  final InputDecoration cardNumberDecoration;
-  final TextStyle cardNumberTextStyle;
-  final InputDecoration cardExpiryDecoration;
-  final TextStyle cardExpiryTextStyle;
-  final InputDecoration cardCvcDecoration;
-  final TextStyle cardCvcTextStyle;
-  final InputDecoration postalCodeDecoration;
-  final TextStyle postalCodeTextStyle;
-  final String cardNumberErrorText;
-  final String postalCodeErrorText;
-  final String cardExpiryErrorText;
-  final String cardCvcErrorText;
-  final Decoration cardDecoration;
+  final InputDecoration? cardNumberDecoration;
+  final TextStyle? cardNumberTextStyle;
+  final InputDecoration? cardExpiryDecoration;
+  final TextStyle? cardExpiryTextStyle;
+  final InputDecoration? cardCvcDecoration;
+  final TextStyle? cardCvcTextStyle;
+  final InputDecoration? postalCodeDecoration;
+  final TextStyle? postalCodeTextStyle;
+  final String? cardNumberErrorText;
+  final String? postalCodeErrorText;
+  final String? cardExpiryErrorText;
+  final String? cardCvcErrorText;
+  final Decoration? cardDecoration;
 
   @override
   _CardFormState createState() => _CardFormState();
@@ -98,13 +100,13 @@ class _CardFormState extends State<CardForm> {
                     child: CardExpiryFormField(
                       initialMonth: _validationModel.expMonth ?? widget.card.expMonth,
                       initialYear: _validationModel.expYear ?? widget.card.expYear,
-                      onChanged: (int month, int year) {
+                      onChanged: (int? month, int? year) {
                         setState(() {
                           _validationModel.expMonth = month;
                           _validationModel.expYear = year;
                         });
                       },
-                      onSaved: (int month, int year) {
+                      onSaved: (int? month, int? year) {
                         widget.card.expMonth = month;
                         widget.card.expYear = year;
                       },

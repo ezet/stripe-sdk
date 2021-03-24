@@ -9,6 +9,6 @@ final locator = GetIt.instance;
 
 void initializeLocator() {
   locator.registerLazySingleton(
-      () => CloudFunctions(region: _cloudFunctionsRegion));
+      () => FirebaseFunctions.instanceFor(region: _cloudFunctionsRegion));
   locator.registerLazySingleton(() => NetworkService(locator.get()));
 }

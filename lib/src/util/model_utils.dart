@@ -5,7 +5,7 @@ class ModelUtils {
   ///
   /// @param value the input string to test
   /// @return {@code true} if the input value consists entirely of integers
-  static bool isWholePositiveNumber(String value) {
+  static bool isWholePositiveNumber(String? value) {
     return value != null && isDigitsOnly(value);
   }
 

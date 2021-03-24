@@ -34,14 +34,12 @@ class MyApp extends StatelessWidget {
     CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
     final app = MaterialApp(
         title: 'Stripe SDK Demo',
-        // home: HomeScreen(),
-
-        onUnknownRoute: (settings) {
-          final uri = Uri.parse(settings.name);
-          if (uri.queryParameters.containsKey('setup_intent') || uri.queryParameters.containsKey('payment_intent')) {
-            return MaterialPageRoute(builder: (context) => IntentCompleteScreen());
+        onUnknownRoute: (RouteSettings settings) {
+          final Uri? uri = Uri.tryParse(settings.name!);
+          if (uri == null && !uri!.queryParameters.containsKey('setup_intent') && !uri.queryParameters.containsKey('payment_intent')) {
+            return MaterialPageRoute(builder: (context) => HomeScreen());
           }
-          return MaterialPageRoute(builder: (context) => HomeScreen());
+          return MaterialPageRoute(builder: (context) => IntentCompleteScreen());
         },
         routes: {
           '/': (context) => HomeScreen(),
@@ -49,7 +47,8 @@ class MyApp extends StatelessWidget {
           '/payments': (context) => PaymentScreen()
         },
         initialRoute: '/',
-        theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity));
+        theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
+    );
     return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
 }
@@ -83,13 +82,13 @@ class HomeScreen extends StatelessWidget {
         Card(
           child: ListTile(
             title: Text('Add Payment Method with Setup Intent'),
-            onTap: () async => await createPaymentMethodWithSetupIntent(context),
+            onTap: () => createPaymentMethodWithSetupIntent(context),
           ),
         ),
         Card(
           child: ListTile(
             title: Text('Add Payment Method without Setup Intent'),
-            onTap: () async => await createPaymentMethodWithoutSetupIntent(context),
+            onTap: () => createPaymentMethodWithoutSetupIntent(context),
           ),
         ),
         Card(
