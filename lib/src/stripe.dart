@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -80,8 +79,8 @@ class Stripe {
       if(webReturnPath == null || webReturnPath.isEmpty){
         webReturnPath = '3ds/complete'; // or app route ex: 3ds/complete
       }
-      assert(webReturnPath?.isNotEmpty ?? false);
-      var webUrl = Uri.base.toString() + webReturnPath!;
+      assert(webReturnPath.isNotEmpty);
+      var webUrl = Uri.base.toString() + webReturnPath;
       debugPrint(webUrl);
       return webUrl;
     } else {
