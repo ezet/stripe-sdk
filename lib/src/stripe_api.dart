@@ -91,7 +91,8 @@ class StripeApi {
 
   /// Confirm a PaymentIntent
   /// https://stripe.com/docs/api/payment_intents/confirm
-  Future<Map<String, dynamic>> confirmPaymentIntent(String clientSecret, {Map<String, dynamic> data = const {}}) async {
+  Future<Map<String, dynamic>> confirmPaymentIntent(String clientSecret, {Map<String, dynamic>? data}) async {
+    data ??= {};
     final intent = _parseIdFromClientSecret(clientSecret);
     data['client_secret'] = clientSecret;
     final path = '/payment_intents/$intent/confirm';
@@ -109,7 +110,8 @@ class StripeApi {
 
   /// Confirm a SetupIntent
   /// https://stripe.com/docs/api/setup_intents/confirm
-  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, {Map<String, dynamic> data = const {}}) async {
+  Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, {Map<String, dynamic>? data}) async {
+    data ??= {};
     final intent = _parseIdFromClientSecret(clientSecret);
     data['client_secret'] = clientSecret;
     final path = '/setup_intents/$intent/confirm';
