@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'dart:convert' show json;
 
@@ -136,7 +134,7 @@ class StripeApiHandler {
   }
 
   static String _urlEncodeMap(dynamic data) {
-    final urlData = StringBuffer('');
+    final urlData = StringBuffer();
     var first = true;
     void urlEncode(dynamic sub, String path) {
       if (sub is List) {

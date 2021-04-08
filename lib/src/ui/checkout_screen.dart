@@ -1,16 +1,13 @@
-
-
 import 'dart:async';
 
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../stripe.dart';
 import 'models.dart';
 import 'progress_bar.dart';
-import 'screens/payment_methods_screen.dart';
 import 'stores/payment_method_store.dart';
+import 'widgets/payment_method_selector.dart';
 
 @Deprecated('Experimental')
 class CheckoutScreen extends StatefulWidget {
@@ -18,12 +15,7 @@ class CheckoutScreen extends StatefulWidget {
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
 
-  CheckoutScreen(
-      {Key? key,
-      required this.title,
-      required this.items,
-      PaymentMethodStore? paymentMethods,
-      required this.createPaymentIntent})
+  CheckoutScreen({Key? key, required this.title, required this.items, required this.createPaymentIntent})
       : super(key: key);
 
   @override
@@ -66,7 +58,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           Center(
             child: PaymentMethodSelector(
                 paymentMethodStore: paymentMethodStore,
-                selectedPaymentMethodId: null,
+                initialPaymentMethodId: null,
                 onChanged: (value) => setState(() {
                       _selectedPaymentMethod = value;
                     })),
@@ -170,77 +162,5 @@ class CheckoutItem extends StatelessWidget {
       subtitle: Text('x $count'),
       trailing: Text((price / 100).toStringAsFixed(2)),
     );
-  }
-}
-
-class PaymentMethodSelector extends StatefulWidget {
-  PaymentMethodSelector(
-      {Key? key, required this.paymentMethodStore, required this.selectedPaymentMethodId, required this.onChanged})
-      : super(key: key);
-
-  final String? selectedPaymentMethodId;
-  final void Function(String?) onChanged;
-  final PaymentMethodStore paymentMethodStore;
-
-  @override
-  _PaymentMethodSelectorState createState() => _PaymentMethodSelectorState();
-}
-
-class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
-  List<PaymentMethod>? paymentMethods;
-  String? _selectedPaymentMethodId;
-
-  @override
-  Widget build(BuildContext context) {
-    PaymentMethod? selectedPaymentMethod;
-    if (_selectedPaymentMethodId != null) {
-      selectedPaymentMethod =
-          paymentMethods?.singleWhereOrNull((item) => item.id == _selectedPaymentMethodId);
-    } else {
-      selectedPaymentMethod = paymentMethods != null && paymentMethods!.isNotEmpty ? paymentMethods!.first : null;
-    }
-    return Container(
-//      padding: EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border.all(),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: DropdownButton<String>(
-        underline: Container(),
-        isExpanded: false,
-        value: selectedPaymentMethod?.id,
-        items: paymentMethods?.map((item) => DropdownMenuItem(
-          value: item.id,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
-          ),
-        )).toList(),
-        onChanged: (value) {
-          widget.onChanged(value);
-          setState(() {
-            _selectedPaymentMethodId = value;
-          });
-        },
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    widget.paymentMethodStore.addListener(listener);
-  }
-
-  @override
-  void dispose() {
-    widget.paymentMethodStore.removeListener(listener);
-    super.dispose();
-  }
-
-  void listener() {
-    setState(() {
-      paymentMethods = widget.paymentMethodStore.paymentMethods;
-    });
   }
 }

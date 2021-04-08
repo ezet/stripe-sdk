@@ -1,5 +1,3 @@
-
-
 /// UI widgets, screens and helpers for Stripe and Stripe SDK.
 library stripe_sdk_ui;
 
@@ -13,3 +11,4 @@ export 'src/ui/widgets/card_cvc_form_field.dart';
 export 'src/ui/widgets/card_expiry_form_field.dart';
 export 'src/ui/widgets/card_form.dart';
 export 'src/ui/widgets/card_number_form_field.dart';
+export 'src/ui/widgets/payment_method_selector.dart';
