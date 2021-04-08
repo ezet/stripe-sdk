@@ -33,30 +33,38 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   Widget build(BuildContext context) {
     selectedPaymentMethod ??= _getPaymentMethodById(widget.initialPaymentMethodId);
     widget.onChanged(selectedPaymentMethod?.id);
+    return selectedPaymentMethod != null ? _buildSelector() : _buildLoadingIndicator();
+  }
+
+  Container _buildSelector() {
     return Container(
-//      padding: EdgeInsets.symmetric(horizontal: 16),
+      //      padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
-      child: DropdownButton<String>(
-        underline: const SizedBox.shrink(),
-        value: selectedPaymentMethod?.id,
-        items: paymentMethods
-            ?.map((item) => DropdownMenuItem(
-                  value: item.id,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
-                  ),
-                ))
-            .toList(),
-        onChanged: (value) {
-          setState(() {
-            selectedPaymentMethod = _getPaymentMethodById(value);
-          });
-        },
-      ),
+      child: _buildDropdown(),
+    );
+  }
+
+  DropdownButton<String> _buildDropdown() {
+    return DropdownButton<String>(
+      underline: const SizedBox.shrink(),
+      value: selectedPaymentMethod?.id,
+      items: paymentMethods
+          ?.map((item) => DropdownMenuItem(
+                value: item.id,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
+                ),
+              ))
+          .toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedPaymentMethod = _getPaymentMethodById(value);
+        });
+      },
     );
   }
 
@@ -85,5 +93,9 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
     setState(() {
       paymentMethods = widget._paymentMethodStore.paymentMethods;
     });
+  }
+
+  Widget _buildLoadingIndicator() {
+    return const CircularProgressIndicator();
   }
 }
