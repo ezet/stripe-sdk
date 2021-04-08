@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -37,6 +35,18 @@ class AddPaymentMethodScreen extends StatefulWidget {
   final String title;
   static const String _defaultTitle = 'Add payment method';
 
+  static Route<String?> routeWithoutSetupIntent(
+      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, String title = _defaultTitle}) {
+    return MaterialPageRoute(
+      builder: (context) => AddPaymentMethodScreen.withoutSetupIntent(
+        paymentMethodStore: paymentMethodStore,
+        stripe: stripe,
+        form: form,
+        title: title,
+      ),
+    );
+  }
+
   /// Add a payment method using a Stripe Setup Intent
   AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent,
       {PaymentMethodStore? paymentMethodStore, Stripe? stripe, this.form, this.title = _defaultTitle})
@@ -47,7 +57,8 @@ class AddPaymentMethodScreen extends StatefulWidget {
   /// Add a payment method without using a Stripe Setup Intent
   @Deprecated(
       'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
-  AddPaymentMethodScreen.withoutSetupIntent({PaymentMethodStore? paymentMethodStore, Stripe? stripe, this.form, this.title = _defaultTitle})
+  AddPaymentMethodScreen.withoutSetupIntent(
+      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, this.form, this.title = _defaultTitle})
       : _useSetupIntent = false,
         _createSetupIntent = null,
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
@@ -105,18 +116,18 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                     hideProgressDialog(context);
                     if (setupIntent['status'] == 'succeeded') {
                       /// A new payment method has been attached, so refresh the store.
-                      // ignore: unawaited_futures
                       widget._paymentMethodStore.refresh();
                       Navigator.pop(context, true);
                       return;
                     }
                   } else {
-                    paymentMethod = await (widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id']) as FutureOr<Map<String, dynamic>>);
+                    paymentMethod = await (widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id'])
+                        as FutureOr<Map<String, dynamic>>);
                     hideProgressDialog(context);
-                    Navigator.pop(context, true);
+                    Navigator.pop(context, paymentMethod['id']);
                     return;
                   }
-                  Navigator.pop(context, false);
+                  Navigator.pop(context, null);
                 }
               },
             )

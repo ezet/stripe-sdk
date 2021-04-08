@@ -5,11 +5,14 @@ import '../../../stripe_sdk_ui.dart';
 
 typedef OnPaymentMethodSelected = void Function(String?);
 
+enum SelectorType { radioButton, dropdownButton }
+
 class PaymentMethodSelector extends StatefulWidget {
   PaymentMethodSelector(
       {required this.onChanged,
       PaymentMethodStore? paymentMethodStore,
       this.initialPaymentMethodId,
+      this.selectorType = SelectorType.radioButton,
       Key? key,
       this.selectFirstByDefault = true})
       : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
@@ -19,60 +22,109 @@ class PaymentMethodSelector extends StatefulWidget {
   final OnPaymentMethodSelected onChanged;
   final PaymentMethodStore _paymentMethodStore;
   final bool selectFirstByDefault;
+  final SelectorType selectorType;
 
   @override
   _PaymentMethodSelectorState createState() => _PaymentMethodSelectorState();
 }
 
 class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
-  List<PaymentMethod>? paymentMethods;
+  List<PaymentMethod>? _paymentMethods;
 
-  PaymentMethod? selectedPaymentMethod;
+  PaymentMethod? _selectedPaymentMethod;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    selectedPaymentMethod ??= _getPaymentMethodById(widget.initialPaymentMethodId);
-    widget.onChanged(selectedPaymentMethod?.id);
-    return selectedPaymentMethod != null ? _buildSelector() : _buildLoadingIndicator();
+    _selectedPaymentMethod ??= _getPaymentMethodById(widget.initialPaymentMethodId);
+    widget.onChanged(_selectedPaymentMethod?.id);
+    return Column(
+      children: [
+        if (!_isLoading)
+          _buildSelector()
+        else
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildLoadingIndicator(),
+          ),
+        OutlinedButton(
+            onPressed: () async {
+              final id = await Navigator.push(context,
+                  AddPaymentMethodScreen.routeWithoutSetupIntent(paymentMethodStore: widget._paymentMethodStore));
+              if (id != null) {
+                await widget._paymentMethodStore.refresh();
+                setState(() {
+                  _selectedPaymentMethod = _getPaymentMethodById(id);
+                });
+              }
+            },
+            child: Text("+ Add card"))
+      ],
+    );
   }
 
-  Container _buildSelector() {
+  Widget _buildSelector() {
+    switch (widget.selectorType) {
+      case SelectorType.radioButton:
+        return _buildRadioListSelector();
+      case SelectorType.dropdownButton:
+        return _buildDropdownSelector();
+    }
+  }
+
+  Widget _buildRadioListSelector() {
+    if (_paymentMethods?.isEmpty == true) return const SizedBox.shrink();
+    return ListView(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      children: _paymentMethods!
+          .map((item) => RadioListTile<String>(
+              contentPadding: EdgeInsets.zero,
+              title: Text(item.brand.toUpperCase()),
+              secondary: Text('**** **** **** ${item.last4}'),
+              subtitle: Text(item.getExpirationAsString()),
+              value: item.id,
+              groupValue: _selectedPaymentMethod?.id,
+              onChanged: (value) => setState(() {
+                    _selectedPaymentMethod = _getPaymentMethodById(value);
+                  })))
+          .toList(),
+    );
+  }
+
+  Widget _buildDropdownSelector() {
+    if (_paymentMethods?.isEmpty == true) return const SizedBox.shrink();
     return Container(
-      //      padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
-      child: _buildDropdown(),
-    );
-  }
-
-  DropdownButton<String> _buildDropdown() {
-    return DropdownButton<String>(
-      underline: const SizedBox.shrink(),
-      value: selectedPaymentMethod?.id,
-      items: paymentMethods
-          ?.map((item) => DropdownMenuItem(
-                value: item.id,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
-                ),
-              ))
-          .toList(),
-      onChanged: (value) {
-        setState(() {
-          selectedPaymentMethod = _getPaymentMethodById(value);
-        });
-      },
+      child: DropdownButton<String>(
+        underline: const SizedBox.shrink(),
+        value: _selectedPaymentMethod?.id,
+        items: _paymentMethods
+            ?.map((item) => DropdownMenuItem(
+                  value: item.id,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
+                  ),
+                ))
+            .toList(),
+        onChanged: (value) {
+          setState(() {
+            _selectedPaymentMethod = _getPaymentMethodById(value);
+          });
+        },
+      ),
     );
   }
 
   PaymentMethod? _getPaymentMethodById(String? paymentMethodId) {
     if (paymentMethodId != null) {
-      return paymentMethods?.singleWhereOrNull((item) => item.id == paymentMethodId);
+      return _paymentMethods?.singleWhereOrNull((item) => item.id == paymentMethodId);
     } else if (widget.selectFirstByDefault) {
-      return paymentMethods != null && paymentMethods!.isNotEmpty ? paymentMethods!.first : null;
+      return _paymentMethods != null && _paymentMethods!.isNotEmpty ? _paymentMethods!.first : null;
     }
     return null;
   }
@@ -91,7 +143,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
 
   void listener() {
     setState(() {
-      paymentMethods = widget._paymentMethodStore.paymentMethods;
+      _paymentMethods = widget._paymentMethodStore.paymentMethods;
+      _isLoading = widget._paymentMethodStore.isLoading;
     });
   }
 

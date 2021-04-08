@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
@@ -14,6 +12,7 @@ import '../screens/payment_methods_screen.dart';
 ///
 class PaymentMethodStore extends ChangeNotifier {
   final List<PaymentMethod> paymentMethods = [];
+  bool isLoading = false;
 
   /// The customer session the store operates on.
   final CustomerSession _customerSession;
@@ -58,13 +57,19 @@ class PaymentMethodStore extends ChangeNotifier {
     if (!hasListeners) return Future.value();
 
     final paymentMethodFuture = _customerSession.listPaymentMethods(limit: 100);
+    isLoading = true;
+    notifyListeners();
     return paymentMethodFuture.then((value) {
       final List listData = value['data'] ?? <PaymentMethod>[];
       paymentMethods.clear();
       if (listData.isNotEmpty) {
-        paymentMethods.addAll(
-            listData.map((item) => PaymentMethod(item['id'], item['card']['last4'], item['card']['brand'])).toList());
+        paymentMethods.addAll(listData
+            .map((item) => PaymentMethod(item['id'], item['card']['last4'], item['card']['brand'],
+                DateTime(item['card']['exp_year'], item['card']['exp_month'])))
+            .toList());
       }
+    }).whenComplete(() {
+      isLoading = false;
       notifyListeners();
     });
   }

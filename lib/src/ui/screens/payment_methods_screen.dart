@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -82,8 +80,13 @@ class PaymentMethod {
   final String id;
   final String last4;
   final String brand;
+  final DateTime expirationDate;
 
-  PaymentMethod(this.id, this.last4, this.brand);
+  const PaymentMethod(this.id, this.last4, this.brand, this.expirationDate);
+
+  String getExpirationAsString() {
+    return '${expirationDate.month}/${expirationDate.year}';
+  }
 }
 
 class PaymentMethodsList extends StatelessWidget {
@@ -148,7 +151,8 @@ class PaymentMethodsList extends StatelessWidget {
                                     content: Text('Payment method successfully deleted.'),
                                   ));
                                 },
-                                child: Text('Delete'),),
+                                child: Text('Delete'),
+                              ),
                             ],
                           );
                         });
