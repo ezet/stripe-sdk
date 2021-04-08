@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'dart:math';
 
@@ -13,7 +11,7 @@ class Stripe {
   /// Creates a new [Stripe] object. Use this constructor if you wish to handle the instance of this class by yourself.
   /// Alternatively, use [Stripe.init] to create a singleton and access it through [Stripe.instance].
   ///
-  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// [publishableKey] is your publishable key, beginning with "pk_".
   /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
@@ -56,7 +54,7 @@ class Stripe {
   /// Initializes the singleton instance of [Stripe]. Afterwards you can
   /// use [Stripe.instance] to access the created instance.
   ///
-  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// [publishableKey] is your publishable key, beginning with "pk_".
   /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
@@ -76,7 +74,7 @@ class Stripe {
   /// This should be set on the intent before attempting to authenticate it.
   String getReturnUrlForSca({String? webReturnPath}) {
     if (kIsWeb) {
-      if(webReturnPath == null || webReturnPath.isEmpty){
+      if (webReturnPath == null || webReturnPath.isEmpty) {
         webReturnPath = '3ds/complete'; // or app route ex: 3ds/complete
       }
       assert(webReturnPath.isNotEmpty);
@@ -181,7 +179,8 @@ class Stripe {
       final returnUrl = Uri.parse(action['redirect_to_url']['return_url']);
       late StreamSubscription sub;
       sub = uriLinkStream.listen((Uri? uri) async {
-        if (uri != null && uri.scheme == returnUrl.scheme &&
+        if (uri != null &&
+            uri.scheme == returnUrl.scheme &&
             uri.host == returnUrl.host &&
             uri.queryParameters['requestId'] == returnUrl.queryParameters['requestId']) {
           await sub.cancel();

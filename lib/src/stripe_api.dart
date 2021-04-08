@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'models/card.dart';
@@ -19,7 +17,7 @@ class StripeApi {
   /// Create a new instance, which can be used with e.g. dependency injection.
   /// Throws a [Exception] if an invalid [publishableKey] has been submitted.
   ///
-  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// [publishableKey] is your publishable key, beginning with "pk_".
   /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
@@ -33,7 +31,7 @@ class StripeApi {
   /// Initialize the managed singleton instance of [StripeApi].
   /// Afterwards you can use [StripeApi.instance] to access the created instance.
   ///
-  /// [publishableKey] is your publishable key, beginning with "sk_".
+  /// [publishableKey] is your publishable key, beginning with "pk_".
   /// Your can copy your key from https://dashboard.stripe.com/account/apikeys
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
