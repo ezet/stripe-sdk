@@ -47,18 +47,35 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
             padding: const EdgeInsets.all(8.0),
             child: _buildLoadingIndicator(),
           ),
-        OutlinedButton(
-            onPressed: () async {
-              final id = await Navigator.push(context,
-                  AddPaymentMethodScreen.routeWithoutSetupIntent(paymentMethodStore: widget._paymentMethodStore));
-              if (id != null) {
-                await widget._paymentMethodStore.refresh();
-                setState(() {
-                  _selectedPaymentMethod = _getPaymentMethodById(id);
-                });
-              }
-            },
-            child: Text("+ Add card"))
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            OutlinedButton(
+                onPressed: () async {
+                  final id = await Navigator.push(context,
+                      AddPaymentMethodScreen.routeWithoutSetupIntent(paymentMethodStore: widget._paymentMethodStore));
+                  if (id != null) {
+                    await widget._paymentMethodStore.refresh();
+                    setState(() {
+                      _selectedPaymentMethod = _getPaymentMethodById(id);
+                    });
+                  }
+                },
+                child: Text("+ Add card")),
+            OutlinedButton(
+                onPressed: () async {
+                  final id = await Navigator.push(context,
+                      AddPaymentMethodScreen.routeWithoutSetupIntent(paymentMethodStore: widget._paymentMethodStore));
+                  if (id != null) {
+                    await widget._paymentMethodStore.refresh();
+                    setState(() {
+                      _selectedPaymentMethod = _getPaymentMethodById(id);
+                    });
+                  }
+                },
+                child: Text("Manage cards")),
+          ],
+        )
       ],
     );
   }

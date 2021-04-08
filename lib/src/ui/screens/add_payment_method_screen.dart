@@ -20,7 +20,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
   final Stripe _stripe;
 
   /// Used to create a setup intent when required.
-  final CreateSetupIntent? _createSetupIntent;
+  late final CreateSetupIntent _createSetupIntent;
 
   /// True if a setup intent should be used to set up the payment method.
   final bool _useSetupIntent;
@@ -29,7 +29,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
   final PaymentMethodStore _paymentMethodStore;
 
   /// The card form used to collect payment method details.
-  final CardForm? form;
+  final CardForm _form;
 
   /// Custom Title for the screen
   final String title;
@@ -38,7 +38,21 @@ class AddPaymentMethodScreen extends StatefulWidget {
   static Route<String?> routeWithoutSetupIntent(
       {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, String title = _defaultTitle}) {
     return MaterialPageRoute(
+      // ignore: deprecated_member_use_from_same_package
       builder: (context) => AddPaymentMethodScreen.withoutSetupIntent(
+        paymentMethodStore: paymentMethodStore,
+        stripe: stripe,
+        form: form,
+        title: title,
+      ),
+    );
+  }
+
+  static Route<String?> routeWithSetupIntent(CreateSetupIntent createSetupIntent,
+      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, String title = _defaultTitle}) {
+    return MaterialPageRoute(
+      builder: (context) => AddPaymentMethodScreen.withSetupIntent(
+        createSetupIntent,
         paymentMethodStore: paymentMethodStore,
         stripe: stripe,
         form: form,
@@ -49,8 +63,9 @@ class AddPaymentMethodScreen extends StatefulWidget {
 
   /// Add a payment method using a Stripe Setup Intent
   AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent,
-      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, this.form, this.title = _defaultTitle})
+      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
       : _useSetupIntent = true,
+        _form = form ?? CardForm(),
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         _stripe = stripe ?? Stripe.instance;
 
@@ -58,35 +73,32 @@ class AddPaymentMethodScreen extends StatefulWidget {
   @Deprecated(
       'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
   AddPaymentMethodScreen.withoutSetupIntent(
-      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, this.form, this.title = _defaultTitle})
+      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
       : _useSetupIntent = false,
-        _createSetupIntent = null,
+        _form = form ?? CardForm(),
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         _stripe = stripe ?? Stripe.instance;
 
   @override
-  _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState(form ?? CardForm());
+  _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState();
 }
 
 class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
-  final StripeCard _cardData;
-  final GlobalKey<FormState> _formKey;
-  final CardForm _form;
+  late final StripeCard _cardData;
+  late final GlobalKey<FormState> _formKey;
 
   late IntentResponse setupIntent;
-
-  _AddPaymentMethodScreenState(this._form)
-      : _cardData = _form.card,
-        _formKey = _form.formKey;
 
   @override
   void initState() {
     _createSetupIntent();
+    _cardData = widget._form.card;
+    _formKey = widget._form.formKey;
     super.initState();
   }
 
-  void _createSetupIntent() async {
-    if (widget._useSetupIntent) setupIntent = await widget._createSetupIntent!();
+  Future<void> _createSetupIntent() async {
+    if (widget._useSetupIntent) setupIntent = await widget._createSetupIntent();
   }
 
   @override
@@ -97,9 +109,9 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
           title: Text(widget.title),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.check),
+              icon: const Icon(Icons.check),
               onPressed: () async {
-                FormState? formState = _formKey.currentState;
+                final formState = _formKey.currentState;
                 if (formState?.validate() ?? false) {
                   formState!.save();
 
@@ -133,6 +145,6 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             )
           ],
         ),
-        body: _form);
+        body: widget._form);
   }
 }
