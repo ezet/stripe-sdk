@@ -20,7 +20,7 @@ dependencies:
   awesome_card: ^1.1.5
   uni_links2: ^0.6.0+2
   credit_card_validator: ^2.0.0-nullsafety.0
-  collection: ^1.15.0-nullsafety.4
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:
