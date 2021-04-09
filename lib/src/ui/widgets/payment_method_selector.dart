@@ -2,20 +2,22 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 
 import '../../../stripe_sdk_ui.dart';
+import '../stripe_ui.dart';
 
 typedef OnPaymentMethodSelected = void Function(String?);
 
 enum SelectorType { radioButton, dropdownButton }
 
 class PaymentMethodSelector extends StatefulWidget {
-  PaymentMethodSelector(
-      {required this.onChanged,
-      PaymentMethodStore? paymentMethodStore,
-      this.initialPaymentMethodId,
-      this.selectorType = SelectorType.radioButton,
-      Key? key,
-      this.selectFirstByDefault = true})
-      : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
+  PaymentMethodSelector({
+    required this.onChanged,
+    this.createSetupIntent,
+    PaymentMethodStore? paymentMethodStore,
+    this.initialPaymentMethodId,
+    this.selectorType = SelectorType.radioButton,
+    Key? key,
+    this.selectFirstByDefault = true,
+  })  : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         super(key: key);
 
   final String? initialPaymentMethodId;
@@ -23,6 +25,7 @@ class PaymentMethodSelector extends StatefulWidget {
   final PaymentMethodStore _paymentMethodStore;
   final bool selectFirstByDefault;
   final SelectorType selectorType;
+  final CreateSetupIntent? createSetupIntent;
 
   @override
   _PaymentMethodSelectorState createState() => _PaymentMethodSelectorState();
@@ -52,8 +55,10 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
           children: [
             OutlinedButton(
                 onPressed: () async {
-                  final id = await Navigator.push(context,
-                      AddPaymentMethodScreen.routeWithoutSetupIntent(paymentMethodStore: widget._paymentMethodStore));
+                  final id = await Navigator.push(
+                      context,
+                      AddPaymentMethodScreen.routeWithSetupIntent(widget.createSetupIntent!,
+                          paymentMethodStore: widget._paymentMethodStore));
                   if (id != null) {
                     await widget._paymentMethodStore.refresh();
                     setState(() {
@@ -64,14 +69,12 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                 child: Text("+ Add card")),
             OutlinedButton(
                 onPressed: () async {
-                  final id = await Navigator.push(context,
-                      AddPaymentMethodScreen.routeWithoutSetupIntent(paymentMethodStore: widget._paymentMethodStore));
-                  if (id != null) {
-                    await widget._paymentMethodStore.refresh();
-                    setState(() {
-                      _selectedPaymentMethod = _getPaymentMethodById(id);
-                    });
-                  }
+                  final id = await Navigator.push(
+                      context,
+                      PaymentMethodsScreen.route(
+                          createSetupIntent: widget.createSetupIntent!,
+                          title: '',
+                          paymentMethodStore: widget._paymentMethodStore));
                 },
                 child: Text("Manage cards")),
           ],

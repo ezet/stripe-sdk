@@ -7,10 +7,10 @@ import '../../models/card.dart';
 import '../../stripe.dart';
 import '../models.dart';
 import '../progress_bar.dart';
+import '../stripe_ui.dart';
 import '../widgets/card_form.dart';
 
 ///
-typedef CreateSetupIntent = Future<IntentResponse> Function();
 
 /// A screen that collects, creates and attaches a payment method to a stripe customer.
 ///

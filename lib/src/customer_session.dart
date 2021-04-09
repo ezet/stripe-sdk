@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -8,7 +6,7 @@ import 'ephemeral_key_manager.dart';
 import 'stripe_api_handler.dart';
 
 class CustomerSession extends ChangeNotifier {
-  static final int keyRefreshBufferInSeconds = 30;
+  static const int keyRefreshBufferInSeconds = 30;
 
   static CustomerSession? _instance;
 
@@ -24,14 +22,14 @@ class CustomerSession extends ChangeNotifier {
       : _keyManager = EphemeralKeyManager(provider, keyRefreshBufferInSeconds),
         _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _apiHandler.apiVersion = apiVersion;
-    _instance ??= this;
+    _instance = this;
   }
 
   /// Initiate the customer session singleton instance.
   /// If [prefetchKey] is true, fetch the ephemeral key immediately.
   static void initCustomerSession(EphemeralKeyProvider provider,
-      {String apiVersion = DEFAULT_API_VERSION, String? stripeAccount, prefetchKey = true}) {
-    _instance = CustomerSession._(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
+      {String apiVersion = DEFAULT_API_VERSION, String? stripeAccount, bool prefetchKey = true}) {
+    CustomerSession._(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
     if (prefetchKey) {
       _instance!._keyManager.retrieveEphemeralKey();
     }
