@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -78,7 +76,6 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
       decoration: widget.decoration,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.next,
-      onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
     );
   }
 }
