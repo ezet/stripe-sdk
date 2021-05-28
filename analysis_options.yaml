@@ -1,15 +1,20 @@
 # Defines a default set of lint rules enforced for
 # projects at Google. For details and rationale,
 # see https://github.com/dart-lang/pedantic#enabled-lints.
-include: package:pedantic/analysis_options.yaml
+#include: package:pedantic/analysis_options.yaml
+include: package:lint/analysis_options.yaml
 
 # For lint rules and documentation, see http://dart-lang.github.io/linter/lints.
 # Uncomment to specify additional rules.
-#linter:
-#  rules:
+linter:
+  rules:
+    prefer_single_quotes: true
 #    deprecated_member_use_from_same_package: false
 #    missing_required_param: false
 
 analyzer:
   errors:
     omit_local_variable_types: ignore
+  strong-mode:
+    implicit-casts: true
+    implicit-dynamic: true

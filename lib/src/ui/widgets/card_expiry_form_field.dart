@@ -6,23 +6,23 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 /// Form field to edit a credit card expiration date, with validation.
 class CardExpiryFormField extends StatefulWidget {
   const CardExpiryFormField(
-      {Key key,
+      {Key? key,
       this.initialMonth,
       this.initialYear,
-      @required this.onSaved,
-      @required this.validator,
-      @required this.onChanged,
+      required this.onSaved,
+      required this.validator,
+      required this.onChanged,
       this.decoration = defaultDecoration,
       this.textStyle = defaultTextStyle})
       : super(key: key);
 
-  final int initialMonth;
-  final int initialYear;
+  final int? initialMonth;
+  final int? initialYear;
   final InputDecoration decoration;
   final TextStyle textStyle;
-  final void Function(int, int) onSaved;
-  final void Function(int, int) onChanged;
-  final String Function(String) validator;
+  final void Function(int?, int?) onSaved;
+  final void Function(int?, int?) onChanged;
+  final String? Function(String?) validator;
 
   static const defaultLabelText = 'Expiration Date';
   static const defaultHintText = 'MM/YY';
@@ -44,8 +44,8 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final month = widget.initialMonth?.toString()?.padLeft(CardExpiryFormField.defaultMonthMask.length, '0');
-    final year = widget.initialYear?.toString()?.substring(widget.initialYear.toString().length -
+    final month = widget.initialMonth?.toString().padLeft(CardExpiryFormField.defaultMonthMask.length, '0');
+    final year = widget.initialYear?.toString().substring(widget.initialYear.toString().length -
         min(CardExpiryFormField.defaultYearMask.length, widget.initialYear.toString().length));
     final initial = (month ?? '') + (year ?? '');
 
@@ -66,7 +66,7 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
         widget.onChanged(month, year);
       },
       onSaved: (text) {
-        final arr = text.split('/');
+        final arr = text!.split('/');
         final month = int.tryParse(arr[0]);
         final year = int.tryParse(arr[1]);
         widget.onSaved(month, year);
@@ -76,7 +76,6 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
       decoration: widget.decoration,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.next,
-      onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
     );
   }
 }

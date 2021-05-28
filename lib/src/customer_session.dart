@@ -6,9 +6,9 @@ import 'ephemeral_key_manager.dart';
 import 'stripe_api_handler.dart';
 
 class CustomerSession extends ChangeNotifier {
-  static final int keyRefreshBufferInSeconds = 30;
+  static const int keyRefreshBufferInSeconds = 30;
 
-  static CustomerSession _instance;
+  static CustomerSession? _instance;
 
   final StripeApiHandler _apiHandler;
 
@@ -18,20 +18,20 @@ class CustomerSession extends ChangeNotifier {
   bool isDisposed = false;
 
   /// Create a new CustomerSession instance. Use this if you prefer to manage your own instances.
-  CustomerSession._(EphemeralKeyProvider provider, {this.apiVersion = DEFAULT_API_VERSION, String stripeAccount})
+  CustomerSession._(EphemeralKeyProvider provider, {this.apiVersion = DEFAULT_API_VERSION, String? stripeAccount})
       : _keyManager = EphemeralKeyManager(provider, keyRefreshBufferInSeconds),
         _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _apiHandler.apiVersion = apiVersion;
-    _instance ??= this;
+    _instance = this;
   }
 
   /// Initiate the customer session singleton instance.
   /// If [prefetchKey] is true, fetch the ephemeral key immediately.
   static void initCustomerSession(EphemeralKeyProvider provider,
-      {String apiVersion = DEFAULT_API_VERSION, String stripeAccount, prefetchKey = true}) {
-    _instance = CustomerSession._(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
+      {String apiVersion = DEFAULT_API_VERSION, String? stripeAccount, bool prefetchKey = true}) {
+    CustomerSession._(provider, apiVersion: apiVersion, stripeAccount: stripeAccount);
     if (prefetchKey) {
-      _instance._keyManager.retrieveEphemeralKey();
+      _instance!._keyManager.retrieveEphemeralKey();
     }
   }
 
@@ -39,7 +39,7 @@ class CustomerSession extends ChangeNotifier {
   /// Call this when the current user logs out.
   @Deprecated('Use CustomerSession.instance.endSession instead.')
   static void endCustomerSession() {
-    _instance.endSession();
+    _instance?.endSession();
   }
 
   /// End the managed singleton customer session.
@@ -57,15 +57,15 @@ class CustomerSession extends ChangeNotifier {
       throw Exception('Attempted to get instance of CustomerSession before initialization.'
           'Please initialize a new session using [CustomerSession.initCustomerSession() first.]');
     }
-    assert(_instance._assertNotDisposed());
-    return _instance;
+    assert(_instance!._assertNotDisposed());
+    return _instance!;
   }
 
   /// Retrieves the details for the current customer.
   /// https://stripe.com/docs/api/customers/retrieve
   Future<Map<String, dynamic>> retrieveCurrentCustomer() async {
     assert(_assertNotDisposed());
-    final key = await _keyManager.retrieveEphemeralKey();
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/customers/${key.customerId}';
     return _apiHandler.request(RequestMethod.get, path, key.secret, apiVersion);
   }
@@ -73,9 +73,9 @@ class CustomerSession extends ChangeNotifier {
   /// List a Customer's PaymentMethods.
   /// https://stripe.com/docs/api/payment_methods/list
   Future<Map<String, dynamic>> listPaymentMethods(
-      {type = 'card', int limit, String ending_before, String starting_after}) async {
+      {type = 'card', int? limit, String? ending_before, String? starting_after}) async {
     assert(_assertNotDisposed());
-    final key = await _keyManager.retrieveEphemeralKey();
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/payment_methods';
     final params = {'customer': key.customerId, 'type': type};
     if (limit != null) params['limit'] = limit;
@@ -86,9 +86,9 @@ class CustomerSession extends ChangeNotifier {
 
   /// Attach a PaymentMethod.
   /// https://stripe.com/docs/api/payment_methods/attach
-  Future<Map<String, dynamic>> attachPaymentMethod(String paymentMethodId) async {
+  Future<Map<String, dynamic>> attachPaymentMethod(String? paymentMethodId) async {
     assert(_assertNotDisposed());
-    final key = await _keyManager.retrieveEphemeralKey();
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/payment_methods/$paymentMethodId/attach';
     final params = {'customer': key.customerId};
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: params);
@@ -96,9 +96,9 @@ class CustomerSession extends ChangeNotifier {
 
   /// Detach a PaymentMethod.
   /// https://stripe.com/docs/api/payment_methods/detach
-  Future<Map<String, dynamic>> detachPaymentMethod(String paymentMethodId) async {
+  Future<Map<String, dynamic>> detachPaymentMethod(String? paymentMethodId) async {
     assert(_assertNotDisposed());
-    final key = await _keyManager.retrieveEphemeralKey();
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/payment_methods/$paymentMethodId/detach';
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion);
   }
@@ -108,7 +108,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/sources/attach
   Future<Map<String, dynamic>> attachSource(String sourceId) async {
     assert(_assertNotDisposed());
-    final key = await _keyManager.retrieveEphemeralKey();
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/customers/${key.customerId}/sources';
     final params = {'source': sourceId};
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: params);
@@ -119,7 +119,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/sources/detach
   Future<Map<String, dynamic>> detachSource(String sourceId) async {
     assert(_assertNotDisposed());
-    final key = await _keyManager.retrieveEphemeralKey();
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/customers/${key.customerId}/sources/$sourceId';
     return _apiHandler.request(RequestMethod.delete, path, key.secret, apiVersion);
   }
@@ -128,7 +128,7 @@ class CustomerSession extends ChangeNotifier {
   /// https://stripe.com/docs/api/customers/update
   Future<Map<String, dynamic>> updateCustomer(Map<String, dynamic> data) async {
     assert(_assertNotDisposed());
-    final key = await _keyManager.retrieveEphemeralKey();
+    final EphemeralKey key = await (_keyManager.retrieveEphemeralKey());
     final path = '/customers/${key.customerId}';
     return _apiHandler.request(RequestMethod.post, path, key.secret, apiVersion, params: data);
   }

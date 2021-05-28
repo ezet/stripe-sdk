@@ -1,26 +1,28 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 /// Form field to edit a credit card number, with validation.
 class CardNumberFormField extends StatefulWidget {
   CardNumberFormField(
-      {Key key,
+      {Key? key,
       this.initialValue,
-      @required this.onSaved,
-      @required this.validator,
+      required this.onSaved,
+      required this.validator,
       this.onChanged,
       this.decoration = defaultDecoration,
       this.textStyle = defaultTextStyle,
       this.textEditingController})
       : super(key: key);
 
-  final void Function(String) onSaved;
-  final void Function(String) onChanged;
-  final String Function(String) validator;
-  final String initialValue;
+  final void Function(String?) onSaved;
+  final void Function(String)? onChanged;
+  final String? Function(String?) validator;
+  final String? initialValue;
   final InputDecoration decoration;
   final TextStyle textStyle;
-  final TextEditingController textEditingController;
+  final TextEditingController? textEditingController;
 
   static const defaultLabelText = 'Card number';
   static const defaultHintText = 'XXXX XXXX XXXX XXXX';

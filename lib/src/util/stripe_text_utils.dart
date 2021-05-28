@@ -1,5 +1,8 @@
 /// Util Array for converting bytes to a hex string.
 /// {@url http://stackoverflow.com/questions/9655181/convert-from-byte-array-to-hex-string-in-java}
+
+
+
 const String HEX_ARRAY = '0123456789ABCDEF';
 
 ///Swap {@code null} for blank text values.
@@ -7,7 +10,7 @@ const String HEX_ARRAY = '0123456789ABCDEF';
 /// @param value an input string that may or may not be entirely whitespace
 /// @return {@code null} if the string is entirely whitespace, otherwise the input value
 ///
-String nullIfBlank(String value) {
+String? nullIfBlank(String? value) {
   if (isBlank(value)) {
     return null;
   }
@@ -20,7 +23,7 @@ String nullIfBlank(String value) {
 ///
 /// @param value a possibly blank input string value
 /// @return {@code true} if and only if the value is all whitespace, {@code null}, or empty
-bool isBlank(String value) {
+bool isBlank(String? value) {
   return value == null || value.trim().isEmpty;
 }
 
@@ -30,11 +33,11 @@ bool isBlank(String value) {
 /// @param cardNumberWithSpaces a card number, for instance "4242 4242 4242 4242"
 /// @return the input number minus any spaces, for instance "4242424242424242".
 /// Returns {@code null} if the input was {@code null} or all spaces.
-String removeSpacesAndHyphens(String cardNumberWithSpaces) {
+String? removeSpacesAndHyphens(String? cardNumberWithSpaces) {
   if (isBlank(cardNumberWithSpaces)) {
     return null;
   }
-  return cardNumberWithSpaces.replaceAll(RegExp(r'\s+|\-+'), '');
+  return cardNumberWithSpaces!.replaceAll(RegExp(r'\s+|\-+'), '');
 }
 
 /// Check to see if the input number has any of the given prefixes.
@@ -42,7 +45,7 @@ String removeSpacesAndHyphens(String cardNumberWithSpaces) {
 /// @param number the number to test
 /// @param prefixes the prefixes to test against
 /// @return {@code true} if number begins with any of the input prefixes
-bool hasAnyPrefix(String number, List<String> prefixes) {
+bool hasAnyPrefix(String? number, List<String> prefixes) {
   if (number == null) {
     return false;
   }
@@ -55,20 +58,21 @@ bool hasAnyPrefix(String number, List<String> prefixes) {
   return false;
 }
 
-bool isDigit(String s) {
+// TODO function isn't used and the same as isDigitsOnly() -> remove?
+bool isDigit(String? s) {
   if (s == null) {
     return false;
   }
   return int.tryParse(s) != null;
 }
 
-bool isDigitsOnly(String s) {
+bool isDigitsOnly(String? s) {
   if (s == null) {
     return false;
   }
   return int.tryParse(s) != null;
 }
 
-int getNumericValue(String s) {
+int? getNumericValue(String s) {
   return int.tryParse(s);
 }
