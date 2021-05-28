@@ -36,7 +36,10 @@ class AddPaymentMethodScreen extends StatefulWidget {
   static const String _defaultTitle = 'Add payment method';
 
   static Route<String?> routeWithoutSetupIntent(
-      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, String title = _defaultTitle}) {
+      {PaymentMethodStore? paymentMethodStore,
+      Stripe? stripe,
+      CardForm? form,
+      String title = _defaultTitle}) {
     return MaterialPageRoute(
       // ignore: deprecated_member_use_from_same_package
       builder: (context) => AddPaymentMethodScreen.withoutSetupIntent(
@@ -48,8 +51,12 @@ class AddPaymentMethodScreen extends StatefulWidget {
     );
   }
 
-  static Route<String?> routeWithSetupIntent(CreateSetupIntent createSetupIntent,
-      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, String title = _defaultTitle}) {
+  static Route<String?> routeWithSetupIntent(
+      CreateSetupIntent createSetupIntent,
+      {PaymentMethodStore? paymentMethodStore,
+      Stripe? stripe,
+      CardForm? form,
+      String title = _defaultTitle}) {
     return MaterialPageRoute(
       builder: (context) => AddPaymentMethodScreen.withSetupIntent(
         createSetupIntent,
@@ -63,7 +70,10 @@ class AddPaymentMethodScreen extends StatefulWidget {
 
   /// Add a payment method using a Stripe Setup Intent
   AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent,
-      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
+      {PaymentMethodStore? paymentMethodStore,
+      Stripe? stripe,
+      CardForm? form,
+      this.title = _defaultTitle})
       : _useSetupIntent = true,
         _form = form ?? CardForm(),
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
@@ -73,7 +83,10 @@ class AddPaymentMethodScreen extends StatefulWidget {
   @Deprecated(
       'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
   AddPaymentMethodScreen.withoutSetupIntent(
-      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
+      {PaymentMethodStore? paymentMethodStore,
+      Stripe? stripe,
+      CardForm? form,
+      this.title = _defaultTitle})
       : _useSetupIntent = false,
         _form = form ?? CardForm(),
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
@@ -117,7 +130,8 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
 
                   showProgressDialog(context);
 
-                  var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(_cardData);
+                  var paymentMethod = await widget._stripe.api
+                      .createPaymentMethodFromCard(_cardData);
                   if (widget._useSetupIntent) {
                     final createSetupIntentResponse = this.setupIntent;
                     final setupIntent = await widget._stripe.confirmSetupIntent(
@@ -133,7 +147,8 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                       return;
                     }
                   } else {
-                    paymentMethod = await (widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id'])
+                    paymentMethod = await (widget._paymentMethodStore
+                            .attachPaymentMethod(paymentMethod['id'])
                         as FutureOr<Map<String, dynamic>>);
                     hideProgressDialog(context);
                     Navigator.pop(context, paymentMethod['id']);

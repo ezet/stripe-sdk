@@ -15,7 +15,9 @@ class PaymentMethodsScreen extends StatefulWidget {
   final PaymentMethodStore _paymentMethodStore;
 
   static Route route(
-      {required CreateSetupIntent createSetupIntent, String title = '', PaymentMethodStore? paymentMethodStore}) {
+      {required CreateSetupIntent createSetupIntent,
+      String title = '',
+      PaymentMethodStore? paymentMethodStore}) {
     return MaterialPageRoute(
         builder: (context) => PaymentMethodsScreen(
               createSetupIntent: createSetupIntent,
@@ -53,7 +55,9 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent, stripe: stripe)));
+                          AddPaymentMethodScreen.withSetupIntent(
+                              widget.createSetupIntent,
+                              stripe: stripe)));
               if (added == true) await widget._paymentMethodStore.refresh();
             },
           )
@@ -100,7 +104,8 @@ class PaymentMethod {
 class PaymentMethodsList extends StatelessWidget {
   final PaymentMethodStore paymentMethodStore;
 
-  const PaymentMethodsList({Key? key, required this.paymentMethodStore}) : super(key: key);
+  const PaymentMethodsList({Key? key, required this.paymentMethodStore})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +116,8 @@ class PaymentMethodsList extends StatelessWidget {
     );
   }
 
-  Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
+  Widget buildListView(List<PaymentMethod> listData,
+      PaymentMethodStore paymentMethods, BuildContext rootContext) {
     if (listData.isEmpty) {
       // TODO: loading indicator
       return const SizedBox();
@@ -141,7 +147,8 @@ class PaymentMethodsList extends StatelessWidget {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Delete payment method'),
-                            content: const Text('Are you sure you want to delete this payment method?'),
+                            content: const Text(
+                                'Are you sure you want to delete this payment method?'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(rootContext),
@@ -152,11 +159,14 @@ class PaymentMethodsList extends StatelessWidget {
                                   Navigator.pop(rootContext);
                                   showProgressDialog(rootContext);
 
-                                  await paymentMethodStore.detachPaymentMethod(card.id);
+                                  await paymentMethodStore
+                                      .detachPaymentMethod(card.id);
                                   hideProgressDialog(rootContext);
                                   await paymentMethods.refresh();
-                                  ScaffoldMessenger.of(rootContext).showSnackBar(const SnackBar(
-                                    content: Text('Payment method successfully deleted.'),
+                                  ScaffoldMessenger.of(rootContext)
+                                      .showSnackBar(const SnackBar(
+                                    content: Text(
+                                        'Payment method successfully deleted.'),
                                   ));
                                 },
                                 child: const Text('Delete'),

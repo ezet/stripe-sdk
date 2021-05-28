@@ -18,7 +18,7 @@ dependencies:
   simple_animations: ^3.0.3
   supercharged: ^2.0.0
   awesome_card: ^1.1.5
-  uni_links2: ^0.6.0+2
+  uni_links: ^0.5.1
   credit_card_validator: ^2.0.0-nullsafety.0
   collection: ^1.15.0
 

@@ -15,7 +15,11 @@ class CheckoutScreen extends StatefulWidget {
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
 
-  CheckoutScreen({Key? key, required this.title, required this.items, required this.createPaymentIntent})
+  CheckoutScreen(
+      {Key? key,
+      required this.title,
+      required this.items,
+      required this.createPaymentIntent})
       : super(key: key);
 
   @override
@@ -33,7 +37,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     super.initState();
-    _total = widget.items.fold(0, (int? value, CheckoutItem item) => value ?? 0 + item.price * item.count);
+    _total = widget.items.fold(
+        0,
+        (int? value, CheckoutItem item) =>
+            value ?? 0 + item.price * item.count);
     _createIntentResponse = widget.createPaymentIntent(_total);
   }
 
@@ -72,7 +79,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 final intentResponse = await _createIntentResponse!;
                 try {
                   final confirmationResponse = await Stripe.instance
-                      .confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
+                      .confirmPayment(intentResponse.clientSecret,
+                          paymentMethodId: _selectedPaymentMethod);
                   hideProgressDialog(context);
                   if (confirmationResponse['status'] == 'succeeded') {
                     await showGeneralDialog(
@@ -83,9 +91,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             child: Opacity(
                               opacity: a1.value,
                               child: AlertDialog(
-                                shape: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
+                                shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.0)),
                                 title: Text('Success'),
-                                content: Text('Payment successfully completed!'),
+                                content:
+                                    Text('Payment successfully completed!'),
                               ),
                             ),
                           );
@@ -118,7 +128,8 @@ class CheckoutItemList extends StatelessWidget {
   final List<CheckoutItem> items;
   final int total;
 
-  const CheckoutItemList({Key? key, required this.items, required this.total}) : super(key: key);
+  const CheckoutItemList({Key? key, required this.items, required this.total})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +162,12 @@ class CheckoutItem extends StatelessWidget {
   final String currency;
   final int count;
 
-  const CheckoutItem({Key? key, required this.name, required this.price, required this.currency, this.count = 1})
+  const CheckoutItem(
+      {Key? key,
+      required this.name,
+      required this.price,
+      required this.currency,
+      this.count = 1})
       : super(key: key);
 
   @override
