@@ -49,7 +49,6 @@ class _CardNumberFormFieldState extends State<CardNumberFormField> {
       controller: widget.textEditingController,
       inputFormatters: [maskFormatter],
       autofocus: true,
-      autofillHints: [AutofillHints.creditCardNumber],
       onSaved: widget.onSaved,
       validator: widget.validator,
       onChanged: widget.onChanged,
