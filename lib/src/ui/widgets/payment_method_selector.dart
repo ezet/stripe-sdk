@@ -16,7 +16,7 @@ class PaymentMethodSelector extends StatefulWidget {
     this.initialPaymentMethodId,
     this.selectorType = SelectorType.radioButton,
     Key? key,
-    this.selectFirstByDefault = true,
+    this.selectFirstByDefault = false,
   })  : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         super(key: key);
 
@@ -40,7 +40,6 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   @override
   Widget build(BuildContext context) {
     _selectedPaymentMethod ??= _getPaymentMethodById(widget.initialPaymentMethodId);
-    widget.onChanged(_selectedPaymentMethod?.id);
     return Column(
       children: [
         if (!_isLoading)
@@ -107,7 +106,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
               groupValue: _selectedPaymentMethod?.id,
               onChanged: (value) => setState(() {
                     _selectedPaymentMethod = _getPaymentMethodById(value);
-                  })))
+                    widget.onChanged(_selectedPaymentMethod?.id);
+              })))
           .toList(),
     );
   }

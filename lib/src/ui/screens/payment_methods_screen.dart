@@ -7,14 +7,14 @@ import '../progress_bar.dart';
 import '../stripe_ui.dart';
 import 'add_payment_method_screen.dart';
 
-class PaymentMethodsScreen extends StatefulWidget {
+class PaymentMethodsScreen extends StatelessWidget {
   final String title;
   final CreateSetupIntent createSetupIntent;
 
   /// The payment method store to use.
   final PaymentMethodStore _paymentMethodStore;
 
-  static Route route(
+  static Route<void> route(
       {required CreateSetupIntent createSetupIntent, String title = '', PaymentMethodStore? paymentMethodStore}) {
     return MaterialPageRoute(
         builder: (context) => PaymentMethodsScreen(
@@ -33,18 +33,12 @@ class PaymentMethodsScreen extends StatefulWidget {
         super(key: key);
 
   @override
-  _PaymentMethodsScreenState createState() => _PaymentMethodsScreenState();
-}
-
-class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
-  @override
   Widget build(BuildContext context) {
     final stripe = Stripe.instance;
-
     return Scaffold(
       appBar: AppBar(
         backwardsCompatibility: false,
-        title: Text(widget.title),
+        title: Text(title),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
@@ -52,36 +46,17 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
               final added = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          AddPaymentMethodScreen.withSetupIntent(widget.createSetupIntent, stripe: stripe)));
-              if (added == true) await widget._paymentMethodStore.refresh();
+                      builder: (context) => AddPaymentMethodScreen.withSetupIntent(createSetupIntent, stripe: stripe)));
+              if (added == true) await _paymentMethodStore.refresh();
             },
           )
         ],
       ),
       body: PaymentMethodsList(
-        paymentMethodStore: widget._paymentMethodStore,
+        paymentMethodStore: _paymentMethodStore,
       ),
     );
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   widget._paymentMethodStore.addListener(_paymentMethodStoreListener);
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   widget._paymentMethodStore.removeListener(_paymentMethodStoreListener);
-  //   super.dispose();
-  // }
-  //
-  // void _paymentMethodStoreListener() {
-  //   if (mounted) {
-  //     setState(() => paymentMethods = widget._paymentMethodStore.paymentMethods);
-  //   }
-  // }
 }
 
 class PaymentMethod {
@@ -97,24 +72,52 @@ class PaymentMethod {
   }
 }
 
-class PaymentMethodsList extends StatelessWidget {
+class PaymentMethodsList extends StatefulWidget {
   final PaymentMethodStore paymentMethodStore;
 
   const PaymentMethodsList({Key? key, required this.paymentMethodStore}) : super(key: key);
 
   @override
+  _PaymentMethodsListState createState() => _PaymentMethodsListState();
+}
+
+class _PaymentMethodsListState extends State<PaymentMethodsList> {
+  List<PaymentMethod> paymentMethods = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.paymentMethodStore.addListener(_paymentMethodStoreListener);
+  }
+
+  @override
+  void dispose() {
+    widget.paymentMethodStore.removeListener(_paymentMethodStoreListener);
+    super.dispose();
+  }
+
+  void _paymentMethodStoreListener() {
+    if (mounted) {
+      setState(() => paymentMethods = widget.paymentMethodStore.paymentMethods);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<PaymentMethod> listData = paymentMethodStore.paymentMethods;
+    final List<PaymentMethod> listData = widget.paymentMethodStore.paymentMethods;
     return RefreshIndicator(
-      onRefresh: () => paymentMethodStore.refresh(),
-      child: buildListView(listData, paymentMethodStore, context),
+      onRefresh: () => widget.paymentMethodStore.refresh(),
+      child: buildListView(listData, widget.paymentMethodStore, context),
     );
   }
 
   Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
     if (listData.isEmpty) {
-      // TODO: loading indicator
-      return const SizedBox();
+      if (paymentMethods.isLoading) {
+        return const Center(child: CircularProgressIndicator());
+      } else {
+        return Container();
+      }
     } else {
       return ListView.builder(
           itemCount: listData.length,
@@ -152,7 +155,7 @@ class PaymentMethodsList extends StatelessWidget {
                                   Navigator.pop(rootContext);
                                   showProgressDialog(rootContext);
 
-                                  await paymentMethodStore.detachPaymentMethod(card.id);
+                                  await widget.paymentMethodStore.detachPaymentMethod(card.id);
                                   hideProgressDialog(rootContext);
                                   await paymentMethods.refresh();
                                   ScaffoldMessenger.of(rootContext).showSnackBar(const SnackBar(

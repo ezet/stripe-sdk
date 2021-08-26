@@ -27,18 +27,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final PaymentMethodStore paymentMethodStore = PaymentMethodStore.instance;
 
   String? _selectedPaymentMethod;
-  Future<IntentResponse>? _createIntentResponse;
-  late int _total;
-
-  @override
-  void initState() {
-    super.initState();
-    _total = widget.items.fold(0, (int? value, CheckoutItem item) => value ?? 0 + item.price * item.count);
-    _createIntentResponse = widget.createPaymentIntent(_total);
-  }
 
   @override
   Widget build(BuildContext context) {
+    final _total = widget.items.fold(0, (int? value, CheckoutItem item) => value! + item.price * item.count);
+    final _createIntentResponse = widget.createPaymentIntent(_total);
     return Scaffold(
       appBar: AppBar(
         backwardsCompatibility: false,
@@ -68,7 +61,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 showProgressDialog(context);
-                final intentResponse = await _createIntentResponse!;
+                final intentResponse = await _createIntentResponse;
                 try {
                   final confirmationResponse = await Stripe.instance
                       .confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
@@ -100,7 +93,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     return;
                   }
                 } catch (e) {
+                  debugPrint(e.toString());
                   hideProgressDialog(context);
+                  rethrow;
                 }
               },
               child: Text('Pay ${(_total / 100).toStringAsFixed(2)}'),

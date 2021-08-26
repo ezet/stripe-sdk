@@ -8,8 +8,6 @@ import '../screens/payment_methods_screen.dart';
 /// A managed repository for payment methods.
 /// This is the preferred way to work with payment methods when using Flutter.
 /// The store will only refresh itself if there are active listeners.
-///
-///
 class PaymentMethodStore extends ChangeNotifier {
   final List<PaymentMethod> paymentMethods = [];
   bool isLoading = false;
