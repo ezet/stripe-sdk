@@ -14,8 +14,16 @@ class CheckoutScreen extends StatefulWidget {
   final List<CheckoutItem> items;
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
+  final void Function(BuildContext context)? onPaymentSuccess;
+  final void Function(BuildContext context)? onPaymentError;
 
-  const CheckoutScreen({Key? key, required this.title, required this.items, required this.createPaymentIntent})
+  const CheckoutScreen(
+      {Key? key,
+      required this.title,
+      required this.items,
+      required this.createPaymentIntent,
+      this.onPaymentSuccess,
+      this.onPaymentError})
       : super(key: key);
 
   @override
@@ -56,8 +64,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     })),
           ),
           Center(
-//            child: LoadStuffButton(),
-
             child: ElevatedButton(
               onPressed: () async {
                 showProgressDialog(context);
@@ -67,29 +73,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       .confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
                   hideProgressDialog(context);
                   if (confirmationResponse['status'] == 'succeeded') {
-                    await showGeneralDialog(
-                        barrierColor: Colors.black.withOpacity(0.5),
-                        transitionBuilder: (context, a1, a2, widget) {
-                          return Transform.scale(
-                            scale: a1.value,
-                            child: Opacity(
-                              opacity: a1.value,
-                              child: AlertDialog(
-                                shape: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
-                                title: const Text('Success'),
-                                content: const Text('Payment successfully completed!'),
+                    if (widget.onPaymentSuccess != null) {
+                      widget.onPaymentSuccess!(context);
+                    } else {
+                      showDialog<void>(
+                        context: context,
+                        barrierDismissible: true,
+                        // false = user must tap button, true = tap outside dialog
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: const Text('Success'),
+                            content: const Text('Payment successfully completed!'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('ok'),
+                                onPressed: () {
+                                  Navigator.of(dialogContext).pop(true); // Dismiss alert dialog
+                                },
                               ),
-                            ),
+                            ],
                           );
                         },
-                        transitionDuration: const Duration(milliseconds: 200),
-                        barrierDismissible: true,
-                        barrierLabel: '',
-                        context: context,
-                        // ignore: missing_return
-                        pageBuilder: (context, animation1, animation2) {
-                          return const SizedBox();
-                        });
+                      );
+                    }
                     return;
                   }
                 } catch (e) {
