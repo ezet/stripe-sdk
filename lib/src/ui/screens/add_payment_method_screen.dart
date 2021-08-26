@@ -63,21 +63,23 @@ class AddPaymentMethodScreen extends StatefulWidget {
 
   /// Add a payment method using a Stripe Setup Intent
   AddPaymentMethodScreen.withSetupIntent(this._createSetupIntent,
-      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
+      {Key? key, PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
       : _useSetupIntent = true,
         _form = form ?? CardForm(),
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
-        _stripe = stripe ?? Stripe.instance;
+        _stripe = stripe ?? Stripe.instance,
+        super(key: key);
 
   /// Add a payment method without using a Stripe Setup Intent
   @Deprecated(
       'Setting up payment methods without a setup intent is not recommended by Stripe. Consider using [withSetupIntent]')
   AddPaymentMethodScreen.withoutSetupIntent(
-      {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
+      {Key? key, PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
       : _useSetupIntent = false,
         _form = form ?? CardForm(),
         _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
-        _stripe = stripe ?? Stripe.instance;
+        _stripe = stripe ?? Stripe.instance,
+        super(key: key);
 
   @override
   _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState();

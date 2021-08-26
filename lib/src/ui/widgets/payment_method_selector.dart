@@ -66,17 +66,17 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                     });
                   }
                 },
-                child: Text("+ Add card")),
+                child: const Text('+ Add card')),
             OutlinedButton(
                 onPressed: () async {
-                  final id = await Navigator.push(
+                  final _ = await Navigator.push(
                       context,
                       PaymentMethodsScreen.route(
                           createSetupIntent: widget.createSetupIntent!,
                           title: '',
                           paymentMethodStore: widget._paymentMethodStore));
                 },
-                child: Text("Manage cards")),
+                child: const Text('Manage cards')),
           ],
         )
       ],

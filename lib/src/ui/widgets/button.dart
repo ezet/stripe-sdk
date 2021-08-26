@@ -8,6 +8,8 @@ import 'package:supercharged/supercharged.dart';
 class LoadStuffButton extends StatefulWidget {
   @override
   _LoadStuffButtonState createState() => _LoadStuffButtonState();
+
+  const LoadStuffButton(Key? key) : super(key: key);
 }
 
 enum _AniProps { width, backgroundColor, childIndex, opacity }
@@ -21,8 +23,7 @@ class _LoadStuffButtonState extends State<LoadStuffButton> {
   Widget build(BuildContext context) {
     final tween1 = MultiTween<_AniProps>()
       ..add(_AniProps.width, 200.0.tweenTo(50.0), 400.milliseconds)
-      ..add(_AniProps.backgroundColor, Colors.green.tweenTo(Colors.white),
-          400.milliseconds)
+      ..add(_AniProps.backgroundColor, Colors.green.tweenTo(Colors.white), 400.milliseconds)
       ..add(_AniProps.childIndex, ConstantTween(0), 200.milliseconds)
       ..add(_AniProps.childIndex, ConstantTween(1), 200.milliseconds)
       ..add(_AniProps.opacity, 1.0.tweenTo(0.0), 200.milliseconds)
@@ -30,8 +31,7 @@ class _LoadStuffButtonState extends State<LoadStuffButton> {
 
     final tween2 = MultiTween<_AniProps>()
       ..add(_AniProps.width, 50.0.tweenTo(200.0), 400.milliseconds)
-      ..add(_AniProps.backgroundColor, ConstantTween(Colors.white),
-          400.milliseconds)
+      ..add(_AniProps.backgroundColor, ConstantTween(Colors.white), 400.milliseconds)
       ..add(_AniProps.childIndex, ConstantTween(2), 400.milliseconds);
 
     final playSecondAnimation = _dataAvailable && _firstAnimationFinished;
@@ -39,17 +39,13 @@ class _LoadStuffButtonState extends State<LoadStuffButton> {
     return GestureDetector(
       onTap: _clickLoadStuff,
       child: CustomAnimation<MultiTweenValues<_AniProps>>(
-        control: !_startedLoading
-            ? CustomAnimationControl.STOP
-            : CustomAnimationControl.PLAY,
+        control: !_startedLoading ? CustomAnimationControl.stop : CustomAnimationControl.play,
         tween: tween1,
         duration: tween1.duration,
         animationStatusListener: _listenToAnimationFinished,
         builder: (context, child, ani1) {
           return CustomAnimation<MultiTweenValues<_AniProps>>(
-            control: !playSecondAnimation
-                ? CustomAnimationControl.STOP
-                : CustomAnimationControl.PLAY,
+            control: !playSecondAnimation ? CustomAnimationControl.stop : CustomAnimationControl.play,
             tween: tween2,
             duration: tween2.duration,
             builder: (context, child, ani2) {
@@ -74,8 +70,7 @@ class _LoadStuffButtonState extends State<LoadStuffButton> {
     setState(() {
       _startedLoading = true;
     });
-    Future.delayed(Duration(milliseconds: 150 + Random().nextInt(2500)))
-        .then((_) {
+    Future.delayed(Duration(milliseconds: 150 + Random().nextInt(2500))).then((_) {
       setState(() {
         _dataAvailable = true;
       });
@@ -104,37 +99,35 @@ class _LoadStuffButtonState extends State<LoadStuffButton> {
     showSuccess
   ];
 
-  static final AnimatedWidgetBuilder<MultiTweenValues<_AniProps>>
-      loadButtonLabel = (context, child, ani) => Center(
+  // ignore_for_file: prefer_function_declarations_over_variables
+  static final AnimatedWidgetBuilder<MultiTweenValues<_AniProps>> loadButtonLabel = (context, child, ani) => Center(
+        child: Opacity(
+          opacity: ani.get(_AniProps.opacity),
+          child: const Text(
+            'Load Stuff',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+      );
+
+  static final AnimatedWidgetBuilder<MultiTweenValues<_AniProps>> progressIndicator = (context, child, ani) => Center(
+        child: LoopAnimation<double>(
+          duration: 600.milliseconds,
+          tween: 0.0.tweenTo(pi * 2),
+          builder: (context, child, rotation) => Transform.rotate(
+            angle: rotation,
             child: Opacity(
               opacity: ani.get(_AniProps.opacity),
-              child: Text(
-                'Load Stuff',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+              child: const Icon(
+                Icons.sync,
+                color: Colors.green,
               ),
             ),
-          );
+          ),
+        ),
+      );
 
-  static final AnimatedWidgetBuilder<MultiTweenValues<_AniProps>>
-      progressIndicator = (context, child, ani) => Center(
-            child: LoopAnimation<double>(
-              duration: 600.milliseconds,
-              tween: 0.0.tweenTo(pi * 2),
-              builder: (context, child, rotation) => Transform.rotate(
-                angle: rotation,
-                child: Opacity(
-                  opacity: ani.get(_AniProps.opacity),
-                  child: Icon(
-                    Icons.sync,
-                    color: Colors.green,
-                  ),
-                ),
-              ),
-            ),
-          );
-
-  static final AnimatedWidgetBuilder<MultiTweenValues<_AniProps>> showSuccess =
-      (context, child, ani) {
+  static final AnimatedWidgetBuilder<MultiTweenValues<_AniProps>> showSuccess = (context, child, ani) {
     final tween = MultiTween<_AniProps>()
       ..add(_AniProps.width, 0.0.tweenTo(100.0), 400.milliseconds)
       ..add(_AniProps.opacity, ConstantTween(0.0), 300.milliseconds)
@@ -157,8 +150,7 @@ class _LoadStuffButtonState extends State<LoadStuffButton> {
                   opacity: value.get(_AniProps.opacity),
                   child: Text(
                     'Success',
-                    style:
-                        TextStyle(color: Colors.green.shade800, fontSize: 16),
+                    style: TextStyle(color: Colors.green.shade800, fontSize: 16),
                   )),
             ),
           )
@@ -171,12 +163,7 @@ class _LoadStuffButtonState extends State<LoadStuffButton> {
     return BoxDecoration(
         border: Border.all(color: Colors.green, width: 2),
         color: backgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withAlpha(40),
-              blurRadius: 10,
-              offset: Offset(0, 5))
-        ]);
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+        boxShadow: [BoxShadow(color: Colors.black.withAlpha(40), blurRadius: 10, offset: const Offset(0, 5))]);
   }
 }

@@ -6,28 +6,28 @@ import 'package:http/http.dart' as http;
 
 import 'stripe_error.dart';
 
-const String DEFAULT_API_VERSION = '2020-03-02';
+const String defaultApiVersion = '2020-03-02';
 
 enum RequestMethod { get, post, put, delete, option }
 
 class StripeApiHandler {
-  static const String LIVE_API_BASE = 'https://api.stripe.com';
-  static const String LIVE_LOGGING_BASE = 'https://q.stripe.com';
-  static const String LOGGING_ENDPOINT = 'https://m.stripe.com/4';
-  static const String LIVE_API_PATH = LIVE_API_BASE + '/v1';
+  static const String liveApiBase = 'https://api.stripe.com';
+  static const String liveLogginBase = 'https://q.stripe.com';
+  static const String liveLoggingEndpoint = 'https://m.stripe.com/4';
+  static const String liveApiPath = liveApiBase + '/v1';
 
-  static const String CHARSET = 'UTF-8';
-  static const String CUSTOMERS = 'customers';
-  static const String TOKENS = 'tokens';
-  static const String SOURCES = 'sources';
+  static const String charset = 'UTF-8';
+  static const String customers = 'customers';
+  static const String tokens = 'tokens';
+  static const String sources = 'sources';
 
-  static const String HEADER_KEY_REQUEST_ID = 'Request-Id';
-  static const String FIELD_ERROR = 'error';
-  static const String FIELD_SOURCE = 'source';
+  static const String headerKeyRequestId = 'Request-Id';
+  static const String fieldError = 'error';
+  static const String fieldSource = 'source';
 
-  String apiVersion = DEFAULT_API_VERSION;
+  String apiVersion = defaultApiVersion;
 
-  static const String MALFORMED_RESPONSE_MESSAGE = 'An improperly formatted error response was found.';
+  static const String malformedResponseMessage = 'An improperly formatted error response was found.';
 
   final http.Client _client = http.Client();
 
@@ -38,7 +38,7 @@ class StripeApiHandler {
   Future<Map<String, dynamic>> request(RequestMethod method, String path, String key, String? apiVersion,
       {final Map<String, dynamic>? params}) {
     final options = RequestOptions(key: key, apiVersion: apiVersion, stripeAccount: stripeAccount);
-    return _getStripeResponse(method, LIVE_API_PATH + path, options, params: params);
+    return _getStripeResponse(method, liveApiPath + path, options, params: params);
   }
 
   Future<Map<String, dynamic>> _getStripeResponse(RequestMethod method, final String url, final RequestOptions options,
@@ -71,19 +71,19 @@ class StripeApiHandler {
         throw Exception('Request Method: $method not implemented');
     }
 
-    final requestId = response.headers[HEADER_KEY_REQUEST_ID];
+    final requestId = response.headers[headerKeyRequestId];
 
     final statusCode = response.statusCode;
     late Map<String, dynamic> resp;
     try {
       resp = json.decode(response.body);
     } catch (error) {
-      final stripeError = StripeApiError(requestId, {StripeApiError.FIELD_MESSAGE: MALFORMED_RESPONSE_MESSAGE});
+      final stripeError = StripeApiError(requestId, {StripeApiError.fieldMessage: malformedResponseMessage});
       throw StripeApiException(stripeError);
     }
 
     if (statusCode < 200 || statusCode >= 300) {
-      final Map<String, dynamic> errBody = resp[FIELD_ERROR];
+      final Map<String, dynamic> errBody = resp[fieldError];
       final stripeError = StripeApiError(requestId, errBody);
       throw StripeApiException(stripeError);
     } else {
@@ -96,7 +96,7 @@ class StripeApiHandler {
   ///
   static Map<String, String> _headers({RequestOptions? options}) {
     final Map<String, String> headers = {};
-    headers['Accept-Charset'] = CHARSET;
+    headers['Accept-Charset'] = charset;
     headers['Accept'] = 'application/json';
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
     headers['User-Agent'] = 'StripeSDK/v2';
@@ -144,7 +144,7 @@ class StripeApiHandler {
       } else if (sub is Map) {
         sub.forEach((k, v) {
           if (path == '') {
-            urlEncode(v, '${Uri.encodeQueryComponent(k)}');
+            urlEncode(v, Uri.encodeQueryComponent(k));
           } else {
             urlEncode(v, '$path%5B${Uri.encodeQueryComponent(k)}%5D');
           }
@@ -164,8 +164,8 @@ class StripeApiHandler {
 }
 
 class RequestOptions {
-  static const String TYPE_QUERY = 'source';
-  static const String TYPE_JSON = 'json_data';
+  static const String typeQuery = 'source';
+  static const String typeJson = 'json_data';
 
   final String? apiVersion; // TODO might have no usage
   final String? guid;

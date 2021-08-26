@@ -160,7 +160,7 @@ class _CardFormState extends State<CardForm> {
   }
 
   Widget _getPostalCodeField() {
-    if (widget.displayPostalCode) return Padding(padding: EdgeInsets.zero);
+    if (widget.displayPostalCode) return const Padding(padding: EdgeInsets.zero);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -171,20 +171,20 @@ class _CardFormState extends State<CardForm> {
         initialValue: _validationModel.postalCode ?? widget.card.postalCode,
         onChanged: (text) => setState(() => _validationModel.postalCode = text),
         onSaved: (text) => widget.card.postalCode = text,
-        autofillHints: [AutofillHints.postalCode],
+        autofillHints: const [AutofillHints.postalCode],
         validator: (text) => _validationModel.isPostalCodeValid()
             ? null
             : widget.postalCodeErrorText ?? 'Invalid postal code',
-        style: widget.postalCodeTextStyle ?? TextStyle(color: Colors.black),
+        style: widget.postalCodeTextStyle ?? const TextStyle(color: Colors.black),
         decoration: widget.postalCodeDecoration ??
-            InputDecoration(
+            const InputDecoration(
                 border: OutlineInputBorder(), labelText: 'Postal code'),
       ),
     );
   }
 
   Widget _getCreditCardView(String cardExpiry) {
-    if (!widget.displayAnimatedCard) return Padding(padding: EdgeInsets.zero);
+    if (!widget.displayAnimatedCard) return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),

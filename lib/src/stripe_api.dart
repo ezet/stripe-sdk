@@ -22,7 +22,7 @@ class StripeApi {
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
-  StripeApi(this.publishableKey, {this.apiVersion = DEFAULT_API_VERSION, String? stripeAccount})
+  StripeApi(this.publishableKey, {this.apiVersion = defaultApiVersion, String? stripeAccount})
       : _apiHandler = StripeApiHandler(stripeAccount: stripeAccount) {
     _validateKey(publishableKey);
     _apiHandler.apiVersion = apiVersion;
@@ -36,7 +36,7 @@ class StripeApi {
   ///
   /// [stripeAccount] is the id of a stripe customer and stats with "cus_".
   /// This is a optional parameter.
-  static void init(String publishableKey, {String apiVersion = DEFAULT_API_VERSION, String? stripeAccount}) {
+  static void init(String publishableKey, {String apiVersion = defaultApiVersion, String? stripeAccount}) {
     _instance ??= StripeApi(publishableKey, apiVersion: apiVersion, stripeAccount: stripeAccount);
   }
 
@@ -52,14 +52,14 @@ class StripeApi {
   /// Create a stripe Token
   /// https://stripe.com/docs/api/tokens
   Future<Map<String, dynamic>> createToken(Map<String, dynamic> data) async {
-    final path = '/tokens';
+    const path = '/tokens';
     return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 
   /// Create a PaymentMethod.
   /// https://stripe.com/docs/api/payment_methods/create
   Future<Map<String, dynamic>> createPaymentMethod(Map<String, dynamic> data) async {
-    final path = '/payment_methods';
+    const path = '/payment_methods';
     return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 
@@ -74,7 +74,7 @@ class StripeApi {
   /// Create a new Source object.
   /// https://stripe.com/docs/api/sources/create
   Future<Map<String, dynamic>> createSource(Map<String, dynamic> data) async {
-    final path = '/sources';
+    const path = '/sources';
     return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
   }
 

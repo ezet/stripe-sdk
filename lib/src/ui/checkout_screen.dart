@@ -15,7 +15,7 @@ class CheckoutScreen extends StatefulWidget {
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
 
-  CheckoutScreen({Key? key, required this.title, required this.items, required this.createPaymentIntent})
+  const CheckoutScreen({Key? key, required this.title, required this.items, required this.createPaymentIntent})
       : super(key: key);
 
   @override
@@ -49,10 +49,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
-              // ignore: deprecated_member_use_from_same_package
-              child: CheckoutItemList(items: widget.items, total: _total)),
-          SizedBox(
+          // ignore: deprecated_member_use_from_same_package
+          CheckoutItemList(items: widget.items, total: _total),
+          const SizedBox(
             height: 40,
           ),
           Center(
@@ -84,19 +83,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               opacity: a1.value,
                               child: AlertDialog(
                                 shape: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
-                                title: Text('Success'),
-                                content: Text('Payment successfully completed!'),
+                                title: const Text('Success'),
+                                content: const Text('Payment successfully completed!'),
                               ),
                             ),
                           );
                         },
-                        transitionDuration: Duration(milliseconds: 200),
+                        transitionDuration: const Duration(milliseconds: 200),
                         barrierDismissible: true,
                         barrierLabel: '',
                         context: context,
                         // ignore: missing_return
                         pageBuilder: (context, animation1, animation2) {
-                          return SizedBox();
+                          return const SizedBox();
                         });
                     return;
                   }
@@ -139,7 +138,7 @@ class CheckoutSumItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('Total'),
+      title: const Text('Total'),
       trailing: Text((total / 100).toStringAsFixed(2)),
     );
   }

@@ -3,7 +3,7 @@
 
 
 
-const String HEX_ARRAY = '0123456789ABCDEF';
+const String hexArray = '0123456789ABCDEF';
 
 ///Swap {@code null} for blank text values.
 ///

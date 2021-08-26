@@ -54,12 +54,12 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
 
     return TextFormField(
       validator: widget.validator,
-      initialValue: initialMaskFormatter.formatEditUpdate(TextEditingValue(), TextEditingValue(text: initial)).text,
-      autofillHints: [AutofillHints.creditCardExpirationDate],
+      initialValue: initialMaskFormatter.formatEditUpdate(const TextEditingValue(), TextEditingValue(text: initial)).text,
+      autofillHints: const [AutofillHints.creditCardExpirationDate],
       onChanged: (text) {
         final arr = text.split('/');
         final month = int.tryParse(arr[0]);
-        var year;
+        int? year;
         if (arr.length == 2) {
           year = int.tryParse(arr[1]);
         }

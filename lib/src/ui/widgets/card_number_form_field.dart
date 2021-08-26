@@ -5,7 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 /// Form field to edit a credit card number, with validation.
 class CardNumberFormField extends StatefulWidget {
-  CardNumberFormField(
+  const CardNumberFormField(
       {Key? key,
       this.initialValue,
       required this.onSaved,
@@ -49,7 +49,7 @@ class _CardNumberFormFieldState extends State<CardNumberFormField> {
       controller: widget.textEditingController,
       inputFormatters: [maskFormatter],
       autofocus: true,
-      autofillHints: [AutofillHints.creditCardNumber],
+      autofillHints: const [AutofillHints.creditCardNumber],
       onSaved: widget.onSaved,
       validator: widget.validator,
       onChanged: widget.onChanged,

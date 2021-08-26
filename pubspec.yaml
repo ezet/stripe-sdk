@@ -4,35 +4,35 @@ version: 5.0.0-nullsafety.1
 homepage: https://github.com/ezet/stripe_sdk
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.13.0 <3.0.0'
   flutter: ">=1.17.0 <2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.13.1
-  url_launcher: ^6.0.2
-  mask_text_input_formatter: ^2.0.0-nullsafety.2
-  flutter_slidable: ^0.6.0-nullsafety.0
-  simple_animations: ^3.0.3
+  http: ^0.13.3
+  url_launcher: ^6.0.9
+  mask_text_input_formatter: ^2.0.0
+  flutter_slidable: ^0.6.0
+  simple_animations: ^3.1.1
   supercharged: ^2.0.0
   awesome_card: ^1.1.5
   uni_links2: ^0.6.0+2
-  credit_card_validator: ^2.0.0-nullsafety.0
+  credit_card_validator: ^2.0.0
   collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic: ^1.11.0
-  lint: ^1.5.3
+  flutter_lints: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
+  uses-material-design: true
 
   # To add assets to your package, add an assets section, like this:
   # assets:

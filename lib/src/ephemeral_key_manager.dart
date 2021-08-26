@@ -13,16 +13,16 @@ typedef EphemeralKeyProvider = Future<String> Function(String apiVersion);
 
 /// Represents a Stripe Ephemeral Key
 class EphemeralKey {
-  static const String FIELD_CREATED = 'created';
-  static const String FIELD_EXPIRES = 'expires';
-  static const String FIELD_SECRET = 'secret';
-  static const String FIELD_LIVEMODE = 'livemode';
-  static const String FIELD_OBJECT = 'object';
-  static const String FIELD_ID = 'id';
-  static const String FIELD_ASSOCIATED_OBJECTS = 'associated_objects';
-  static const String FIELD_TYPE = 'type';
+  static const String fieldCreated = 'created';
+  static const String fieldExpires = 'expires';
+  static const String fieldSecret = 'secret';
+  static const String fieldLiveMode = 'livemode';
+  static const String fieldObject = 'object';
+  static const String fieldId = 'id';
+  static const String fieldAssociatedObjects = 'associated_objects';
+  static const String fieldType = 'type';
 
-  static const String NULL = 'null';
+  static const String fieldNull = 'null';
 
   late String _id;
   late int _created;
@@ -37,14 +37,14 @@ class EphemeralKey {
 
   EphemeralKey.fromJson(Map<String, dynamic> json) {
     // TODO might throw an error if ephemeralKey doesn't provide all fields.
-    _id = optString(json, FIELD_ID)!;
-    _created = optInteger(json, FIELD_CREATED)!;
-    _expires = optInteger(json, FIELD_EXPIRES)!;
-    _liveMode = optBoolean(json, FIELD_LIVEMODE)!;
-    _customerId = json[FIELD_ASSOCIATED_OBJECTS][0][FIELD_ID];
-    _type = json[FIELD_ASSOCIATED_OBJECTS][0][FIELD_TYPE];
-    _object = optString(json, FIELD_OBJECT)!;
-    _secret = optString(json, FIELD_SECRET)!;
+    _id = optString(json, fieldId)!;
+    _created = optInteger(json, fieldCreated)!;
+    _expires = optInteger(json, fieldExpires)!;
+    _liveMode = optBoolean(json, fieldLiveMode)!;
+    _customerId = json[fieldAssociatedObjects][0][fieldId];
+    _type = json[fieldAssociatedObjects][0][fieldType];
+    _object = optString(json, fieldObject)!;
+    _secret = optString(json, fieldSecret)!;
     _createdAt = DateTime.fromMillisecondsSinceEpoch(_created * 1000);
     _expiresAt = DateTime.fromMillisecondsSinceEpoch(_expires * 1000);
   }
@@ -83,7 +83,7 @@ class EphemeralKeyManager {
     if (_shouldRefreshKey()) {
       String key;
       try {
-        key = await ephemeralKeyProvider(DEFAULT_API_VERSION);
+        key = await ephemeralKeyProvider(defaultApiVersion);
       } catch (error) {
         log(error.toString());
         rethrow;
@@ -95,7 +95,7 @@ class EphemeralKeyManager {
       } catch (error) {
         log(error.toString());
         final e = StripeApiError(null, {
-          StripeApiError.FIELD_MESSAGE:
+          StripeApiError.fieldMessage:
               'Failed to parse Ephemeral Key, Please return the response as it is as you received from stripe server',
         });
         throw StripeApiException(e);

@@ -5,7 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 /// Form field to edit a credit card CVC code, with validation
 class CardCvcFormField extends StatefulWidget {
-  CardCvcFormField(
+  const CardCvcFormField(
       {Key? key,
       this.initialValue,
       required this.onSaved,
@@ -37,7 +37,7 @@ class _CardCvcFormFieldState extends State<CardCvcFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       initialValue: widget.initialValue,
-      autofillHints: [AutofillHints.creditCardSecurityCode],
+      autofillHints: const [AutofillHints.creditCardSecurityCode],
       inputFormatters: [maskFormatter],
       onChanged: widget.onChanged,
       validator: widget.validator,
