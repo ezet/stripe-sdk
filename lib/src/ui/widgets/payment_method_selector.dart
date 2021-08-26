@@ -52,20 +52,21 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            OutlinedButton(
-                onPressed: () async {
-                  final id = await Navigator.push(
-                      context,
-                      AddPaymentMethodScreen.routeWithSetupIntent(widget.createSetupIntent!,
-                          paymentMethodStore: widget._paymentMethodStore));
-                  if (id != null) {
-                    await widget._paymentMethodStore.refresh();
-                    setState(() {
-                      _selectedPaymentMethod = _getPaymentMethodById(id);
-                    });
-                  }
-                },
-                child: const Text('+ Add card')),
+            if (widget.createSetupIntent != null)
+              OutlinedButton(
+                  onPressed: () async {
+                    final id = await Navigator.push(
+                        context,
+                        AddPaymentMethodScreen.routeWithSetupIntent(widget.createSetupIntent!,
+                            paymentMethodStore: widget._paymentMethodStore));
+                    if (id != null) {
+                      await widget._paymentMethodStore.refresh();
+                      setState(() {
+                        _selectedPaymentMethod = _getPaymentMethodById(id);
+                      });
+                    }
+                  },
+                  child: const Text('+ Add card')),
             OutlinedButton(
                 onPressed: () async {
                   final _ = await Navigator.push(
@@ -107,7 +108,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
               onChanged: (value) => setState(() {
                     _selectedPaymentMethod = _getPaymentMethodById(value);
                     widget.onChanged(_selectedPaymentMethod?.id);
-              })))
+                  })))
           .toList(),
     );
   }

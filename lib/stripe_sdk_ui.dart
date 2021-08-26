@@ -12,3 +12,4 @@ export 'src/ui/widgets/card_expiry_form_field.dart';
 export 'src/ui/widgets/card_form.dart';
 export 'src/ui/widgets/card_number_form_field.dart';
 export 'src/ui/widgets/payment_method_selector.dart';
+export 'src/ui/stripe_ui.dart';
