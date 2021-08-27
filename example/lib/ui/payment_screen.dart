@@ -73,6 +73,7 @@ class PaymentScreen extends StatelessWidget {
     }
     final result = await Stripe.instance.confirmPayment(
       response.clientSecret,
+      context,
       paymentMethodId: 'pm_card_threeDSecure2Required',
     );
     if (result['status'] == 'succeeded') {
@@ -96,7 +97,7 @@ class PaymentScreen extends StatelessWidget {
       debugPrint('Success before authentication.');
       return;
     }
-    final result = await Stripe.instance.authenticatePayment(response['clientSecret']);
+    final result = await Stripe.instance.authenticatePayment(response['clientSecret'], context);
     if (result['status'] == 'requires_confirmation') {
       // TODO: make call to server to confirm
       debugPrint('Success after authentication.');

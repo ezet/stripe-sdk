@@ -47,7 +47,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       final intentResponse = await _createIntentResponse;
       try {
         final confirmationResponse =
-            await Stripe.instance.confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
+            await Stripe.instance.confirmPayment(intentResponse.clientSecret, context, paymentMethodId: _selectedPaymentMethod);
         hideProgressDialog(context);
         if (confirmationResponse['status'] == 'succeeded') {
           if (widget.onPaymentSuccess != null) {

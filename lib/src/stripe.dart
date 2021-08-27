@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stripe_sdk/src/ui/stripe_web_view.dart';
+import "package:universal_html/html.dart";
+import 'package:url_launcher/url_launcher.dart';
+
 
 import 'stripe_api.dart';
 
@@ -117,62 +120,69 @@ class Stripe {
   /// Confirm and authenticate a payment.
   /// Returns the PaymentIntent.
   /// https://stripe.com/docs/payments/payment-intents/android
-  Future<Map<String, dynamic>> confirmPayment(String paymentIntentClientSecret, {String? paymentMethodId}) async {
+  Future<Map<String, dynamic>> confirmPayment(String paymentIntentClientSecret, BuildContext context,
+      {String? paymentMethodId}) async {
     final data = {'return_url': getReturnUrlForSca()};
     if (paymentMethodId != null) data['payment_method'] = paymentMethodId;
     final Map<String, dynamic> paymentIntent = await api.confirmPaymentIntent(
       paymentIntentClientSecret,
       data: data,
     );
-    if (paymentIntent['status'] == 'requires_action') {
-      await authenticatePaymentWithNextAction(paymentIntent['next_action']);
-      return api.retrievePaymentIntent(paymentIntentClientSecret);
-    } else {
-      return paymentIntent;
-    }
+    return _handlePaymentIntent(paymentIntent, context);
   }
 
   /// Authenticate a payment.
   /// Returns the PaymentIntent.
   /// https://stripe.com/docs/payments/payment-intents/android-manual
-  Future<Map<String, dynamic>> authenticatePayment(String paymentIntentClientSecret) async {
+  Future<Map<String, dynamic>> authenticatePayment(String paymentIntentClientSecret, BuildContext context) async {
     final Map<String, dynamic> paymentIntent = await api.retrievePaymentIntent(paymentIntentClientSecret);
-    if (paymentIntent['status'] != 'requires_action') {
-      return paymentIntent;
-    }
-    final nextAction = paymentIntent['next_action'];
-    return authenticatePaymentWithNextAction(nextAction);
+    return _handlePaymentIntent(paymentIntent, context);
   }
 
   /// Authenticate a payment with [paymentIntent].
   /// This is similar to [authenticatePayment] but is slightly more efficient,
   /// as it avoids the request to the Stripe API to retrieve the action.
   /// To use this, return the complete [paymentIntent] from your server.
-  Future<Map<String, dynamic>> authenticatePaymentWithNextAction(Map<String, dynamic> paymentIntent,
-      [BuildContext? context]) async {
-    await _authenticateIntent(paymentIntent['next_action'], context);
-    final paymentIntentClientSecret = paymentIntent['client_Secret'];
+  Future<Map<String, dynamic>> _handlePaymentIntent(Map<String, dynamic> paymentIntent, BuildContext context) async {
+    await _authenticateIntent(paymentIntent, context);
+    final paymentIntentClientSecret = paymentIntent['client_secret'];
     return api.retrievePaymentIntent(paymentIntentClientSecret);
   }
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe SetupIntent when the user completes or cancels authentication.
   Future<Map<String, dynamic>> _handleSetupIntent(Map<String, dynamic> intent, BuildContext context) async {
-    if (intent['status'] == 'requires_action') {
-      await _authenticateIntent(intent['next_action'], context);
-      final clientSecret = intent['client_secret'];
-      return api.retrieveSetupIntent(clientSecret);
-    } else {
-      return intent;
-    }
+    await _authenticateIntent(intent, context);
+    final clientSecret = intent['client_secret'];
+    return api.retrieveSetupIntent(clientSecret);
   }
 
-  Future<void> _authenticateIntent(Map action, BuildContext? context) async {
+  Future<bool?> _authenticateIntent(Map<String, dynamic> intent, BuildContext context) async {
+    if (intent['status'] != 'requires_action') return false;
+    final action = intent['next_action'];
     final String url = action['redirect_to_url']['url'];
     final returnUri = Uri.parse(action['redirect_to_url']['return_url']);
 
-    final result = await Navigator.push<bool?>(
-        context!,
+    if (kIsWeb) {
+      return _authenticateWithBrowser(context, url, returnUri);
+    } else {
+      return _authenticateWithWebView(context, url, returnUri);
+    }
+  }
+
+  Future<bool?> _authenticateWithBrowser(BuildContext context, String url, Uri returnUri) async {
+    // await launch(url, webOnlyWindowName: '_self');
+    final completer = Completer<bool?>();
+    window.onFocus.listen((event) {
+      debugPrint(event.toString());
+    });
+    await launch(url, enableJavaScript: true);
+    return completer.future;
+  }
+
+  Future<bool?> _authenticateWithWebView(BuildContext context, String url, Uri returnUri) async {
+    return Navigator.push<bool?>(
+        context,
         MaterialPageRoute(
           builder: (context) => StripeWebView(
             uri: url,

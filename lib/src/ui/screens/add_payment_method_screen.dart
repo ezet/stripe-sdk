@@ -36,12 +36,13 @@ class AddPaymentMethodScreen extends StatefulWidget {
   static Route<String?> route(
       {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, String title = _defaultTitle}) {
     return MaterialPageRoute(
-      builder: (context) => AddPaymentMethodScreen(
-        paymentMethodStore: paymentMethodStore,
-        stripe: stripe,
-        form: form,
-        title: title,
-      ),
+      builder: (context) =>
+          AddPaymentMethodScreen(
+            paymentMethodStore: paymentMethodStore,
+            stripe: stripe,
+            form: form,
+            title: title,
+          ),
     );
   }
 
@@ -131,8 +132,16 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
     if (setupIntent != null) {
       final setupIntent = await widget._stripe
           .confirmSetupIntent(this.setupIntent!.clientSecret, paymentMethod['id'], context: context);
-
       hideProgressDialog(context);
+      if (kIsWeb) {
+
+        await showDialog(
+            context: context,
+            barrierDismissible: false,
+            barrierLabel: "Waiting for authentication",
+            useRootNavigator: true,
+            builder: (context) => SimpleDialog(title: Text("Waiting for authentication"),));
+      }
       if (setupIntent['status'] == 'succeeded') {
         /// A new payment method has been attached, so refresh the store.
         await widget._paymentMethodStore.refresh();
