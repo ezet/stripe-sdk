@@ -46,8 +46,9 @@ class PaymentMethodsScreen extends StatelessWidget {
               final added = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddPaymentMethodScreen.withSetupIntent(createSetupIntent, stripe: stripe)));
-              if (added == true) await _paymentMethodStore.refresh();
+                      builder: (context) =>
+                          AddPaymentMethodScreen(stripe: stripe, paymentMethodStore: _paymentMethodStore)));
+              // if (added == true) await _paymentMethodStore.refresh();
             },
           )
         ],
@@ -104,20 +105,15 @@ class _PaymentMethodsListState extends State<PaymentMethodsList> {
 
   @override
   Widget build(BuildContext context) {
-    final List<PaymentMethod> listData = widget.paymentMethodStore.paymentMethods;
     return RefreshIndicator(
-      onRefresh: () => widget.paymentMethodStore.refresh(),
-      child: buildListView(listData, widget.paymentMethodStore, context),
+      onRefresh: () async => await widget.paymentMethodStore.refresh(),
+      child: buildListView(paymentMethods, widget.paymentMethodStore, context),
     );
   }
 
   Widget buildListView(List<PaymentMethod> listData, PaymentMethodStore paymentMethods, BuildContext rootContext) {
-    if (listData.isEmpty) {
-      if (paymentMethods.isLoading) {
-        return const Center(child: CircularProgressIndicator());
-      } else {
-        return Container();
-      }
+    if (paymentMethods.isLoading) {
+      return const Center(child: CircularProgressIndicator());
     } else {
       return ListView.builder(
           itemCount: listData.length,
@@ -158,9 +154,11 @@ class _PaymentMethodsListState extends State<PaymentMethodsList> {
                                   await widget.paymentMethodStore.detachPaymentMethod(card.id);
                                   hideProgressDialog(rootContext);
                                   await paymentMethods.refresh();
-                                  ScaffoldMessenger.of(rootContext).showSnackBar(const SnackBar(
-                                    content: Text('Payment method successfully deleted.'),
-                                  ));
+                                  ScaffoldMessenger.of(rootContext)
+                                    ..clearSnackBars()
+                                    ..showSnackBar(const SnackBar(
+                                      content: Text('Payment method successfully deleted.'),
+                                    ));
                                 },
                                 child: const Text('Delete'),
                               ),

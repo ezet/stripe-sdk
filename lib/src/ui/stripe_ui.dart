@@ -1,26 +1,28 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 import 'models.dart';
 
 typedef CreateSetupIntent = Future<IntentResponse> Function();
 typedef CreatePaymentIntent = Future<IntentResponse> Function(int amount);
 
-class StripeUi {
-  static late StripeUi _instance;
-  final CreateSetupIntent? createSetupIntent;
-  final CreatePaymentIntent? createPaymentIntent;
+class StripeUiOptions {
+  static CreateSetupIntent? createSetupIntent;
+  static CreatePaymentIntent? createPaymentIntent;
+  static String Function(BuildContext context, String currency, int amount) formatCurrency = _defaultFormatCurrency;
 
-  factory StripeUi() {
-    return _instance;
-  }
+  static Widget Function(BuildContext context, String currency, int total, void Function()? onPressed) payWidgetBuilder = _defaultPayWidgetBuilder;
 
-  StripeUi._(this.createSetupIntent, this.createPaymentIntent) {
-    _instance = this;
-  }
 
-  static void init({CreateSetupIntent? createSetupIntent, CreatePaymentIntent? createPaymentIntent}) {
-    StripeUi._(createSetupIntent, createPaymentIntent);
-  }
 }
 
-void test() {
-  // StripeUi().
+String _defaultFormatCurrency(BuildContext context, String currency, int amount) {
+  return (amount / 100).toStringAsFixed(2);
+}
+
+Widget _defaultPayWidgetBuilder(BuildContext context, String currency, int total, void Function()? onPressed) {
+  return ElevatedButton(
+    onPressed: onPressed,
+    child: Text('Pay ${StripeUiOptions.formatCurrency(context, currency, total)}'),
+  );
 }

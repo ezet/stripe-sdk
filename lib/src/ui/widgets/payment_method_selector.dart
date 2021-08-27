@@ -11,7 +11,6 @@ enum SelectorType { radioButton, dropdownButton }
 class PaymentMethodSelector extends StatefulWidget {
   PaymentMethodSelector({
     required this.onChanged,
-    this.createSetupIntent,
     PaymentMethodStore? paymentMethodStore,
     this.initialPaymentMethodId,
     this.selectorType = SelectorType.radioButton,
@@ -25,7 +24,7 @@ class PaymentMethodSelector extends StatefulWidget {
   final PaymentMethodStore _paymentMethodStore;
   final bool selectFirstByDefault;
   final SelectorType selectorType;
-  final CreateSetupIntent? createSetupIntent;
+  final CreateSetupIntent? createSetupIntent = StripeUiOptions.createSetupIntent;
 
   @override
   _PaymentMethodSelectorState createState() => _PaymentMethodSelectorState();
@@ -55,12 +54,10 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
             if (widget.createSetupIntent != null)
               OutlinedButton(
                   onPressed: () async {
-                    final id = await Navigator.push(
-                        context,
-                        AddPaymentMethodScreen.routeWithSetupIntent(widget.createSetupIntent!,
-                            paymentMethodStore: widget._paymentMethodStore));
+                    final id = await Navigator.push(context,
+                        AddPaymentMethodScreen.route(paymentMethodStore: widget._paymentMethodStore));
                     if (id != null) {
-                      await widget._paymentMethodStore.refresh();
+                      // await widget._paymentMethodStore.refresh();
                       setState(() {
                         _selectedPaymentMethod = _getPaymentMethodById(id);
                       });
@@ -99,7 +96,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
       shrinkWrap: true,
       children: _paymentMethods!
           .map((item) => RadioListTile<String>(
-              contentPadding: EdgeInsets.zero,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 32),
               title: Text(item.brand.toUpperCase()),
               secondary: Text('**** **** **** ${item.last4}'),
               subtitle: Text(item.getExpirationAsString()),

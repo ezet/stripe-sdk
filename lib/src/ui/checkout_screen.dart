@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stripe_sdk/src/stripe_error.dart';
+import 'package:stripe_sdk/src/ui/stripe_ui.dart';
 
 import '../stripe.dart';
 import 'models.dart';
@@ -15,7 +17,7 @@ class CheckoutScreen extends StatefulWidget {
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
   final void Function(BuildContext context)? onPaymentSuccess;
-  final void Function(BuildContext context)? onPaymentError;
+  final void Function(BuildContext context, StripeApiException e)? onPaymentError;
 
   const CheckoutScreen(
       {Key? key,
@@ -40,6 +42,50 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     final _total = widget.items.fold(0, (int? value, CheckoutItem item) => value! + item.price * item.count);
     final _createIntentResponse = widget.createPaymentIntent(_total);
+    onPressedCallback() async {
+      showProgressDialog(context);
+      final intentResponse = await _createIntentResponse;
+      try {
+        final confirmationResponse =
+            await Stripe.instance.confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
+        hideProgressDialog(context);
+        if (confirmationResponse['status'] == 'succeeded') {
+          if (widget.onPaymentSuccess != null) {
+            widget.onPaymentSuccess!(context);
+          } else {
+            showDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              // false = user must tap button, true = tap outside dialog
+              builder: (BuildContext dialogContext) {
+                return AlertDialog(
+                  title: const Text('Success'),
+                  content: const Text('Payment successfully completed!'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('ok'),
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(true); // Dismiss alert dialog
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+          return;
+        }
+      } catch (e) {
+        if (widget.onPaymentError != null && e is StripeApiException) {
+          widget.onPaymentError!(context, e);
+        } else {
+          debugPrint(e.toString());
+          hideProgressDialog(context);
+          rethrow;
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         backwardsCompatibility: false,
@@ -64,48 +110,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     })),
           ),
           Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                showProgressDialog(context);
-                final intentResponse = await _createIntentResponse;
-                try {
-                  final confirmationResponse = await Stripe.instance
-                      .confirmPayment(intentResponse.clientSecret, paymentMethodId: _selectedPaymentMethod);
-                  hideProgressDialog(context);
-                  if (confirmationResponse['status'] == 'succeeded') {
-                    if (widget.onPaymentSuccess != null) {
-                      widget.onPaymentSuccess!(context);
-                    } else {
-                      showDialog<void>(
-                        context: context,
-                        barrierDismissible: true,
-                        // false = user must tap button, true = tap outside dialog
-                        builder: (BuildContext dialogContext) {
-                          return AlertDialog(
-                            title: const Text('Success'),
-                            content: const Text('Payment successfully completed!'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('ok'),
-                                onPressed: () {
-                                  Navigator.of(dialogContext).pop(true); // Dismiss alert dialog
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                    return;
-                  }
-                } catch (e) {
-                  debugPrint(e.toString());
-                  hideProgressDialog(context);
-                  rethrow;
-                }
-              },
-              child: Text('Pay ${(_total / 100).toStringAsFixed(2)}'),
-            ),
+            child: StripeUiOptions.payWidgetBuilder(context, widget.items.first.currency, _total,
+                _selectedPaymentMethod == null ? null : onPressedCallback),
           )
         ],
       ),
@@ -123,7 +129,10 @@ class CheckoutItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final list = List<Widget>.from(items);
-    list.add(CheckoutSumItem(total: total));
+    list.add(CheckoutSumItem(
+      total: total,
+      currency: items.first.currency,
+    ));
     return ListView(
       shrinkWrap: true,
       children: list,
@@ -133,14 +142,15 @@ class CheckoutItemList extends StatelessWidget {
 
 class CheckoutSumItem extends StatelessWidget {
   final int total;
+  final String currency;
 
-  const CheckoutSumItem({Key? key, required this.total}) : super(key: key);
+  const CheckoutSumItem({Key? key, required this.total, required this.currency}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: const Text('Total'),
-      trailing: Text((total / 100).toStringAsFixed(2)),
+      trailing: Text(StripeUiOptions.formatCurrency(context, currency, total)),
     );
   }
 }
@@ -160,7 +170,7 @@ class CheckoutItem extends StatelessWidget {
       dense: false,
       title: Text(name),
       subtitle: Text('x $count'),
-      trailing: Text((price / 100).toStringAsFixed(2)),
+      trailing: Text(StripeUiOptions.formatCurrency(context, currency, price)),
     );
   }
 }
