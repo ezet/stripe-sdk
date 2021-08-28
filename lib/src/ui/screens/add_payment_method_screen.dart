@@ -125,55 +125,8 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             _createPaymentMethod(context, StripeCard(number: number, cvc: "123", expMonth: 1, expYear: 2030)));
   }
 
-  Future<void> _createPaymentMethodForWeb(BuildContext context, StripeCard cardData) async {
-    var cancelled = false;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => SimpleDialog(
-        title: const Text("Awaiting authentication, please complete authentication in the opened window."),
-        children: [
-          SimpleDialogOption(
-            child: const Text("Cancel"),
-            onPressed: () => Navigator.pop(context, true),
-          )
-        ],
-      ),
-    ).then((value) {
-      if (value == true) {
-        cancelled = true;
-        // Cancel intent ?
-      }
-    });
-
-    var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(cardData);
-    if (setupIntent != null) {
-      final setupIntent = await widget._stripe
-          .confirmSetupIntent(this.setupIntent!.clientSecret, paymentMethod['id'], context: context);
-
-      if (cancelled) return;
-      hideProgressDialog(context);
-
-      if (setupIntent['status'] == 'succeeded') {
-        /// A new payment method has been attached, so refresh the store.
-        await widget._paymentMethodStore.refresh();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment method successfully added.")));
-        Navigator.pop(context, paymentMethod['id']);
-        return;
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Authentication failed, please try again.")));
-      }
-    } else {
-      paymentMethod = await (widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id']));
-      hideProgressDialog(context);
-      Navigator.pop(context, paymentMethod['id']);
-      return;
-    }
-  }
-
   Future<void> _createPaymentMethod(BuildContext context, StripeCard cardData) async {
-    final scaDialog = showProgressDialog(context);
+    showProgressDialog(context);
     var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(cardData);
     if (setupIntent != null) {
       final setupIntent = await widget._stripe
