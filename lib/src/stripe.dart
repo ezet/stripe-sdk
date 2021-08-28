@@ -5,11 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stripe_sdk/src/ui/stripe_web_view.dart';
-import "package:universal_html/html.dart";
+import "package:universal_html/html.dart" as html;
 import 'package:url_launcher/url_launcher.dart';
 
-
 import 'stripe_api.dart';
+import 'ui/stripe_ui.dart';
 
 class Stripe {
   /// Creates a new [Stripe] object. Use this constructor if you wish to handle the instance of this class by yourself.
@@ -76,15 +76,9 @@ class Stripe {
 
   /// Creates a return URL that can be used to authenticate a single PaymentIntent.
   /// This should be set on the intent before attempting to authenticate it.
-  String getReturnUrlForSca({String? webReturnPath}) {
+  String getReturnUrlForSca({String? webReturnUrl}) {
     if (kIsWeb) {
-      if (webReturnPath == null || webReturnPath.isEmpty) {
-        webReturnPath = '3ds/complete'; // or app route ex: 3ds/complete
-      }
-      assert(webReturnPath.isNotEmpty);
-      var webUrl = Uri.base.toString() + webReturnPath;
-      debugPrint(webUrl);
-      return webUrl;
+      return webReturnUrl ?? StripeUiOptions.defaultWebReturnUrl;
     } else {
       final requestId = Random.secure().nextInt(99999999);
       return '$_returnUrlForSca?requestId=$requestId';
@@ -97,7 +91,7 @@ class Stripe {
       {String? webReturnPath, required BuildContext context}) async {
     final Map<String, dynamic> intent = await api.confirmSetupIntent(
       clientSecret,
-      data: {'return_url': getReturnUrlForSca(webReturnPath: webReturnPath)},
+      data: {'return_url': getReturnUrlForSca(webReturnUrl: webReturnPath)},
     );
     return _handleSetupIntent(intent, context);
   }
@@ -106,7 +100,7 @@ class Stripe {
   /// https://stripe.com/docs/api/setup_intents/confirm
   Future<Map<String, dynamic>> confirmSetupIntent(String clientSecret, String paymentMethod,
       {String? webReturnPath, required BuildContext context}) async {
-    var returnUrlForSca = getReturnUrlForSca(webReturnPath: webReturnPath);
+    var returnUrlForSca = getReturnUrlForSca(webReturnUrl: webReturnPath);
     final Map<String, dynamic> intent = await api.confirmSetupIntent(
       clientSecret,
       data: {
@@ -144,39 +138,73 @@ class Stripe {
   /// as it avoids the request to the Stripe API to retrieve the action.
   /// To use this, return the complete [paymentIntent] from your server.
   Future<Map<String, dynamic>> _handlePaymentIntent(Map<String, dynamic> paymentIntent, BuildContext context) async {
-    await _authenticateIntent(paymentIntent, context);
-    final paymentIntentClientSecret = paymentIntent['client_secret'];
-    return api.retrievePaymentIntent(paymentIntentClientSecret);
+    return _authenticateIntent(paymentIntent, context, api.retrievePaymentIntent);
   }
 
   /// Launch 3DS in a new browser window.
   /// Returns a [Future] with the Stripe SetupIntent when the user completes or cancels authentication.
-  Future<Map<String, dynamic>> _handleSetupIntent(Map<String, dynamic> intent, BuildContext context) async {
-    await _authenticateIntent(intent, context);
-    final clientSecret = intent['client_secret'];
-    return api.retrieveSetupIntent(clientSecret);
+  Future<Map<String, dynamic>> _handleSetupIntent(Map<String, dynamic> setupIntent, BuildContext context) async {
+    return _authenticateIntent(setupIntent, context, api.retrieveSetupIntent);
   }
 
-  Future<bool?> _authenticateIntent(Map<String, dynamic> intent, BuildContext context) async {
-    if (intent['status'] != 'requires_action') return false;
+  Future<Map<String, dynamic>> _authenticateIntent(Map<String, dynamic> intent, BuildContext context,
+      Future<Map<String, dynamic>> Function(String clientSecret) getIntentFunction) async {
+    if (intent['status'] != 'requires_action') return intent;
+    final clientSecret = intent['client_secret'];
     final action = intent['next_action'];
     final String url = action['redirect_to_url']['url'];
     final returnUri = Uri.parse(action['redirect_to_url']['return_url']);
 
     if (kIsWeb) {
-      return _authenticateWithBrowser(context, url, returnUri);
+      return _authenticateWithBrowser(context, url, returnUri, getIntentFunction, clientSecret);
     } else {
-      return _authenticateWithWebView(context, url, returnUri);
+      await _authenticateWithWebView(context, url, returnUri);
+      return getIntentFunction(clientSecret);
     }
   }
 
-  Future<bool?> _authenticateWithBrowser(BuildContext context, String url, Uri returnUri) async {
-    // await launch(url, webOnlyWindowName: '_self');
-    final completer = Completer<bool?>();
-    window.onFocus.listen((event) {
-      debugPrint(event.toString());
+  Future<Map<String, dynamic>> _authenticateWithBrowser(BuildContext context, String url, Uri returnUri,
+      Future<Map<String, dynamic>> Function(String clientSecret) getIntentFunction, String clientSecret) async {
+    final completer = Completer<Map<String, dynamic>>();
+
+    late StreamSubscription<html.Event> subscription;
+    subscription = html.window.onFocus.listen((event) async {
+      final intent = await getIntentFunction(clientSecret);
+      if (intent['status'] != 'requires_action') {
+        Navigator.of(context).pop();
+        subscription.cancel();
+        await Future.delayed(const Duration(seconds: 1));
+        completer.complete(intent);
+        return;
+      }
     });
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => SimpleDialog(
+        title: const Text("Awaiting authentication, please complete authentication in the opened window."),
+        children: [
+          SimpleDialogOption(
+            child: const Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              subscription.cancel();
+              completer.complete(getIntentFunction(clientSecret));
+            },
+          ),
+          SimpleDialogOption(
+            child: const Text("Open new window"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              launch(url, enableJavaScript: true);
+            },
+          )
+        ],
+      ),
+    );
+
     await launch(url, enableJavaScript: true);
+
     return completer.future;
   }
 

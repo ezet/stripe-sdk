@@ -45,7 +45,7 @@ class SetupIntentWithScaScreen extends StatelessWidget {
     RouteSettings? routeSettings = ModalRoute.of(context)?.settings;
     final createSetupIntentResponse = await networkService.createSetupIntentWithPaymentMethod(
       paymentMethod,
-      Stripe.instance.getReturnUrlForSca(webReturnPath: routeSettings?.name),
+      Stripe.instance.getReturnUrlForSca(webReturnUrl: routeSettings?.name),
     );
     final PaymentMethodStore paymentMethods = Provider.of(context, listen: false);
     if (createSetupIntentResponse.status == 'succeeded') {

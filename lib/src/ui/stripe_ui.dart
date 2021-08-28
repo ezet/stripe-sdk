@@ -11,9 +11,10 @@ class StripeUiOptions {
   static CreatePaymentIntent? createPaymentIntent;
   static String Function(BuildContext context, String currency, int amount) formatCurrency = _defaultFormatCurrency;
 
-  static Widget Function(BuildContext context, String currency, int total, void Function()? onPressed) payWidgetBuilder = _defaultPayWidgetBuilder;
+  static Widget Function(BuildContext context, String currency, int total, void Function()? onPressed)
+      payWidgetBuilder = _defaultPayWidgetBuilder;
 
-
+  static String defaultWebReturnUrl = "/";
 }
 
 String _defaultFormatCurrency(BuildContext context, String currency, int amount) {
