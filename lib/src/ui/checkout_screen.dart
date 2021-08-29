@@ -93,25 +93,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           if (widget.onPaymentSuccess != null) {
             widget.onPaymentSuccess!(context);
           } else {
-            showDialog<void>(
-              context: context,
-              barrierDismissible: true,
-              // false = user must tap button, true = tap outside dialog
-              builder: (BuildContext dialogContext) {
-                return AlertDialog(
-                  title: const Text('Success'),
-                  content: const Text('Payment successfully completed!'),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('ok'),
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop(true); // Dismiss alert dialog
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment successfully completed")));
           }
           return;
         }

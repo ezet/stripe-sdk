@@ -61,18 +61,14 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   late final StripeCard _cardData;
   late final GlobalKey<FormState> _formKey;
 
-  IntentResponse? setupIntent;
+  Future<IntentResponse>? setupIntentFuture;
 
   @override
   void initState() {
-    _createSetupIntent();
+    if (widget.createSetupIntent != null) setupIntentFuture = widget.createSetupIntent!();
     _cardData = widget._form.card;
     _formKey = widget._form.formKey;
     super.initState();
-  }
-
-  Future<void> _createSetupIntent() async {
-    if (widget.createSetupIntent != null) setupIntent = await widget.createSetupIntent!();
   }
 
   @override
@@ -128,12 +124,13 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   Future<void> _createPaymentMethod(BuildContext context, StripeCard cardData) async {
     showProgressDialog(context);
     var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(cardData);
-    if (setupIntent != null) {
-      final setupIntent = await widget._stripe
-          .confirmSetupIntent(this.setupIntent!.clientSecret, paymentMethod['id'], context: context);
+    if (setupIntentFuture != null) {
+      final initialSetupIntent = await setupIntentFuture!;
+      final confirmedSetupIntent = await widget._stripe
+          .confirmSetupIntent(initialSetupIntent.clientSecret, paymentMethod['id'], context: context);
       hideProgressDialog(context);
 
-      if (setupIntent['status'] == 'succeeded') {
+      if (confirmedSetupIntent['status'] == 'succeeded') {
         /// A new payment method has been attached, so refresh the store.
         await widget._paymentMethodStore.refresh();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment method successfully added.")));

@@ -15,7 +15,7 @@ class PaymentMethodSelector extends StatefulWidget {
     this.initialPaymentMethodId,
     this.selectorType = SelectorType.radioButton,
     Key? key,
-    this.selectFirstByDefault = false,
+    this.selectFirstByDefault = true,
   })  : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         super(key: key);
 
@@ -37,8 +37,36 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    widget._paymentMethodStore.addListener(_updateState);
+    _updateState();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget._paymentMethodStore.removeListener(_updateState);
+    super.dispose();
+  }
+
+  void _updateState() {
+    if (mounted) {
+      setState(() {
+        _paymentMethods = widget._paymentMethodStore.paymentMethods;
+        _isLoading = widget._paymentMethodStore.isLoading;
+        if (widget.selectFirstByDefault && _selectedPaymentMethod == null) {
+          _selectedPaymentMethod = _paymentMethods?.firstOrNull;
+          WidgetsBinding.instance!.addPostFrameCallback((_) {
+            widget.onChanged(_selectedPaymentMethod?.id);
+          });
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _selectedPaymentMethod ??= _getPaymentMethodById(widget.initialPaymentMethodId);
+    // _selectedPaymentMethod ??= _getPaymentMethodById(widget.initialPaymentMethodId);
     return Column(
       children: [
         if (!_isLoading)
@@ -90,7 +118,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   }
 
   Widget _buildRadioListSelector() {
-    if (_paymentMethods?.isEmpty == true) return const SizedBox.shrink();
+    if (_paymentMethods?.isNotEmpty != true) return const SizedBox.shrink();
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -139,31 +167,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   }
 
   PaymentMethod? _getPaymentMethodById(String? paymentMethodId) {
-    if (paymentMethodId != null) {
-      return _paymentMethods?.singleWhereOrNull((item) => item.id == paymentMethodId);
-    } else if (widget.selectFirstByDefault) {
-      return _paymentMethods != null && _paymentMethods!.isNotEmpty ? _paymentMethods!.first : null;
-    }
-    return null;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    widget._paymentMethodStore.addListener(listener);
-  }
-
-  @override
-  void dispose() {
-    widget._paymentMethodStore.removeListener(listener);
-    super.dispose();
-  }
-
-  void listener() {
-    setState(() {
-      _paymentMethods = widget._paymentMethodStore.paymentMethods;
-      _isLoading = widget._paymentMethodStore.isLoading;
-    });
+    return _paymentMethods?.singleWhereOrNull((item) => item.id == paymentMethodId);
   }
 
   Widget _buildLoadingIndicator() {
