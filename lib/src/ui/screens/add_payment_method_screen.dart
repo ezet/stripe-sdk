@@ -61,7 +61,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   late final StripeCard _cardData;
   late final GlobalKey<FormState> _formKey;
 
-  Future<IntentResponse>? setupIntentFuture;
+  Future<IntentClientSecret>? setupIntentFuture;
 
   @override
   void initState() {

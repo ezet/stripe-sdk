@@ -13,9 +13,8 @@ import 'widgets/payment_method_selector.dart';
 
 @Deprecated('Experimental')
 class CheckoutScreen extends StatefulWidget {
-  final List<CheckoutItem> items;
   final String title;
-  final Future<IntentResponse> Function(int amount) createPaymentIntent;
+  final Future<IntentClientSecret> Function() createPaymentIntent;
   final void Function(BuildContext context, Map<String, dynamic> paymentIntent) onPaymentSuccess;
   final void Function(BuildContext context, Map<String, dynamic> paymentIntent) onPaymentFailed;
   final void Function(BuildContext context, StripeApiException e) onPaymentError;
@@ -23,7 +22,6 @@ class CheckoutScreen extends StatefulWidget {
   CheckoutScreen({
     Key? key,
     required this.title,
-    required this.items,
     required this.createPaymentIntent,
     void Function(BuildContext context, Map<String, dynamic> paymentIntent)? onPaymentSuccess,
     void Function(BuildContext context, Map<String, dynamic> paymentIntent)? onPaymentFailed,
@@ -42,13 +40,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final PaymentMethodStore paymentMethodStore = PaymentMethodStore.instance;
 
   String? _selectedPaymentMethod;
-  late Future<IntentResponse> _paymentIntentFuture;
-  late int _total;
+  late Future<IntentClientSecret> _clientSecretFuture;
+  late Future<Map<String, dynamic>> paymentIntentFuture;
 
   @override
   void initState() {
-    _total = widget.items.fold(0, (int? value, CheckoutItem item) => value! + item.price * item.count);
-    _paymentIntentFuture = widget.createPaymentIntent(_total);
+    _clientSecretFuture = widget.createPaymentIntent();
+    paymentIntentFuture =
+        _clientSecretFuture.then((value) => Stripe.instance.api.retrievePaymentIntent(value.clientSecret));
     super.initState();
   }
 
@@ -60,12 +59,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         title: Text(widget.title),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          // ignore: deprecated_member_use_from_same_package
-          CheckoutItemList(items: widget.items, total: _total),
           const SizedBox(
             height: 40,
           ),
@@ -77,16 +71,33 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       _selectedPaymentMethod = value;
                     })),
           ),
-          Center(
-            child: StripeUiOptions.payWidgetBuilder(context, widget.items.first.currency, _total,
-                _selectedPaymentMethod == null ? null : _createAttemptPaymentFunction(context, _paymentIntentFuture)),
+          Expanded(
+            child: FutureBuilder<Map<String, dynamic>>(
+                future: paymentIntentFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Align(
+                      alignment: Alignment.bottomCenter,
+                      child: StripeUiOptions.payButtonBuilder(
+                          context,
+                          snapshot.data!,
+                          _selectedPaymentMethod == null
+                              ? null
+                              : _createAttemptPaymentFunction(context, _clientSecretFuture)),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
           )
         ],
       ),
     );
   }
 
-  void Function() _createAttemptPaymentFunction(BuildContext context, Future<IntentResponse> paymentIntentFuture) {
+  void Function() _createAttemptPaymentFunction(BuildContext context, Future<IntentClientSecret> paymentIntentFuture) {
     return () async {
       showProgressDialog(context);
       final initialPaymentIntent = await paymentIntentFuture;

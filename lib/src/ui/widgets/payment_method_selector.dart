@@ -2,7 +2,6 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 
 import '../../../stripe_sdk_ui.dart';
-import '../stripe_ui.dart';
 
 typedef OnPaymentMethodSelected = void Function(String?);
 
@@ -24,7 +23,6 @@ class PaymentMethodSelector extends StatefulWidget {
   final PaymentMethodStore _paymentMethodStore;
   final bool selectFirstByDefault;
   final SelectorType selectorType;
-  final CreateSetupIntent? createSetupIntent = StripeUiOptions.createSetupIntent;
 
   @override
   _PaymentMethodSelectorState createState() => _PaymentMethodSelectorState();
@@ -66,7 +64,6 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
 
   @override
   Widget build(BuildContext context) {
-    // _selectedPaymentMethod ??= _getPaymentMethodById(widget.initialPaymentMethodId);
     return Column(
       children: [
         if (!_isLoading)
@@ -79,27 +76,24 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            if (widget.createSetupIntent != null)
-              OutlinedButton(
-                  onPressed: () async {
-                    final id = await Navigator.push(
-                        context, AddPaymentMethodScreen.route(paymentMethodStore: widget._paymentMethodStore));
-                    if (id != null) {
-                      // await widget._paymentMethodStore.refresh();
-                      setState(() {
-                        _selectedPaymentMethod = _getPaymentMethodById(id);
-                      });
-                    }
-                  },
-                  child: const Text('+ Add card')),
+            OutlinedButton(
+                onPressed: () async {
+                  final id = await Navigator.push(
+                      context, AddPaymentMethodScreen.route(paymentMethodStore: widget._paymentMethodStore));
+                  if (id != null) {
+                    // await widget._paymentMethodStore.refresh();
+                    setState(() {
+                      _selectedPaymentMethod = _getPaymentMethodById(id);
+                    });
+                  }
+                },
+                child: const Text('+ Add card')),
             OutlinedButton(
                 onPressed: () async {
                   final _ = await Navigator.push(
                       context,
                       PaymentMethodsScreen.route(
-                          createSetupIntent: widget.createSetupIntent!,
-                          title: 'Payment methods',
-                          paymentMethodStore: widget._paymentMethodStore));
+                          title: 'Payment methods', paymentMethodStore: widget._paymentMethodStore));
                 },
                 child: const Text('Manage cards')),
           ],
@@ -140,28 +134,33 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
 
   Widget _buildDropdownSelector() {
     if (_paymentMethods?.isEmpty == true) return const SizedBox.shrink();
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(),
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      child: DropdownButton<String>(
-        underline: const SizedBox.shrink(),
-        value: _selectedPaymentMethod?.id,
-        items: _paymentMethods
-            ?.map((item) => DropdownMenuItem(
-                  value: item.id,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
-                  ),
-                ))
-            .toList(),
-        onChanged: (value) {
-          setState(() {
-            _selectedPaymentMethod = _getPaymentMethodById(value);
-          });
-        },
+    return Material(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).colorScheme.onBackground),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+          ),
+          child: DropdownButton<String>(
+            underline: const SizedBox.shrink(),
+            value: _selectedPaymentMethod?.id,
+            items: _paymentMethods
+                ?.map((item) => DropdownMenuItem(
+                      value: item.id,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
+                      ),
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedPaymentMethod = _getPaymentMethodById(value);
+              });
+            },
+          ),
+        ),
       ),
     );
   }

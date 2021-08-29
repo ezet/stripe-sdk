@@ -35,23 +35,21 @@ class NetworkService {
     return jsonKey;
   }
 
-  Future<IntentResponse> createSetupIntent() async {
+  Future<IntentClientSecret> createSetupIntent() async {
     final response = await _call('createSetupIntent', {});
-    return IntentResponse(response['status'], response['clientSecret']);
+    return IntentClientSecret(response['status'], response['clientSecret']);
   }
 
-  Future<IntentResponse> createSetupIntentWithPaymentMethod(paymentMethod, String returnUrl) async {
+  Future<IntentClientSecret> createSetupIntentWithPaymentMethod(paymentMethod, String returnUrl) async {
     final params = {'paymentMethod': paymentMethod, 'returnUrl': returnUrl};
     final response = await _call('createSetupIntent', params);
-    return IntentResponse(response['status'], response['clientSecret']);
+    return IntentClientSecret(response['status'], response['clientSecret']);
   }
 
-  Future<IntentResponse> createAutomaticPaymentIntent(int amount) async {
-    final params = {
-      'amount': amount,
-    };
+  Future<IntentClientSecret> createAutomaticPaymentIntent() async {
+    final params = {};
     final response = await _call('createAutomaticPaymentIntent', params);
-    return IntentResponse(response['status'], response['clientSecret']);
+    return IntentClientSecret(response['status'], response['clientSecret']);
   }
 
   Future<Map?> createManualPaymentIntent(int amount, String paymentMethod, String returnUrl) {

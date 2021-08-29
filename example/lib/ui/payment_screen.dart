@@ -39,24 +39,11 @@ class PaymentScreen extends StatelessWidget {
   }
 
   Future checkout(BuildContext context) {
-    var items = [
-      CheckoutItem(
-        name: 'Book',
-        price: 40000,
-        currency: '\$',
-      ),
-      CheckoutItem(
-        name: 'CD',
-        price: 10000,
-        currency: '\$',
-      )
-    ];
     final networkService = locator.get<NetworkService>();
     return Navigator.push(context, MaterialPageRoute(builder: (context) {
       // ignore: deprecated_member_use
       return CheckoutScreen(
         title: 'Checkout',
-        items: items,
 //        paymentMethods: paymentMethods.paymentMethods.map((e) => PaymentMethod(e.id, e.last4)),
         createPaymentIntent: networkService.createAutomaticPaymentIntent,
       );
@@ -65,7 +52,7 @@ class PaymentScreen extends StatelessWidget {
 
   void createAutomaticPaymentIntent(BuildContext context) async {
     final networkService = locator.get<NetworkService>();
-    final response = await networkService.createAutomaticPaymentIntent(10000);
+    final response = await networkService.createAutomaticPaymentIntent();
     if (response.status == 'succeeded') {
       // TODO: success
       debugPrint('Success before authentication.');

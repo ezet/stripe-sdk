@@ -4,31 +4,23 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../stripe.dart';
 import '../../ui/stores/payment_method_store.dart';
 import '../progress_bar.dart';
-import '../stripe_ui.dart';
 import 'add_payment_method_screen.dart';
 
 class PaymentMethodsScreen extends StatelessWidget {
   final String title;
-  final CreateSetupIntent createSetupIntent;
 
   /// The payment method store to use.
   final PaymentMethodStore _paymentMethodStore;
 
-  static Route<void> route(
-      {required CreateSetupIntent createSetupIntent, String title = '', PaymentMethodStore? paymentMethodStore}) {
+  static Route<void> route({String title = '', PaymentMethodStore? paymentMethodStore}) {
     return MaterialPageRoute(
         builder: (context) => PaymentMethodsScreen(
-              createSetupIntent: createSetupIntent,
               title: title,
               paymentMethodStore: paymentMethodStore,
             ));
   }
 
-  PaymentMethodsScreen(
-      {Key? key,
-      required this.createSetupIntent,
-      this.title = 'Payment Methods',
-      PaymentMethodStore? paymentMethodStore})
+  PaymentMethodsScreen({Key? key, this.title = 'Payment Methods', PaymentMethodStore? paymentMethodStore})
       : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore(),
         super(key: key);
 

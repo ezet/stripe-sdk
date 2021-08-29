@@ -4,16 +4,16 @@ import 'package:stripe_sdk/src/stripe_error.dart';
 
 import 'models.dart';
 
-typedef CreateSetupIntent = Future<IntentResponse> Function();
-typedef CreatePaymentIntent = Future<IntentResponse> Function(int amount);
+typedef CreateSetupIntent = Future<IntentClientSecret> Function();
+typedef CreatePaymentIntent = Future<IntentClientSecret> Function(int amount);
 
 class StripeUiOptions {
   static CreateSetupIntent? createSetupIntent;
   static CreatePaymentIntent? createPaymentIntent;
   static String Function(BuildContext context, String currency, int amount) formatCurrency = _defaultFormatCurrency;
 
-  static Widget Function(BuildContext context, String currency, int total, void Function()? onPressed)
-      payWidgetBuilder = _defaultPayWidgetBuilder;
+  static Widget Function(BuildContext context, Map<String, dynamic> paymentIntent, void Function()? onPressed)
+      payButtonBuilder = _defaultPayButtonBuilder;
 
   static void Function(BuildContext, Map<String, dynamic>) onPaymentFailed = _defaultOnPaymentFailed;
   static void Function(BuildContext, Map<String, dynamic>) onPaymentSuccess = _defaultOnPaymentSuccess;
@@ -23,13 +23,13 @@ class StripeUiOptions {
 }
 
 String _defaultFormatCurrency(BuildContext context, String currency, int amount) {
-  return (amount / 100).toStringAsFixed(2);
+  return "${currency.toUpperCase()}${(amount / 100).toStringAsFixed(2)}";
 }
 
-Widget _defaultPayWidgetBuilder(BuildContext context, String currency, int total, void Function()? onPressed) {
+Widget _defaultPayButtonBuilder(BuildContext context, Map<String, dynamic> paymentIntent, void Function()? onPressed) {
   return ElevatedButton(
     onPressed: onPressed,
-    child: Text('Pay ${StripeUiOptions.formatCurrency(context, currency, total)}'),
+    child: Text('Pay ${StripeUiOptions.formatCurrency(context, paymentIntent['currency'], paymentIntent['amount'])}'),
   );
 }
 
