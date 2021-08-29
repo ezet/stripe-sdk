@@ -87,6 +87,7 @@ class _PaymentMethodsListState extends State<PaymentMethodsList> {
   @override
   void initState() {
     super.initState();
+    setState(() => paymentMethods = widget.paymentMethodStore.paymentMethods);
     widget.paymentMethodStore.addListener(_paymentMethodStoreListener);
   }
 

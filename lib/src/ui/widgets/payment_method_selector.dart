@@ -54,8 +54,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
             if (widget.createSetupIntent != null)
               OutlinedButton(
                   onPressed: () async {
-                    final id = await Navigator.push(context,
-                        AddPaymentMethodScreen.route(paymentMethodStore: widget._paymentMethodStore));
+                    final id = await Navigator.push(
+                        context, AddPaymentMethodScreen.route(paymentMethodStore: widget._paymentMethodStore));
                     if (id != null) {
                       // await widget._paymentMethodStore.refresh();
                       setState(() {
@@ -70,7 +70,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                       context,
                       PaymentMethodsScreen.route(
                           createSetupIntent: widget.createSetupIntent!,
-                          title: '',
+                          title: 'Payment methods',
                           paymentMethodStore: widget._paymentMethodStore));
                 },
                 child: const Text('Manage cards')),

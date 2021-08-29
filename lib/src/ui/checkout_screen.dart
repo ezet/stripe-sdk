@@ -37,17 +37,57 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final PaymentMethodStore paymentMethodStore = PaymentMethodStore.instance;
 
   String? _selectedPaymentMethod;
+  late Future<IntentResponse> _paymentIntentFuture;
+  late int _total;
+
+  @override
+  void initState() {
+    _total = widget.items.fold(0, (int? value, CheckoutItem item) => value! + item.price * item.count);
+    _paymentIntentFuture = widget.createPaymentIntent(_total);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _total = widget.items.fold(0, (int? value, CheckoutItem item) => value! + item.price * item.count);
-    final _createIntentResponse = widget.createPaymentIntent(_total);
-    onPressedCallback() async {
+    return Scaffold(
+      appBar: AppBar(
+        backwardsCompatibility: false,
+        title: Text(widget.title),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          // ignore: deprecated_member_use_from_same_package
+          CheckoutItemList(items: widget.items, total: _total),
+          const SizedBox(
+            height: 40,
+          ),
+          Center(
+            child: PaymentMethodSelector(
+                paymentMethodStore: paymentMethodStore,
+                initialPaymentMethodId: null,
+                onChanged: (value) => setState(() {
+                      _selectedPaymentMethod = value;
+                    })),
+          ),
+          Center(
+            child: StripeUiOptions.payWidgetBuilder(context, widget.items.first.currency, _total,
+                _selectedPaymentMethod == null ? null : _createAttemptPaymentFunction(context, _paymentIntentFuture)),
+          )
+        ],
+      ),
+    );
+  }
+
+  void Function() _createAttemptPaymentFunction(BuildContext context, Future<IntentResponse> paymentIntentFuture) {
+    return () async {
       showProgressDialog(context);
-      final intentResponse = await _createIntentResponse;
+      final paymentIntent = await paymentIntentFuture;
       try {
-        final confirmationResponse =
-            await Stripe.instance.confirmPayment(intentResponse.clientSecret, context, paymentMethodId: _selectedPaymentMethod);
+        final confirmationResponse = await Stripe.instance
+            .confirmPayment(paymentIntent.clientSecret, context, paymentMethodId: _selectedPaymentMethod);
         hideProgressDialog(context);
         if (confirmationResponse['status'] == 'succeeded') {
           if (widget.onPaymentSuccess != null) {
@@ -84,38 +124,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           rethrow;
         }
       }
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        backwardsCompatibility: false,
-        title: Text(widget.title),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          // ignore: deprecated_member_use_from_same_package
-          CheckoutItemList(items: widget.items, total: _total),
-          const SizedBox(
-            height: 40,
-          ),
-          Center(
-            child: PaymentMethodSelector(
-                paymentMethodStore: paymentMethodStore,
-                initialPaymentMethodId: null,
-                onChanged: (value) => setState(() {
-                      _selectedPaymentMethod = value;
-                    })),
-          ),
-          Center(
-            child: StripeUiOptions.payWidgetBuilder(context, widget.items.first.currency, _total,
-                _selectedPaymentMethod == null ? null : onPressedCallback),
-          )
-        ],
-      ),
-    );
+    };
   }
 }
 
