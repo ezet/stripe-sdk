@@ -16,17 +16,22 @@ class CheckoutScreen extends StatefulWidget {
   final List<CheckoutItem> items;
   final String title;
   final Future<IntentResponse> Function(int amount) createPaymentIntent;
-  final void Function(BuildContext context)? onPaymentSuccess;
-  final void Function(BuildContext context, StripeApiException e)? onPaymentError;
+  final void Function(BuildContext context, Map<String, dynamic> paymentIntent) onPaymentSuccess;
+  final void Function(BuildContext context, Map<String, dynamic> paymentIntent) onPaymentFailed;
+  final void Function(BuildContext context, StripeApiException e) onPaymentError;
 
-  const CheckoutScreen(
-      {Key? key,
-      required this.title,
-      required this.items,
-      required this.createPaymentIntent,
-      this.onPaymentSuccess,
-      this.onPaymentError})
-      : super(key: key);
+  CheckoutScreen({
+    Key? key,
+    required this.title,
+    required this.items,
+    required this.createPaymentIntent,
+    void Function(BuildContext context, Map<String, dynamic> paymentIntent)? onPaymentSuccess,
+    void Function(BuildContext context, Map<String, dynamic> paymentIntent)? onPaymentFailed,
+    void Function(BuildContext, StripeApiException)? onPaymentError,
+  })  : onPaymentSuccess = onPaymentSuccess ?? StripeUiOptions.onPaymentSuccess,
+        onPaymentFailed = onPaymentFailed ?? StripeUiOptions.onPaymentFailed,
+        onPaymentError = onPaymentError ?? StripeUiOptions.onPaymentError,
+        super(key: key);
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -84,25 +89,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   void Function() _createAttemptPaymentFunction(BuildContext context, Future<IntentResponse> paymentIntentFuture) {
     return () async {
       showProgressDialog(context);
-      final paymentIntent = await paymentIntentFuture;
+      final initialPaymentIntent = await paymentIntentFuture;
       try {
-        final confirmationResponse = await Stripe.instance
-            .confirmPayment(paymentIntent.clientSecret, context, paymentMethodId: _selectedPaymentMethod);
+        final confirmedPaymentIntent = await Stripe.instance
+            .confirmPayment(initialPaymentIntent.clientSecret, context, paymentMethodId: _selectedPaymentMethod);
         hideProgressDialog(context);
-        if (confirmationResponse['status'] == 'succeeded') {
-          if (widget.onPaymentSuccess != null) {
-            widget.onPaymentSuccess!(context);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment successfully completed")));
-          }
-          return;
+        if (confirmedPaymentIntent['status'] == 'succeeded') {
+          widget.onPaymentSuccess(context, confirmedPaymentIntent);
+        } else {
+          widget.onPaymentFailed(context, confirmedPaymentIntent);
         }
       } catch (e) {
-        if (widget.onPaymentError != null && e is StripeApiException) {
-          widget.onPaymentError!(context, e);
+        hideProgressDialog(context);
+        if (e is StripeApiException) {
+          widget.onPaymentError(context, e);
         } else {
           debugPrint(e.toString());
-          hideProgressDialog(context);
           rethrow;
         }
       }
