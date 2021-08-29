@@ -66,13 +66,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (!_isLoading)
-          _buildSelector()
-        else
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _buildLoadingIndicator(),
-          ),
+        if (!_isLoading) _buildSelector() else _buildLoadingIndicator(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -112,54 +106,53 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   }
 
   Widget _buildRadioListSelector() {
-    if (_paymentMethods?.isNotEmpty != true) return const SizedBox.shrink();
-    return ListView(
+    return ListView.builder(
+      itemCount: _paymentMethods?.length ?? 0,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      children: _paymentMethods!
-          .map((item) => RadioListTile<String>(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 32),
-              title: Text(item.brand.toUpperCase()),
-              secondary: Text('**** **** **** ${item.last4}'),
-              subtitle: Text(item.getExpirationAsString()),
-              value: item.id,
-              groupValue: _selectedPaymentMethod?.id,
-              onChanged: (value) => setState(() {
-                    _selectedPaymentMethod = _getPaymentMethodById(value);
-                    widget.onChanged(_selectedPaymentMethod?.id);
-                  })))
-          .toList(),
+      itemBuilder: (context, index) {
+        final item = _paymentMethods![index];
+        return RadioListTile<String>(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 32),
+            title: Text(item.brand.toUpperCase()),
+            secondary: Text('**** **** **** ${item.last4}'),
+            subtitle: Text(item.getExpirationAsString()),
+            value: item.id,
+            groupValue: _selectedPaymentMethod?.id,
+            onChanged: (value) => setState(() {
+                  _selectedPaymentMethod = _getPaymentMethodById(value);
+                  widget.onChanged(_selectedPaymentMethod?.id);
+                }));
+      },
     );
   }
 
   Widget _buildDropdownSelector() {
     if (_paymentMethods?.isEmpty == true) return const SizedBox.shrink();
-    return Material(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Theme.of(context).colorScheme.onBackground),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-          ),
-          child: DropdownButton<String>(
-            underline: const SizedBox.shrink(),
-            value: _selectedPaymentMethod?.id,
-            items: _paymentMethods
-                ?.map((item) => DropdownMenuItem(
-                      value: item.id,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
-                      ),
-                    ))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedPaymentMethod = _getPaymentMethodById(value);
-              });
-            },
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Theme.of(context).colorScheme.onBackground),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+        child: DropdownButton<String>(
+          underline: const SizedBox.shrink(),
+          value: _selectedPaymentMethod?.id,
+          items: _paymentMethods
+              ?.map((item) => DropdownMenuItem(
+                    value: item.id,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: Text('${item.brand.toUpperCase()} **** **** **** ${item.last4}'),
+                    ),
+                  ))
+              .toList(),
+          onChanged: (value) {
+            setState(() {
+              _selectedPaymentMethod = _getPaymentMethodById(value);
+            });
+          },
         ),
       ),
     );

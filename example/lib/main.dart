@@ -33,21 +33,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     CustomerSession.initCustomerSession((version) => locator.get<NetworkService>().getEphemeralKey(version));
     final app = MaterialApp(
-        title: 'Stripe SDK Demo',
-        onUnknownRoute: (RouteSettings settings) {
-          final Uri? uri = Uri.tryParse(settings.name!);
-          if (uri == null && !uri!.queryParameters.containsKey('setup_intent') && !uri.queryParameters.containsKey('payment_intent')) {
-            return MaterialPageRoute(builder: (context) => HomeScreen());
-          }
-          return MaterialPageRoute(builder: (context) => IntentCompleteScreen());
-        },
-        routes: {
-          '/': (context) => HomeScreen(),
-          '/3ds/complete': (context) => IntentCompleteScreen(),
-          '/payments': (context) => PaymentScreen()
-        },
-        initialRoute: '/',
-        theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
+      title: 'Stripe SDK Demo',
+      onUnknownRoute: (RouteSettings settings) {
+        final Uri? uri = Uri.tryParse(settings.name!);
+        if (uri == null &&
+            !uri!.queryParameters.containsKey('setup_intent') &&
+            !uri.queryParameters.containsKey('payment_intent')) {
+          return MaterialPageRoute(builder: (context) => HomeScreen());
+        }
+        return MaterialPageRoute(builder: (context) => IntentCompleteScreen());
+      },
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/3ds/complete': (context) => IntentCompleteScreen(),
+        '/payments': (context) => PaymentScreen()
+      },
+      initialRoute: '/',
+      theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
     );
     return ChangeNotifierProvider(create: (_) => PaymentMethodStore(), child: app);
   }
@@ -73,9 +75,7 @@ class HomeScreen extends StatelessWidget {
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) {
               final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
               // ignore: deprecated_member_use
-              return PaymentMethodsScreen(
-                  createSetupIntent: locator.get<NetworkService>().createSetupIntent,
-                  paymentMethodStore: paymentMethods);
+              return PaymentMethodsScreen(paymentMethodStore: paymentMethods);
             })),
           ),
         ),
@@ -107,22 +107,22 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // void createPaymentMethodWithSetupIntent(BuildContext context) async {
-  //   final networkService = locator.get<NetworkService>();
-  //   await Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (context) =>
-  //               // ignore: deprecated_member_use
-  //               AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent)));
-  // }
+// void createPaymentMethodWithSetupIntent(BuildContext context) async {
+//   final networkService = locator.get<NetworkService>();
+//   await Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//           builder: (context) =>
+//               // ignore: deprecated_member_use
+//               AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent)));
+// }
 
-  // void createPaymentMethodWithoutSetupIntent(BuildContext context) async {
-  //   await Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (context) =>
-  //               // ignore: deprecated_member_use
-  //               AddPaymentMethodScreen.withoutSetupIntent()));
-  // }
+// void createPaymentMethodWithoutSetupIntent(BuildContext context) async {
+//   await Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//           builder: (context) =>
+//               // ignore: deprecated_member_use
+//               AddPaymentMethodScreen.withoutSetupIntent()));
+// }
 }
