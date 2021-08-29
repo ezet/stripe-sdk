@@ -60,9 +60,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
       body: Column(
         children: <Widget>[
-          const SizedBox(
-            height: 40,
-          ),
           Center(
             child: PaymentMethodSelector(
                 paymentMethodStore: paymentMethodStore,

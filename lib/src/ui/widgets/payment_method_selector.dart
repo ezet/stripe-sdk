@@ -67,6 +67,9 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
     return Column(
       children: [
         if (!_isLoading) _buildSelector() else _buildLoadingIndicator(),
+        const SizedBox(
+          height: 16,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
