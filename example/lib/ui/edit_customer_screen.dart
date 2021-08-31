@@ -6,7 +6,7 @@ class EditCustomerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Customer'),
+        title: const Text('Customer'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: CustomerSession.instance.retrieveCurrentCustomer(),
@@ -25,11 +25,13 @@ class EditCustomerScreen extends StatelessWidget {
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
   }
+
+  const EditCustomerScreen({Key? key}) : super(key: key);
 }
 
 class CustomerData {
@@ -62,18 +64,18 @@ class EditCustomerForm extends StatelessWidget {
               TextField(
                 controller: nameController,
                 readOnly: true,
-                decoration: InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Name'),
               ),
               TextField(
                 controller: emailController,
                 readOnly: true,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
               ),
               TextField(
                 controller: phoneController,
                 readOnly: true,
                 enableInteractiveSelection: false,
-                decoration: InputDecoration(labelText: 'Phone'),
+                decoration: const InputDecoration(labelText: 'Phone'),
               )
             ],
           ),

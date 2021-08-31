@@ -13,24 +13,24 @@ class PaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Payments'),
+        title: const Text('Payments'),
       ),
       body: ListView(children: <Widget>[
         Card(
           child: ListTile(
-            title: Text('Automatic confirmation (3DS2)'),
+            title: const Text('Automatic confirmation (3DS2)'),
             onTap: () => createAutomaticPaymentIntent(context),
           ),
         ),
         Card(
           child: ListTile(
-            title: Text('Manual confirmation (3DS2)'),
+            title: const Text('Manual confirmation (3DS2)'),
             onTap: () => createAutomaticPaymentIntent(context),
           ),
         ),
         Card(
           child: ListTile(
-            title: Text('Checkout (WIP)'),
+            title: const Text('Checkout (WIP)'),
             onTap: () => checkout(context),
           ),
         ),
@@ -93,4 +93,6 @@ class PaymentScreen extends StatelessWidget {
       debugPrint('Error');
     }
   }
+
+  const PaymentScreen({Key? key}) : super(key: key);
 }

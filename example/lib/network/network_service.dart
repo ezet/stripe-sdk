@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/material.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 class NetworkService {
@@ -17,8 +18,8 @@ class NetworkService {
     final callable = _cf.httpsCallable(name);
     try {
       final result = await callable.call(params);
-      print(result);
-      print(result.data);
+      debugPrint(result.toString());
+      debugPrint(result.data);
       return result.data;
     } on FirebaseFunctionsException catch (e) {
       log(e.message.toString());

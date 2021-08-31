@@ -13,23 +13,23 @@ class SetupIntentWithScaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stripe Test Cards'),
+        title: const Text('Stripe Test Cards'),
       ),
       body: ListView(
         children: <Widget>[
           Card(
               child: ListTile(
-            title: Text('pm_card_authenticationRequiredOnSetup'),
+            title: const Text('pm_card_authenticationRequiredOnSetup'),
             onTap: () async => await completeSetupIntent(context, 'pm_card_authenticationRequiredOnSetup'),
           )),
           Card(
               child: ListTile(
-            title: Text('pm_card_authenticationRequired'),
+            title: const Text('pm_card_authenticationRequired'),
             onTap: () async => await completeSetupIntent(context, 'pm_card_authenticationRequired'),
           )),
           Card(
               child: ListTile(
-            title: Text('pm_card_authenticationRequiredChargeDeclinedInsufficientFunds'),
+            title: const Text('pm_card_authenticationRequiredChargeDeclinedInsufficientFunds'),
             onTap: () async =>
                 await completeSetupIntent(context, 'pm_card_authenticationRequiredChargeDeclinedInsufficientFunds'),
           )),
@@ -62,4 +62,6 @@ class SetupIntentWithScaScreen extends StatelessWidget {
     hideProgressDialog(context);
     Navigator.pop(context, setupIntent['status'] == 'succeeded');
   }
+
+  const SetupIntentWithScaScreen({Key? key}) : super(key: key);
 }

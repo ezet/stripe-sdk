@@ -6,9 +6,11 @@ class IntentCompleteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('3DS intent completed'),
+        title: const Text('3DS intent completed'),
       ),
-      body: Text('complete'),
+      body: const Text('complete'),
     );
   }
+
+  const IntentCompleteScreen({Key? key}) : super(key: key);
 }
