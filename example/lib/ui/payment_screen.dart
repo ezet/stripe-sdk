@@ -42,8 +42,7 @@ class PaymentScreen extends StatelessWidget {
     final networkService = locator.get<NetworkService>();
     return Navigator.push(context, MaterialPageRoute(builder: (context) {
       // ignore: deprecated_member_use
-      return CheckoutScreen(
-        title: 'Checkout',
+      return CheckoutPage(
 //        paymentMethods: paymentMethods.paymentMethods.map((e) => PaymentMethod(e.id, e.last4)),
         createPaymentIntent: networkService.createAutomaticPaymentIntent,
       );
