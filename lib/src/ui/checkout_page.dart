@@ -11,17 +11,14 @@ import 'progress_bar.dart';
 import 'stores/payment_method_store.dart';
 import 'widgets/payment_method_selector.dart';
 
-@Deprecated('Experimental')
-class CheckoutScreen extends StatefulWidget {
-  final String title;
+class CheckoutPage extends StatefulWidget {
   final Future<IntentClientSecret> Function() createPaymentIntent;
   final void Function(BuildContext context, Map<String, dynamic> paymentIntent) onPaymentSuccess;
   final void Function(BuildContext context, Map<String, dynamic> paymentIntent) onPaymentFailed;
   final void Function(BuildContext context, StripeApiException e) onPaymentError;
 
-  CheckoutScreen({
+  CheckoutPage({
     Key? key,
-    required this.title,
     required this.createPaymentIntent,
     void Function(BuildContext context, Map<String, dynamic> paymentIntent)? onPaymentSuccess,
     void Function(BuildContext context, Map<String, dynamic> paymentIntent)? onPaymentFailed,
@@ -32,11 +29,11 @@ class CheckoutScreen extends StatefulWidget {
         super(key: key);
 
   @override
-  _CheckoutScreenState createState() => _CheckoutScreenState();
+  _CheckoutPageState createState() => _CheckoutPageState();
 }
 
 // ignore: deprecated_member_use_from_same_package
-class _CheckoutScreenState extends State<CheckoutScreen> {
+class _CheckoutPageState extends State<CheckoutPage> {
   final PaymentMethodStore paymentMethodStore = PaymentMethodStore.instance;
 
   String? _selectedPaymentMethod;
@@ -53,44 +50,39 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backwardsCompatibility: false,
-        title: Text(widget.title),
-      ),
-      body: Column(
-        children: <Widget>[
-          Center(
-            child: PaymentMethodSelector(
-                paymentMethodStore: paymentMethodStore,
-                initialPaymentMethodId: null,
-                onChanged: (value) => setState(() {
-                      _selectedPaymentMethod = value;
-                    })),
-          ),
-          Expanded(
-            child: FutureBuilder<Map<String, dynamic>>(
-                future: paymentIntentFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Align(
-                      alignment: Alignment.bottomCenter,
-                      child: StripeUiOptions.payButtonBuilder(
-                          context,
-                          snapshot.data!,
-                          _selectedPaymentMethod == null
-                              ? null
-                              : _createAttemptPaymentFunction(context, _clientSecretFuture)),
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                }),
-          )
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Center(
+          child: PaymentMethodSelector(
+              paymentMethodStore: paymentMethodStore,
+              initialPaymentMethodId: null,
+              onChanged: (value) => setState(() {
+                    _selectedPaymentMethod = value;
+                  })),
+        ),
+        Flexible(
+          child: FutureBuilder<Map<String, dynamic>>(
+              future: paymentIntentFuture,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Align(
+                    alignment: Alignment.bottomCenter,
+                    child: StripeUiOptions.payButtonBuilder(
+                        context,
+                        snapshot.data!,
+                        _selectedPaymentMethod == null
+                            ? null
+                            : _createAttemptPaymentFunction(context, _clientSecretFuture)),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+        )
+      ],
     );
   }
 
