@@ -65,6 +65,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
           child: FutureBuilder<Map<String, dynamic>>(
               future: paymentIntentFuture,
               builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  debugPrint(snapshot.error.toString());
+                }
                 if (snapshot.hasData) {
                   return Align(
                     alignment: Alignment.bottomCenter,
@@ -101,10 +104,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
         }
       } catch (e) {
         hideProgressDialog(context);
+        debugPrint(e.toString());
         if (e is StripeApiException) {
           widget.onPaymentError(context, e);
         } else {
-          debugPrint(e.toString());
           rethrow;
         }
       }
