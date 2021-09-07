@@ -50,19 +50,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Center(
-          child: PaymentMethodSelector(
-              paymentMethodStore: paymentMethodStore,
-              initialPaymentMethodId: null,
-              onChanged: (value) => setState(() {
-                    _selectedPaymentMethod = value;
-                  })),
-        ),
-        Flexible(
-          child: FutureBuilder<Map<String, dynamic>>(
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Center(
+            child: PaymentMethodSelector(
+                paymentMethodStore: paymentMethodStore,
+                initialPaymentMethodId: null,
+                onChanged: (value) => setState(() {
+                      _selectedPaymentMethod = value;
+                    })),
+          ),
+          FutureBuilder<Map<String, dynamic>>(
               future: paymentIntentFuture,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -85,9 +85,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           child: CircularProgressIndicator(),
                         );
                 }
-              }),
-        )
-      ],
+              })
+        ],
+      ),
     );
   }
 
