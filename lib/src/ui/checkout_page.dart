@@ -79,9 +79,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             : _createAttemptPaymentFunction(context, _clientSecretFuture)),
                   );
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return _selectedPaymentMethod == null
+                      ? const SizedBox.shrink()
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        );
                 }
               }),
         )
