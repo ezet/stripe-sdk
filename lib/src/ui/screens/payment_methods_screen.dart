@@ -29,7 +29,6 @@ class PaymentMethodsScreen extends StatelessWidget {
     final stripe = Stripe.instance;
     return Scaffold(
       appBar: AppBar(
-        backwardsCompatibility: false,
         title: Text(title),
         actions: <Widget>[
           IconButton(

@@ -75,7 +75,6 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backwardsCompatibility: false,
           title: Text(widget.title),
           actions: <Widget>[
             IconButton(
