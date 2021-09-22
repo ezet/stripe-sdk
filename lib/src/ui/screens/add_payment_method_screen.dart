@@ -90,26 +90,28 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             )
           ],
         ),
-        body: Column(
-          children: [
-            widget._form,
-            if (!kReleaseMode)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Wrap(
-                  children: [
-                    _createTestCardButton("4242424242424242"),
-                    _createTestCardButton("4000000000003220"),
-                    _createTestCardButton("4000000000003063"),
-                    _createTestCardButton("4000008400001629"),
-                    _createTestCardButton("4000008400001280"),
-                    _createTestCardButton("4000000000003055"),
-                    _createTestCardButton("4000000000003097"),
-                    _createTestCardButton("378282246310005"),
-                  ],
-                ),
-              )
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              widget._form,
+              if (!kReleaseMode)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Wrap(
+                    children: [
+                      _createTestCardButton("4242424242424242"),
+                      _createTestCardButton("4000000000003220"),
+                      _createTestCardButton("4000000000003063"),
+                      _createTestCardButton("4000008400001629"),
+                      _createTestCardButton("4000008400001280"),
+                      _createTestCardButton("4000000000003055"),
+                      _createTestCardButton("4000000000003097"),
+                      _createTestCardButton("378282246310005"),
+                    ],
+                  ),
+                )
+            ],
+          ),
         ));
   }
 
