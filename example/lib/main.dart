@@ -22,7 +22,7 @@ String getScaReturnUrl() {
 
 void main() async {
   initializeLocator();
-  Stripe.init(_stripePublishableKey, returnUrlForSca: getScaReturnUrl());
+  Stripe.init(_stripePublishableKey);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());

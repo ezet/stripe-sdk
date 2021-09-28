@@ -20,6 +20,8 @@ class StripeUiOptions {
   static void Function(BuildContext, StripeApiException) onPaymentError = _defaultOnPaymentError;
 
   static String defaultWebReturnUrl = "/";
+
+  static String defaultMobileReturnUrl = "stripesdk://3ds.stripesdk";
 }
 
 String _defaultFormatCurrency(BuildContext context, String currency, int amount) {

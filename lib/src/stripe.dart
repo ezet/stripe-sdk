@@ -26,24 +26,10 @@ class Stripe {
   /// It is required to use your own app specific url scheme and host. This
   /// parameter must match your "android/app/src/main/AndroidManifest.xml"
   /// and "ios/Runner/Info.plist" configuration.
-  Stripe(String publishableKey, {String? stripeAccount, required String returnUrlForSca})
-      : api = StripeApi(publishableKey, stripeAccount: stripeAccount),
-        _returnUrlForSca = returnUrlForSca {
-    assert(_isValidScheme());
-  }
-
-  bool _isValidScheme() {
-    var isHttpScheme = ['http', 'https'].contains(_returnUrlForSca.split(':')[0]);
-    if (kIsWeb) {
-      assert(isHttpScheme, 'Return URL schema must be http/https when compiled for web.');
-    } else {
-      assert(!isHttpScheme, 'Return URL schema must not http/https when compiled for mobile.');
-    }
-    return true;
-  }
+  Stripe(String publishableKey, {String? stripeAccount})
+      : api = StripeApi(publishableKey, stripeAccount: stripeAccount);
 
   final StripeApi api;
-  final String _returnUrlForSca;
   static Stripe? _instance;
 
   /// Access the instance of Stripe by calling [Stripe.instance].
@@ -69,8 +55,8 @@ class Stripe {
   /// It is required to use your own app specific url scheme and host. This
   /// parameter must match your "android/app/src/main/AndroidManifest.xml"
   /// and "ios/Runner/Info.plist" configuration.
-  static void init(String publishableKey, {String? stripeAccount, required String returnUrlForSca}) {
-    _instance = Stripe(publishableKey, stripeAccount: stripeAccount, returnUrlForSca: returnUrlForSca);
+  static void init(String publishableKey, {String? stripeAccount}) {
+    _instance = Stripe(publishableKey, stripeAccount: stripeAccount);
     StripeApi.init(publishableKey, stripeAccount: stripeAccount);
   }
 
@@ -81,7 +67,7 @@ class Stripe {
       return webReturnUrl ?? StripeUiOptions.defaultWebReturnUrl;
     } else {
       final requestId = Random.secure().nextInt(99999999);
-      return '$_returnUrlForSca?requestId=$requestId';
+      return '${StripeUiOptions.defaultMobileReturnUrl}?requestId=$requestId';
     }
   }
 
