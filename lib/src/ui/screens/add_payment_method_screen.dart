@@ -94,7 +94,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
           child: Column(
             children: [
               widget._form,
-              if (!kReleaseMode)
+              if (kDebugMode)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Wrap(
