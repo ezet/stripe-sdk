@@ -94,7 +94,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
           child: Column(
             children: [
               widget._form,
-              if (kDebugMode)
+              if (StripeUiOptions.showTestPaymentMethods)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Wrap(

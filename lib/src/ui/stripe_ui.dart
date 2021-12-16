@@ -21,6 +21,7 @@ class StripeUiOptions {
   static String defaultWebReturnUrl = "/";
 
   static String defaultMobileReturnUrl = "stripesdk://3ds.stripesdk";
+  static bool showTestPaymentMethods = false;
 }
 
 String _defaultFormatCurrency(BuildContext context, String currency, int amount) {
