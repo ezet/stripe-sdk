@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stripe_sdk/src/ui/stores/payment_method_store.dart';
 
@@ -10,8 +9,6 @@ import '../models.dart';
 import '../progress_bar.dart';
 import '../stripe_ui.dart';
 import '../widgets/card_form.dart';
-
-///
 
 /// A screen that collects, creates and attaches a payment method to a stripe customer.
 ///
