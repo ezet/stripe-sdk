@@ -22,7 +22,7 @@ dependencies:
 #  app_links: ^2.2.0
   credit_card_validator: ^2.0.0
   collection: ^1.15.0
-  webview_flutter: ^2.1.0
+  webview_flutter: ^3.0.0
   universal_html: ^2.0.8
 
 
