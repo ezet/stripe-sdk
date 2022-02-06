@@ -10,8 +10,6 @@ import '../progress_bar.dart';
 import '../stripe_ui.dart';
 import '../widgets/card_form.dart';
 
-///
-
 /// A screen that collects, creates and attaches a payment method to a stripe customer.
 ///
 /// Payment methods can be created with and without a Setup Intent. Using a Setup Intent is highly recommended.
