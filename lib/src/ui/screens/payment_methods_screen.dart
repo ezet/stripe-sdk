@@ -135,30 +135,29 @@ class _PaymentMethodsListState extends State<PaymentMethodsList> {
   }
 
   Future<void> _displayDeletePaymentMethodDialog(
-      BuildContext rootContext, PaymentMethod card, PaymentMethodStore paymentMethods) async {
+      BuildContext context, PaymentMethod card, PaymentMethodStore paymentMethods) async {
     showDialog(
-        context: rootContext,
-        builder: (BuildContext context) {
+        context: context,
+        builder: (BuildContext alertDialogContext) {
           return AlertDialog(
             title: const Text('Delete payment method'),
             content: const Text('Are you sure you want to delete this payment method?'),
             actions: <Widget>[
               TextButton(
-                onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                onPressed: () => Navigator.of(alertDialogContext, rootNavigator: true).pop(),
                 child: const Text('Cancel'),
               ),
               TextButton(
                 onPressed: () async {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  showProgressDialog(rootContext);
-                  await widget.paymentMethodStore.detachPaymentMethod(card.id);
-                  hideProgressDialog(rootContext);
-                  await paymentMethods.refresh();
-                  ScaffoldMessenger.of(rootContext)
+                  Navigator.of(alertDialogContext, rootNavigator: true).pop();
+                  showProgressDialog(context);
+                  await widget.paymentMethodStore
+                      .detachPaymentMethod(card.id)
+                      .whenComplete(() => hideProgressDialog(context));
+                  ScaffoldMessenger.of(context)
                     ..clearSnackBars()
                     ..showSnackBar(const SnackBar(
                       content: Text('Payment method successfully deleted.'),
-                      duration: Duration(seconds: 3),
                     ));
                 },
                 child: const Text('Delete'),

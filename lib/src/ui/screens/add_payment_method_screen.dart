@@ -84,7 +84,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                 if (formState?.validate() ?? false) {
                   formState!.save();
 
-                  await _createPaymentMethod(context, _cardData);
+                  await _tryCreatePaymentMethod(context, _cardData);
                 }
               },
             )
@@ -119,36 +119,41 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
     return OutlinedButton(
         child: Text(number.substring(number.length - 4)),
         onPressed: () =>
-            _createPaymentMethod(context, StripeCard(number: number, cvc: "123", expMonth: 1, expYear: 2030)));
+            _tryCreatePaymentMethod(context, StripeCard(number: number, cvc: "123", expMonth: 1, expYear: 2030)));
   }
 
-  Future<void> _createPaymentMethod(BuildContext context, StripeCard cardData) async {
+  Future<void> _tryCreatePaymentMethod(BuildContext context, StripeCard cardData) async {
     showProgressDialog(context);
+    try {
+      await _createPaymentMethod(cardData, context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  Future<void> _createPaymentMethod(StripeCard cardData, BuildContext context) async {
     var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(cardData);
     if (setupIntentFuture != null) {
-      final initialSetupIntent = await setupIntentFuture!;
+      final initialSetupIntent =
+          await setupIntentFuture!.timeout(const Duration(seconds: 10)).whenComplete(() => hideProgressDialog(context));
       final confirmedSetupIntent = await widget._stripe
           .confirmSetupIntent(initialSetupIntent.clientSecret, paymentMethod['id'], context: context);
-      hideProgressDialog(context);
 
       if (confirmedSetupIntent['status'] == 'succeeded') {
         /// A new payment method has been attached, so refresh the store.
         await widget._paymentMethodStore.refresh();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Payment method successfully added."),
-          duration: Duration(seconds: 3),
         ));
         Navigator.pop(context, paymentMethod['id']);
-        return;
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Authentication failed, please try again.")));
       }
     } else {
-      paymentMethod = await (widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id']));
-      hideProgressDialog(context);
+      paymentMethod = await (widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id']))
+          .whenComplete(() => hideProgressDialog(context));
       Navigator.pop(context, paymentMethod['id']);
-      return;
     }
   }
 }
