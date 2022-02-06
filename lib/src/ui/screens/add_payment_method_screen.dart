@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stripe_sdk/src/ui/stores/payment_method_store.dart';
 
@@ -80,6 +79,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: () async {
+                FocusManager.instance.primaryFocus?.unfocus();
                 final formState = _formKey.currentState;
                 if (formState?.validate() ?? false) {
                   formState!.save();
@@ -134,7 +134,10 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
       if (confirmedSetupIntent['status'] == 'succeeded') {
         /// A new payment method has been attached, so refresh the store.
         await widget._paymentMethodStore.refresh();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment method successfully added.")));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Payment method successfully added."),
+          duration: Duration(seconds: 3),
+        ));
         Navigator.pop(context, paymentMethod['id']);
         return;
       } else {

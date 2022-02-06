@@ -80,7 +80,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                   final id = await Navigator.push(
                       context, AddPaymentMethodScreen.route(paymentMethodStore: widget._paymentMethodStore));
                   if (id != null) {
-                    // await widget._paymentMethodStore.refresh();
+                    await widget._paymentMethodStore.refresh();
                     setState(() {
                       _selectedPaymentMethod = _getPaymentMethodById(id);
                     });

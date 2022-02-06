@@ -11,6 +11,7 @@ import '../screens/payment_methods_screen.dart';
 class PaymentMethodStore extends ChangeNotifier {
   final List<PaymentMethod> paymentMethods = [];
   bool isLoading = false;
+  bool isInitialized = false;
 
   /// The customer session the store operates on.
   final CustomerSession _customerSession;
@@ -25,15 +26,19 @@ class PaymentMethodStore extends ChangeNotifier {
 
   PaymentMethodStore({CustomerSession? customerSession})
       : _customerSession = customerSession ?? CustomerSession.instance {
-    _customerSession.addListener(() => dispose());
+    _customerSession.addListener(_customerSessionListener);
   }
+
+  void _customerSessionListener() => dispose();
 
   /// Refreshes data from the API when the first listener is added.
   @override
   void addListener(VoidCallback listener) {
-    final isFirstListener = !hasListeners;
     super.addListener(listener);
-    if (isFirstListener) refresh();
+    if (!isInitialized) {
+      isInitialized = true;
+      refresh();
+    }
   }
 
   /// Attach a payment method and refresh the store if there are any active listeners.
@@ -52,8 +57,6 @@ class PaymentMethodStore extends ChangeNotifier {
 
   /// Refresh the store if there are any active listeners.
   Future<void> refresh() async {
-    if (!hasListeners) return Future.value();
-
     final paymentMethodFuture = _customerSession.listPaymentMethods(limit: 100);
     isLoading = true;
     notifyListeners();
@@ -75,6 +78,7 @@ class PaymentMethodStore extends ChangeNotifier {
   /// Clear the store, notify all active listeners and dispose the ChangeNotifier.
   @override
   void dispose() {
+    _customerSession.removeListener(_customerSessionListener);
     paymentMethods.clear();
     notifyListeners();
     super.dispose();

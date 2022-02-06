@@ -10,19 +10,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.13.3
-  url_launcher: ^6.0.12
-  mask_text_input_formatter: ^2.0.0
-  flutter_slidable: ^0.6.0
-  simple_animations: ^3.1.1
-  supercharged: ^2.1.1
-  awesome_card: ^1.1.5
-#  uni_links2: ^0.6.0+2
-#  uni_links: ^0.5.1
-#  app_links: ^2.2.0
-  credit_card_validator: ^2.0.0
+  http: ^0.13.4
+  url_launcher: ^6.0.18
+  mask_text_input_formatter: ^2.1.0
+#  flutter_slidable: ^1.2.0
+  simple_animations: ^4.0.1
+  awesome_card: ^1.1.7
+  credit_card_validator: ^2.0.1
   collection: ^1.15.0
-  webview_flutter: ^2.1.0
+  webview_flutter: ^3.0.0
   universal_html: ^2.0.8
 
 
@@ -68,3 +64,6 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+
+false_secrets:
+  - example/**

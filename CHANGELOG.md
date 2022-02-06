@@ -1,5 +1,7 @@
 # Stripe SDK Changelog
 
+## 5.0.0-nullsafety.1
+
 ## 4.0.2
 
 * Fix a bug with date validation

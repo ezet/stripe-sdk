@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void hideProgressDialog(BuildContext context) {
-  Navigator.pop(context);
+  Navigator.of(context, rootNavigator: true).pop();
 }
 
 Future<bool?> showProgressDialog(BuildContext context) {
