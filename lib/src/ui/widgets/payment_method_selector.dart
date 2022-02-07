@@ -118,9 +118,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
       itemBuilder: (context, index) {
         final item = _paymentMethods![index];
         return RadioListTile<String>(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 32),
             title: Text(item.brand.toUpperCase()),
-            secondary: Text('**** **** **** ${item.last4}'),
+            secondary: Text(item.last4),
             subtitle: Text(item.getExpirationAsString()),
             value: item.id,
             groupValue: _selectedPaymentMethod?.id,

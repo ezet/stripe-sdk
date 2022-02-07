@@ -55,16 +55,11 @@ class AddPaymentMethodScreen extends StatefulWidget {
 }
 
 class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
-  late final StripeCard _cardData;
-  late final GlobalKey<FormState> _formKey;
-
   Future<IntentClientSecret>? setupIntentFuture;
 
   @override
   void initState() {
     if (widget.createSetupIntent != null) setupIntentFuture = widget.createSetupIntent!();
-    _cardData = widget._form.card;
-    _formKey = widget._form.formKey;
     super.initState();
   }
 
@@ -78,11 +73,11 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
               icon: const Icon(Icons.check),
               onPressed: () async {
                 FocusManager.instance.primaryFocus?.unfocus();
-                final formState = _formKey.currentState;
+                final formState = widget._form.formKey.currentState;
                 if (formState?.validate() ?? false) {
                   formState!.save();
 
-                  await _tryCreatePaymentMethod(context, _cardData);
+                  await _tryCreatePaymentMethod(context, widget._form.card);
                 }
               },
             )
