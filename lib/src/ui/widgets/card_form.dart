@@ -147,18 +147,19 @@ class _CardFormState extends State<CardForm> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       margin: const EdgeInsets.only(top: 8),
       child: TextFormField(
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.done,
-        initialValue: _validationModel.postalCode ?? widget.card.postalCode,
-        onChanged: (text) => setState(() => _validationModel.postalCode = text),
-        onSaved: (text) => widget.card.postalCode = text,
-        autofillHints: const [AutofillHints.postalCode],
-        validator: (text) =>
-            _validationModel.isPostalCodeValid() ? null : widget.postalCodeErrorText ?? 'Invalid postal code',
-        style: widget.postalCodeTextStyle ?? const TextStyle(color: Colors.black),
-        decoration: widget.postalCodeDecoration ??
-            const InputDecoration(border: OutlineInputBorder(), labelText: 'Postal code'),
-      ),
+          textInputAction: TextInputAction.done,
+          initialValue: _validationModel.postalCode ?? widget.card.postalCode,
+          onChanged: (text) => setState(() => _validationModel.postalCode = text),
+          onSaved: (text) => widget.card.postalCode = text,
+          autofillHints: const [AutofillHints.postalCode],
+          validator: (text) =>
+              _validationModel.isPostalCodeValid() ? null : widget.postalCodeErrorText ?? 'Invalid postal code',
+          style: widget.postalCodeTextStyle ?? const TextStyle(color: Colors.black),
+          decoration: widget.postalCodeDecoration ??
+              const InputDecoration(border: OutlineInputBorder(), labelText: 'Postal code'),
+          // Use TextInputType.datetime instead of TextInputType.number to fix the numeric keyboard issue on
+          // iOS devices running iOS12 and lower. See: https://github.com/flutter/flutter/issues/58510
+          keyboardType: TextInputType.datetime),
     );
   }
 

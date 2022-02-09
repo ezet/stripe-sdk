@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -36,16 +34,17 @@ class _CardCvcFormFieldState extends State<CardCvcFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: widget.initialValue,
-      autofillHints: const [AutofillHints.creditCardSecurityCode],
-      inputFormatters: [maskFormatter],
-      onChanged: widget.onChanged,
-      validator: widget.validator,
-      onSaved: widget.onSaved,
-      style: widget.textStyle,
-      decoration: widget.decoration,
-      keyboardType: TextInputType.number,
-      textInputAction: TextInputAction.next,
-    );
+        initialValue: widget.initialValue,
+        autofillHints: const [AutofillHints.creditCardSecurityCode],
+        inputFormatters: [maskFormatter],
+        onChanged: widget.onChanged,
+        validator: widget.validator,
+        onSaved: widget.onSaved,
+        style: widget.textStyle,
+        decoration: widget.decoration,
+        textInputAction: TextInputAction.next,
+        // Use TextInputType.datetime instead of TextInputType.number to fix the numeric keyboard issue on
+        // iOS devices running iOS12 and lower. See: https://github.com/flutter/flutter/issues/58510
+        keyboardType: TextInputType.datetime);
   }
 }
