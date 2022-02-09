@@ -53,29 +53,31 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
         MaskTextInputFormatter(mask: '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
 
     return TextFormField(
-      validator: widget.validator,
-      initialValue: initialMaskFormatter.formatEditUpdate(const TextEditingValue(), TextEditingValue(text: initial)).text,
-      autofillHints: const [AutofillHints.creditCardExpirationDate],
-      onChanged: (text) {
-        final arr = text.split('/');
-        final month = int.tryParse(arr[0]);
-        int? year;
-        if (arr.length == 2) {
-          year = int.tryParse(arr[1]);
-        }
-        widget.onChanged(month, year);
-      },
-      onSaved: (text) {
-        final arr = text!.split('/');
-        final month = int.tryParse(arr[0]);
-        final year = int.tryParse(arr[1]);
-        widget.onSaved(month, year);
-      },
-      inputFormatters: [maskFormatter],
-      style: widget.textStyle,
-      decoration: widget.decoration,
-      keyboardType: TextInputType.number,
-      textInputAction: TextInputAction.next,
-    );
+        validator: widget.validator,
+        initialValue:
+            initialMaskFormatter.formatEditUpdate(const TextEditingValue(), TextEditingValue(text: initial)).text,
+        autofillHints: const [AutofillHints.creditCardExpirationDate],
+        onChanged: (text) {
+          final arr = text.split('/');
+          final month = int.tryParse(arr[0]);
+          int? year;
+          if (arr.length == 2) {
+            year = int.tryParse(arr[1]);
+          }
+          widget.onChanged(month, year);
+        },
+        onSaved: (text) {
+          final arr = text!.split('/');
+          final month = int.tryParse(arr[0]);
+          final year = int.tryParse(arr[1]);
+          widget.onSaved(month, year);
+        },
+        inputFormatters: [maskFormatter],
+        style: widget.textStyle,
+        decoration: widget.decoration,
+        textInputAction: TextInputAction.next,
+        // Use TextInputType.datetime instead of TextInputType.number to fix the numeric keyboard issue issue on
+        // iOS devices running iOS12 and lower. See: https://github.com/flutter/flutter/issues/58510
+        keyboardType: TextInputType.datetime);
   }
 }
