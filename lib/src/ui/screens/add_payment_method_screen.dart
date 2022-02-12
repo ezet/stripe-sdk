@@ -15,16 +15,13 @@ import '../widgets/card_form.dart';
 /// Payment methods can be created with and without a Setup Intent. Using a Setup Intent is highly recommended.
 ///
 class AddPaymentMethodScreen extends StatefulWidget {
-  final Stripe _stripe;
+  final Stripe stripe;
 
   /// Used to create a setup intent when required.
   final createSetupIntent = StripeUiOptions.createSetupIntent;
 
   /// The payment method store used to manage payment methods.
-  final PaymentMethodStore _paymentMethodStore;
-
-  /// The card form used to collect payment method details.
-  final CardForm _form;
+  final PaymentMethodStore paymentMethodStore;
 
   /// Custom Title for the screen
   final String title;
@@ -34,21 +31,16 @@ class AddPaymentMethodScreen extends StatefulWidget {
       {PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, String title = _defaultTitle}) {
     return MaterialPageRoute(
       builder: (context) => AddPaymentMethodScreen(
-        paymentMethodStore: paymentMethodStore,
-        stripe: stripe,
-        form: form,
+        paymentMethodStore: paymentMethodStore ?? PaymentMethodStore.instance,
+        stripe: stripe ?? Stripe.instance,
         title: title,
       ),
     );
   }
 
   /// Add a payment method using a Stripe Setup Intent
-  AddPaymentMethodScreen(
-      {Key? key, PaymentMethodStore? paymentMethodStore, Stripe? stripe, CardForm? form, this.title = _defaultTitle})
-      : _form = form ?? CardForm(),
-        _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
-        _stripe = stripe ?? Stripe.instance,
-        super(key: key);
+  AddPaymentMethodScreen({Key? key, required this.paymentMethodStore, required this.stripe, this.title = _defaultTitle})
+      : super(key: key);
 
   @override
   _AddPaymentMethodScreenState createState() => _AddPaymentMethodScreenState();
@@ -56,6 +48,7 @@ class AddPaymentMethodScreen extends StatefulWidget {
 
 class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   Future<IntentClientSecret>? setupIntentFuture;
+  final form = CardForm();
 
   @override
   void initState() {
@@ -72,12 +65,10 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: () async {
-                FocusManager.instance.primaryFocus?.unfocus();
-                final formState = widget._form.formKey.currentState;
+                final formState = form.formKey.currentState;
                 if (formState?.validate() ?? false) {
                   formState!.save();
-
-                  await _tryCreatePaymentMethod(context, widget._form.card);
+                  await _tryCreatePaymentMethod(context, form.card);
                 }
               },
             )
@@ -86,7 +77,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              widget._form,
+              form,
               if (StripeUiOptions.showTestPaymentMethods)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -116,6 +107,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   }
 
   Future<void> _tryCreatePaymentMethod(BuildContext context, StripeCard cardData) async {
+    FocusManager.instance.primaryFocus!.unfocus();
     showProgressDialog(context);
     try {
       await _createPaymentMethod(cardData, context);
@@ -125,16 +117,16 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   }
 
   Future<void> _createPaymentMethod(StripeCard cardData, BuildContext context) async {
-    var paymentMethod = await widget._stripe.api.createPaymentMethodFromCard(cardData);
+    var paymentMethod = await widget.stripe.api.createPaymentMethodFromCard(cardData);
     if (setupIntentFuture != null) {
       final initialSetupIntent =
           await setupIntentFuture!.timeout(const Duration(seconds: 10)).whenComplete(() => hideProgressDialog(context));
-      final confirmedSetupIntent = await widget._stripe
+      final confirmedSetupIntent = await widget.stripe
           .confirmSetupIntent(initialSetupIntent.clientSecret, paymentMethod['id'], context: context);
 
       if (confirmedSetupIntent['status'] == 'succeeded') {
         /// A new payment method has been attached, so refresh the store.
-        await widget._paymentMethodStore.refresh();
+        await widget.paymentMethodStore.refresh();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Payment method successfully added."),
         ));
@@ -144,7 +136,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             .showSnackBar(const SnackBar(content: Text("Authentication failed, please try again.")));
       }
     } else {
-      paymentMethod = await (widget._paymentMethodStore.attachPaymentMethod(paymentMethod['id']))
+      paymentMethod = await (widget.paymentMethodStore.attachPaymentMethod(paymentMethod['id']))
           .whenComplete(() => hideProgressDialog(context));
       Navigator.pop(context, paymentMethod['id']);
     }

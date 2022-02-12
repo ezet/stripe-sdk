@@ -159,7 +159,7 @@ class _CardFormState extends State<CardForm> {
               const InputDecoration(border: OutlineInputBorder(), labelText: 'Postal code'),
           // Use TextInputType.datetime instead of TextInputType.number to fix the numeric keyboard issue on
           // iOS devices running iOS12 and lower. See: https://github.com/flutter/flutter/issues/58510
-          keyboardType: TextInputType.datetime),
+          keyboardType: TextInputType.streetAddress),
     );
   }
 

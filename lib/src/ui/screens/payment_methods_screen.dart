@@ -34,10 +34,7 @@ class PaymentMethodsScreen extends StatelessWidget {
             icon: const Icon(Icons.add),
             onPressed: () async {
               await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          AddPaymentMethodScreen(stripe: stripe, paymentMethodStore: _paymentMethodStore)));
+                  context, AddPaymentMethodScreen.route(paymentMethodStore: _paymentMethodStore, stripe: stripe));
             },
           )
         ],
