@@ -42,9 +42,10 @@ void _defaultOnPaymentSuccess(BuildContext context, Map<String, dynamic> payment
 }
 
 void _defaultOnPaymentFailed(BuildContext context, Map<String, dynamic> paymentIntent) {
+  final lastIntent = paymentIntent['last_payment_error'];
   ScaffoldMessenger.of(context)
     ..clearSnackBars()
-    ..showSnackBar(SnackBar(content: Text(paymentIntent['last_payment_error']['message'])));
+    ..showSnackBar(SnackBar(content: Text(lastIntent != null ? lastIntent('message') : "Payment aborted")));
 }
 
 void _defaultOnPaymentError(BuildContext context, StripeApiException e) {
