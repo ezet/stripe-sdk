@@ -59,6 +59,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 initialPaymentMethodId: null,
                 onChanged: (value) => setState(() {
                       _selectedPaymentMethod = value;
+                      debugPrint("Selected paymentMethod changed: $value");
                     })),
           ),
           FutureBuilder<Map<String, dynamic>>(

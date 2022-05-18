@@ -14,7 +14,7 @@ class PaymentMethodSelector extends StatefulWidget {
     this.initialPaymentMethodId,
     this.selectorType = SelectorType.radioButton,
     Key? key,
-    this.selectFirstByDefault = true,
+    this.selectFirstByDefault = false,
   })  : _paymentMethodStore = paymentMethodStore ?? PaymentMethodStore.instance,
         super(key: key);
 
@@ -52,13 +52,15 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
       setState(() {
         _paymentMethods = widget._paymentMethodStore.paymentMethods;
         _isLoading = widget._paymentMethodStore.isLoading;
-        if (widget.selectFirstByDefault && _selectedPaymentMethod == null) {
-          _selectedPaymentMethod = _paymentMethods?.firstOrNull;
-          if (_selectedPaymentMethod != null) {
+        if (!_paymentMethods!.contains(_selectedPaymentMethod) || _selectedPaymentMethod == null) {
+            if (widget.selectFirstByDefault && _selectedPaymentMethod == null) {
+              _selectedPaymentMethod = _paymentMethods?.firstOrNull;
+            } else {
+              _selectedPaymentMethod = null;
+            }
             WidgetsBinding.instance!.addPostFrameCallback((_) {
-              widget.onChanged(_selectedPaymentMethod!.id);
+              widget.onChanged(_selectedPaymentMethod?.id);
             });
-          }
         }
       });
     }
@@ -117,7 +119,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         final item = _paymentMethods![index];
-        return RadioListTile<String>(
+        return RadioListTile<String?>(
             title: Text(item.brand.toUpperCase()),
             secondary: Text(item.last4),
             subtitle: Text(item.getExpirationAsString()),
