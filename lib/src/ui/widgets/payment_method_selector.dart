@@ -55,7 +55,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
         if (widget.selectFirstByDefault && _selectedPaymentMethod == null) {
           _selectedPaymentMethod = _paymentMethods?.firstOrNull;
           if (_selectedPaymentMethod != null) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               widget.onChanged(_selectedPaymentMethod!.id);
             });
           }
