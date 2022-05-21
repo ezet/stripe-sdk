@@ -57,6 +57,17 @@ class PaymentMethod {
   String getExpirationAsString() {
     return '${expirationDate.month}/${expirationDate.year}';
   }
+
+  @override
+  int get hashCode {
+    return id.hashCode;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is PaymentMethod) return id == other.id;
+    return false;
+  }
 }
 
 class PaymentMethodsList extends StatefulWidget {
