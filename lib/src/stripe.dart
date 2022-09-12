@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -103,6 +104,26 @@ class Stripe {
       {String? paymentMethodId}) async {
     final data = {'return_url': getReturnUrlForSca()};
     if (paymentMethodId != null) data['payment_method'] = paymentMethodId;
+    final Map<String, dynamic> paymentIntent = await api.confirmPaymentIntent(
+      paymentIntentClientSecret,
+      data: data,
+    );
+    return _handlePaymentIntent(paymentIntent, context);
+  }
+
+  /// Confirm and authenticate a payment.
+  /// Returns the PaymentIntent.
+  /// https://stripe.com/docs/payments/payment-intents/android
+  Future<Map<String, dynamic>> confirmPaymentWithGooglePay(BuildContext context,
+      {required String paymentIntentClientSecret, required Map<String, dynamic> paymentResult}) async {
+    final data = <String, dynamic>{'return_url': getReturnUrlForSca()};
+    final String token = paymentResult['paymentMethodData']['tokenizationData']['token'] as String;
+    final tokenJson = jsonDecode(token) as Map<String, dynamic>;
+    final tokenId = tokenJson['id'] as String;
+    data['payment_method_data'] = {
+      'type': 'card',
+      "card": {"token": tokenId}
+    };
     final Map<String, dynamic> paymentIntent = await api.confirmPaymentIntent(
       paymentIntentClientSecret,
       data: data,
