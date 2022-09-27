@@ -131,6 +131,23 @@ class Stripe {
     return _handlePaymentIntent(paymentIntent, context);
   }
 
+  /// Confirm and authenticate a payment.
+  /// Returns the PaymentIntent.
+  /// https://stripe.com/docs/payments/payment-intents/android
+  Future<Map<String, dynamic>> confirmPaymentWithToken(BuildContext context,
+      {required String paymentIntentClientSecret, required String token}) async {
+    final data = <String, dynamic>{'return_url': getReturnUrlForSca()};
+    data['payment_method_data'] = {
+      'type': 'card',
+      "card": {"token": token}
+    };
+    final Map<String, dynamic> paymentIntent = await api.confirmPaymentIntent(
+      paymentIntentClientSecret,
+      data: data,
+    );
+    return _handlePaymentIntent(paymentIntent, context);
+  }
+
   /// Authenticate a payment.
   /// Returns the PaymentIntent.
   /// https://stripe.com/docs/payments/payment-intents/android-manual
