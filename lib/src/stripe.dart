@@ -134,7 +134,7 @@ class Stripe {
   /// Confirm and authenticate a payment with Apple Pay.
   /// [paymentResult] must be the result of requesting a Apple Pay paymet with the `pay` library.
   /// Returns the PaymentIntent.
-  Future<Map<String, dynamic>> confirmPaymentApplePay(BuildContext context,
+  Future<Map<String, dynamic>> confirmPaymentWithApplePay(BuildContext context,
       {required String paymentIntentClientSecret, required Map<String, dynamic> paymentResult}) async {
     final tokenPayload = <String, dynamic>{};
     tokenPayload['pk_token'] = paymentResult['token'];
