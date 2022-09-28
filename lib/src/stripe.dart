@@ -243,14 +243,14 @@ class Stripe {
             child: const Text("Open new window"),
             onPressed: () {
               Navigator.of(context).pop();
-              launch(url, enableJavaScript: true);
+              launchUrl(Uri.parse(url));
             },
           )
         ],
       ),
     );
 
-    await launch(url, enableJavaScript: true);
+    await launchUrl(Uri.parse(url));
 
     return completer.future;
   }
