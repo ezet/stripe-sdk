@@ -53,14 +53,14 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
         _paymentMethods = widget._paymentMethodStore.paymentMethods;
         _isLoading = widget._paymentMethodStore.isLoading;
         if (!_paymentMethods!.contains(_selectedPaymentMethod) || _selectedPaymentMethod == null) {
-            if (widget.selectFirstByDefault && _selectedPaymentMethod == null) {
-              _selectedPaymentMethod = _paymentMethods?.firstOrNull;
-            } else {
-              _selectedPaymentMethod = null;
-            }
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
-              widget.onChanged(_selectedPaymentMethod?.id);
-            });
+          if (widget.selectFirstByDefault && _selectedPaymentMethod == null) {
+            _selectedPaymentMethod = _paymentMethods?.firstOrNull;
+          } else {
+            _selectedPaymentMethod = null;
+          }
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            widget.onChanged(_selectedPaymentMethod?.id);
+          });
         }
       });
     }
