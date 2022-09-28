@@ -111,9 +111,9 @@ class Stripe {
     return _handlePaymentIntent(paymentIntent, context);
   }
 
-  /// Confirm and authenticate a payment.
+  /// Confirm and authenticate a payment with Google Pay.
+  /// /// [paymentResult] must be the result of requesting a Google Pay payment with the `pay` library.
   /// Returns the PaymentIntent.
-  /// https://stripe.com/docs/payments/payment-intents/android
   Future<Map<String, dynamic>> confirmPaymentWithGooglePay(BuildContext context,
       {required String paymentIntentClientSecret, required Map<String, dynamic> paymentResult}) async {
     final data = <String, dynamic>{'return_url': getReturnUrlForSca()};
@@ -131,21 +131,45 @@ class Stripe {
     return _handlePaymentIntent(paymentIntent, context);
   }
 
-  /// Confirm and authenticate a payment.
+  /// Confirm and authenticate a payment with Apple Pay.
+  /// [paymentResult] must be the result of requesting a Apple Pay paymet with the `pay` library.
   /// Returns the PaymentIntent.
-  /// https://stripe.com/docs/payments/payment-intents/android
-  Future<Map<String, dynamic>> confirmPaymentWithToken(BuildContext context,
-      {required String paymentIntentClientSecret, required String token}) async {
+  Future<Map<String, dynamic>> confirmPaymentApplePay(BuildContext context,
+      {required String paymentIntentClientSecret, required Map<String, dynamic> paymentResult}) async {
+    final tokenPayload = <String, dynamic>{};
+    tokenPayload['pk_token'] = paymentResult['token'];
+    final paymentMethod = _getPaymentMethod(paymentResult['paymentMethod']);
+    tokenPayload['pk_token_instrument_name'] = paymentMethod['displayName'];
+    tokenPayload['pk_token_payment_network'] = paymentMethod['network'];
+    tokenPayload['card'] = <String, dynamic>{};
+    tokenPayload['pk_token_transaction_id'] = paymentResult['transactionIdentifier'];
+
+    if (tokenPayload['pk_token_transaction_id'] == "Simulated Identifier") {
+      tokenPayload['pk_token_transaction_id'] =
+          "ApplePayStubs~4242424242424242~200~USD~${DateTime.now().millisecondsSinceEpoch}";
+    }
+
+    final stripeToken = await api.createToken(tokenPayload);
+    final tokenId = stripeToken['id'] as String;
+
     final data = <String, dynamic>{'return_url': getReturnUrlForSca()};
     data['payment_method_data'] = {
       'type': 'card',
-      "card": {"token": token}
+      "card": {"token": tokenId}
     };
     final Map<String, dynamic> paymentIntent = await api.confirmPaymentIntent(
       paymentIntentClientSecret,
       data: data,
     );
     return _handlePaymentIntent(paymentIntent, context);
+  }
+
+  Map<String, dynamic> _getPaymentMethod(dynamic paymentMethod) {
+    if (paymentMethod is String) {
+      return jsonDecode(paymentMethod) as Map<String, dynamic>;
+    } else {
+      return paymentMethod as Map<String, dynamic>;
+    }
   }
 
   /// Authenticate a payment.
