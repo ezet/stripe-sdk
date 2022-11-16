@@ -95,7 +95,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return () async {
       showProgressDialog(context);
       final initialPaymentIntent = await paymentIntentFuture.catchError((error){
-        debugPrint(error.toString());
         hideProgressDialog(context);
       });
       try {
