@@ -94,7 +94,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void Function() _createAttemptPaymentFunction(BuildContext context, Future<IntentClientSecret> paymentIntentFuture) {
     return () async {
       showProgressDialog(context);
-      final initialPaymentIntent = await paymentIntentFuture;
+      final initialPaymentIntent = await paymentIntentFuture.catchError((error){
+        debugPrint(error.toString());
+        hideProgressDialog(context);
+      });
       try {
         final confirmedPaymentIntent = await Stripe.instance
             .confirmPayment(initialPaymentIntent.clientSecret, context, paymentMethodId: _selectedPaymentMethod);
