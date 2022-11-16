@@ -94,16 +94,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void Function() _createAttemptPaymentFunction(BuildContext context, Future<IntentClientSecret> paymentIntentFuture) {
     return () async {
       showProgressDialog(context);
-      final initialPaymentIntent = await paymentIntentFuture.whenComplete(() => hideProgressDialog(context));
+      final initialPaymentIntent = await paymentIntentFuture.catchError((error){
+        hideProgressDialog(context);
+      });
       try {
         final confirmedPaymentIntent = await Stripe.instance
             .confirmPayment(initialPaymentIntent.clientSecret, context, paymentMethodId: _selectedPaymentMethod);
         if (confirmedPaymentIntent['status'] == 'succeeded') {
           widget.onPaymentSuccess(context, confirmedPaymentIntent);
+          hideProgressDialog(context);
         } else {
           widget.onPaymentFailed(context, confirmedPaymentIntent);
+          hideProgressDialog(context);
         }
       } catch (e) {
+        hideProgressDialog(context);
         debugPrint(e.toString());
         if (e is StripeApiException) {
           widget.onPaymentError(context, e);
