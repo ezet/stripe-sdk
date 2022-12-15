@@ -81,6 +81,9 @@ class PaymentMethodStore extends ChangeNotifier {
     _customerSession.removeListener(_customerSessionListener);
     paymentMethods.clear();
     notifyListeners();
+    if (identical(this, _instance)) {
+      _instance = null;
+    }
     super.dispose();
   }
 }

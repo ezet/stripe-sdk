@@ -48,13 +48,16 @@ class CustomerSession extends ChangeNotifier {
     notifyListeners();
     dispose();
     isDisposed = true;
-    if (this == _instance) _instance = null;
+    if (identical(_instance, this)) {
+      _instance = null;
+    }
   }
 
   /// Get the current customer session
   static CustomerSession get instance {
     if (_instance == null) {
-      throw Exception('Attempted to get instance of CustomerSession before initialization. Please initialize a new session using [CustomerSession.initCustomerSession() first.]');
+      throw Exception(
+          'Attempted to get instance of CustomerSession before initialization. Please initialize a new session using [CustomerSession.initCustomerSession() first.]');
     }
     assert(_instance!._assertNotDisposed());
     return _instance!;
