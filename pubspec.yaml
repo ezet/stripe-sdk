@@ -15,7 +15,7 @@ dependencies:
   url_launcher: ^6.1.6
   mask_text_input_formatter: ^2.4.0
   #  flutter_slidable: ^1.2.0
-  simple_animations: ^4.0.1
+  simple_animations: ^5.0.2
   awesome_card: ^1.1.7
   credit_card_validator: ^2.0.1
   collection: ^1.16.0
