@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-
-import '../../../stripe_sdk_ui.dart';
+import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_sdk_example/ui/payment_methods_screen.dart';
 
 typedef OnPaymentMethodSelected = void Function(String?);
 
@@ -77,18 +77,6 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            OutlinedButton(
-                onPressed: () async {
-                  final id = await Navigator.push(
-                      context, AddPaymentMethodScreen.route(paymentMethodStore: widget._paymentMethodStore));
-                  if (id != null) {
-                    await widget._paymentMethodStore.refresh();
-                    setState(() {
-                      _selectedPaymentMethod = _getPaymentMethodById(id);
-                    });
-                  }
-                },
-                child: const Text('+ Add card')),
             OutlinedButton(
                 onPressed: () async {
                   final _ = await Navigator.push(

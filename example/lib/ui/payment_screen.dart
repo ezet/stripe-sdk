@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
-import 'package:stripe_sdk/stripe_sdk_ui.dart';
 import 'package:stripe_sdk_example/network/network_service.dart';
 
 import '../locator.dart';
+import 'checkout_page.dart';
 
 class PaymentScreen extends StatelessWidget {
   @override

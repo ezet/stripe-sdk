@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 import '../../customer_session.dart';
-import '../screens/payment_methods_screen.dart';
+import '../../models.dart';
 
 /// A managed repository for payment methods.
 /// This is the preferred way to work with payment methods when using Flutter.

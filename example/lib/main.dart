@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
-import 'package:stripe_sdk/stripe_sdk_ui.dart';
 import 'package:stripe_sdk_example/ui/intent_complete_screen.dart';
 
 import 'locator.dart';
 import 'network/network_service.dart';
 import 'setup_intent_with_sca.dart';
 import 'ui/edit_customer_screen.dart';
+import 'ui/payment_methods_screen.dart';
 import 'ui/payment_screen.dart';
 
 const _stripePublishableKey = 'pk_test_FlC2pf2JCTgKLcgG0aScSQmp00XqfTJL8s';

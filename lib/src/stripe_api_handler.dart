@@ -12,9 +12,9 @@ enum RequestMethod { get, post, put, delete, option }
 
 class StripeApiHandler {
   static const String liveApiBase = 'https://api.stripe.com';
-  static const String liveLogginBase = 'https://q.stripe.com';
+  static const String liveLoggingBase = 'https://q.stripe.com';
   static const String liveLoggingEndpoint = 'https://m.stripe.com/4';
-  static const String liveApiPath = liveApiBase + '/v1';
+  static const String liveApiPath = '$liveApiBase/v1';
 
   static const String charset = 'UTF-8';
   static const String customers = 'customers';

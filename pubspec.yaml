@@ -11,20 +11,20 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.13.5
-  url_launcher: ^6.1.6
-  mask_text_input_formatter: ^2.4.0
+  http: ^1.1.0
+  url_launcher: ^6.1.12
+  mask_text_input_formatter: ^2.5.0
   #  flutter_slidable: ^1.2.0
-  simple_animations: ^4.0.1
+  simple_animations: ^5.0.2
   awesome_card: ^1.1.7
-  credit_card_validator: ^2.0.1
-  collection: ^1.16.0
+  credit_card_validator: ^2.1.0
+  collection: ^1.17.1
   webview_flutter: ^3.0.4
-  universal_html: ^2.0.8
+  universal_html: ^2.2.3
 
 
 dev_dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.2
   flutter_test:
     sdk: flutter
 

@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:stripe_sdk/stripe_sdk_ui.dart';
+import 'package:stripe_sdk/stripe_sdk.dart';
 
 class NetworkService {
   final FirebaseFunctions _cf;

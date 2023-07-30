@@ -9,7 +9,7 @@ import "package:universal_html/html.dart" as html;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'stripe_api.dart';
-import 'ui/stripe_ui.dart';
+import 'stripe_config.dart';
 
 class Stripe {
   /// Creates a new [Stripe] object. Use this constructor if you wish to handle the instance of this class by yourself.

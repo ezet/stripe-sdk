@@ -11,6 +11,4 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
 #  errors:
 #    omit_local_variable_types: ignore
-  strong-mode:
-    implicit-casts: true
-    implicit-dynamic: true
+

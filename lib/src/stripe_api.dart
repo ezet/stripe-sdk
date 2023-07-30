@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'models/card.dart';
 import 'stripe_api_handler.dart';
 
 typedef IntentProvider = Future<Map<String, dynamic>> Function(Uri uri);
@@ -61,14 +60,6 @@ class StripeApi {
   Future<Map<String, dynamic>> createPaymentMethod(Map<String, dynamic> data) async {
     const path = '/payment_methods';
     return _apiHandler.request(RequestMethod.post, path, publishableKey, apiVersion, params: data);
-  }
-
-  /// Create a PaymentMethod from a card.
-  /// This will only create a PaymentMethod with the minimum required properties.
-  /// To include additional properties such as billing details, use [StripeCard.toPaymentMethod], add additional details
-  /// and then use [createPaymentMethod].
-  Future<Map<String, dynamic>> createPaymentMethodFromCard(StripeCard card) async {
-    return createPaymentMethod(card.toPaymentMethod());
   }
 
   /// Create a new Source object.

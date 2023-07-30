@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../stripe.dart';
-import '../../ui/stores/payment_method_store.dart';
-import '../progress_bar.dart';
-import 'add_payment_method_screen.dart';
+import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_sdk_example/ui/progress_bar.dart';
 
 class PaymentMethodsScreen extends StatelessWidget {
   final String title;
@@ -25,19 +22,9 @@ class PaymentMethodsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stripe = Stripe.instance;
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () async {
-              await Navigator.push(
-                  context, AddPaymentMethodScreen.route(paymentMethodStore: _paymentMethodStore, stripe: stripe));
-            },
-          )
-        ],
       ),
       body: PaymentMethodsList(
         paymentMethodStore: _paymentMethodStore,
@@ -46,29 +33,7 @@ class PaymentMethodsScreen extends StatelessWidget {
   }
 }
 
-class PaymentMethod {
-  final String id;
-  final String last4;
-  final String brand;
-  final DateTime expirationDate;
 
-  const PaymentMethod(this.id, this.last4, this.brand, this.expirationDate);
-
-  String getExpirationAsString() {
-    return '${expirationDate.month}/${expirationDate.year}';
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is PaymentMethod) return id == other.id;
-    return false;
-  }
-}
 
 class PaymentMethodsList extends StatefulWidget {
   final PaymentMethodStore paymentMethodStore;
