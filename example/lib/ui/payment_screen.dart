@@ -24,7 +24,7 @@ class PaymentScreen extends StatelessWidget {
         Card(
           child: ListTile(
             title: const Text('Manual confirmation (3DS2)'),
-            onTap: () => createAutomaticPaymentIntent(context),
+            onTap: () => createManualPaymentIntent(context),
           ),
         ),
         Card(
@@ -42,15 +42,18 @@ class PaymentScreen extends StatelessWidget {
     return Navigator.push(context, MaterialPageRoute(builder: (context) {
       // ignore: deprecated_member_use
       return CheckoutPage(
-//        paymentMethods: paymentMethods.paymentMethods.map((e) => PaymentMethod(e.id, e.last4)),
-        createPaymentIntent: networkService.createAutomaticPaymentIntent,
+        createPaymentIntent: () => networkService.createAutomaticPaymentIntent(1, "", ""),
       );
     }));
   }
 
   void createAutomaticPaymentIntent(BuildContext context) async {
     final networkService = locator.get<NetworkService>();
-    final response = await networkService.createAutomaticPaymentIntent();
+    final response = await (networkService.createAutomaticPaymentIntent(
+      10000,
+      'pm_card_threeDSecure2Required',
+      Stripe.instance.getReturnUrlForSca(webReturnUrl: '/'),
+    ));
     if (response.status == 'succeeded') {
       // TODO: success
       debugPrint('Success before authentication.');

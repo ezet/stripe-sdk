@@ -69,30 +69,18 @@ class HomeScreen extends StatelessWidget {
       body: ListView(children: <Widget>[
         Card(
           child: ListTile(
-            title: const Text('Customer Details'),
+            title: const Text('User Details'),
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const EditCustomerScreen())),
           ),
         ),
         Card(
           child: ListTile(
-            title: const Text('Payment Methods Screen'),
+            title: const Text('Payment Methods'),
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) {
               final paymentMethods = Provider.of<PaymentMethodStore>(context, listen: false);
               // ignore: deprecated_member_use
               return PaymentMethodsScreen(paymentMethodStore: paymentMethods);
             })),
-          ),
-        ),
-        const Card(
-          child: ListTile(
-            title: Text('Add Payment Method with Setup Intent'),
-            // onTap: () => createPaymentMethodWithSetupIntent(context),
-          ),
-        ),
-        const Card(
-          child: ListTile(
-            title: Text('Add Payment Method without Setup Intent'),
-            // onTap: () => createPaymentMethodWithoutSetupIntent(context),
           ),
         ),
         Card(
@@ -111,23 +99,4 @@ class HomeScreen extends StatelessWidget {
       ]),
     );
   }
-
-// void createPaymentMethodWithSetupIntent(BuildContext context) async {
-//   final networkService = locator.get<NetworkService>();
-//   await Navigator.push(
-//       context,
-//       MaterialPageRoute(
-//           builder: (context) =>
-//               // ignore: deprecated_member_use
-//               AddPaymentMethodScreen.withSetupIntent(networkService.createSetupIntent)));
-// }
-
-// void createPaymentMethodWithoutSetupIntent(BuildContext context) async {
-//   await Navigator.push(
-//       context,
-//       MaterialPageRoute(
-//           builder: (context) =>
-//               // ignore: deprecated_member_use
-//               AddPaymentMethodScreen.withoutSetupIntent()));
-// }
 }

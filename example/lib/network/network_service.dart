@@ -13,18 +13,18 @@ class NetworkService {
   NetworkService.defaultInstance() : _cf = FirebaseFunctions.instanceFor(region: 'europe-west2');
 
   /// Utility function to call a Firebase Function
-  Future<T?> _call<T>(String name, Map params) async {
+  Future<Map<String, dynamic>> _call<T>(String name, Map params) async {
     log('NetworkService._call, $name, $params');
     final callable = _cf.httpsCallable(name);
     try {
       final result = await callable.call(params);
       debugPrint(result.toString());
-      debugPrint(result.data);
+      debugPrint(result.data.toString());
       return result.data;
     } on FirebaseFunctionsException catch (e) {
       log(e.message.toString());
       log(e.toString());
-      return null;
+      return {};
     }
   }
 
@@ -41,19 +41,19 @@ class NetworkService {
     return IntentClientSecret(response['status'], response['clientSecret']);
   }
 
-  Future<IntentClientSecret> createSetupIntentWithPaymentMethod(paymentMethod, String returnUrl) async {
+  Future<IntentClientSecret> createSetupIntentWithPaymentMethod(String paymentMethod, String returnUrl) async {
     final params = {'paymentMethod': paymentMethod, 'returnUrl': returnUrl};
     final response = await _call('createSetupIntent', params);
     return IntentClientSecret(response['status'], response['clientSecret']);
   }
 
-  Future<IntentClientSecret> createAutomaticPaymentIntent() async {
-    final params = {};
+  Future<IntentClientSecret> createAutomaticPaymentIntent(int amount, String paymentMethod, String returnUrl) async {
+    final params = {'amount': amount, 'paymentMethod': paymentMethod, 'returnUrl': returnUrl};
     final response = await _call('createAutomaticPaymentIntent', params);
     return IntentClientSecret(response['status'], response['clientSecret']);
   }
 
-  Future<Map?> createManualPaymentIntent(int amount, String paymentMethod, String returnUrl) {
+  Future<Map<String, dynamic>> createManualPaymentIntent(int amount, String paymentMethod, String returnUrl) {
     final params = {'amount': amount, 'paymentMethod': paymentMethod, 'returnUrl': returnUrl};
     return _call('createManualPaymentIntent', params);
   }
