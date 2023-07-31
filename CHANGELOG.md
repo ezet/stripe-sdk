@@ -1,5 +1,21 @@
 # Stripe SDK Changelog
 
+## 5.0.0
+
+* Add support for Google Pay and Apple Pay through the official `pay` library
+  * Pass the resulting `paymentResult` to the respective `Stripe.confirmPaymentWith...` method.
+  * See https://pub.dev/packages/pay for more information. 
+* Add support for null safety and dart 3.0
+* Remove most UI and screens from the library, users are encouraged to implement their own UI.
+* Add example UI screens to the example app.
+* Remove convenience methods for creating payment methods, users are encouraged to use the `flutter_stripe` package to add payment methods.
+  * You can still use the low-level methods to add a payment method, but this is not recommended.
+  * By using this library to add payment methods, you will eventually be required to complete a PCI SAQ-D form, which requires you to be PCI compliant.
+  * Instead, use https://pub.dev/packages/flutter_stripe to add payment methods and benefit from Stripe's PCI compliance.
+  * You can still use this library to perform any other Stripe API calls, and remain PCI compliant, with full support for web.
+* Update dependencies to latest versions
+* Update example app
+
 ## 5.0.0-nullsafety.1
 
 ## 4.0.2

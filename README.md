@@ -25,11 +25,6 @@ Demo backend: <https://github.com/ezet/stripe-sdk-demo-api>
 * Add, remove and update payment methods, sources and cards, optionally with SCA.
 * Manage customer information.
 * Create all types of Stripe tokens.
-* Forms, widgets and utilities to use directly, or create your own UI!
-
-### Experimental
-
-* Managed UI flow for adding payment methods with SCA (using SetupIntent).
 
 ### Supported APIs
 
@@ -41,9 +36,6 @@ Demo backend: <https://github.com/ezet/stripe-sdk-demo-api>
 - Sources
 - Tokens
 
-### Planned features
-
-- Offer managed UI flow for checkout
 
 ## Demo application
 
@@ -122,29 +114,6 @@ StripeApi.init('pk_xxx');
 final stripeApi = StripeApi('pk_xxx');
 ```
 
-## UI
-
-Use `CardForm` to add or edit credit card details, or build your own form using the pre-built FormFields.
-
-```dart
-final formKey = GlobalKey<FormState>();
-final card = StripeCard();
-
-final form = CardForm(card: card, formKey: formKey);
- 
-onPressed: () {
-  if (formKey.currentState.validate()) {
-    formKey.currentState.save();
-  }
-}
-
-
-```
-
-<img src="https://raw.githubusercontent.com/ezet/stripe-sdk/master/doc/cardform.png" width="300">
-
-
-
 ## SCA/PSD2
 
 The library offers complete support for SCA on iOS and Android.
@@ -218,30 +187,7 @@ under URL Types). This example is for the url `stripesdk://3ds.stripesdk.io`:
 </plist>
 ```
 
-
 ## Experimental
 
 Experimental features are marked as `deprecated` and the API is subject to change until it is deemed stable.
 Feel free to use these features but be aware that breaking changes might be introduced in minor updates.
-
-### Add Payment Method
-
-Use `AddPaymentMethodScreen.withSetupIntent(...)` to launch a managed UI flow for adding a payment method.
-This will also handle SCA if required. 
-
-### Payment Methods
-
-`PaymentMethodsScreen` offers a prebuilt UI that can:
-
-* List all current payment methods
-* Add new payment methods, using setup intents
-* Delete existing payment methods
-
-## Additional examples
-
-### Glappen
-This is a complete application, with a mobile client and a backend API.
-Documentation is lacking, but it can serve as an example for more advanced use.
-
-App: <https://github.com/ezet/glappen-client> 
-Backend: <https://github.com/ezet/glappen-firebase-api>
