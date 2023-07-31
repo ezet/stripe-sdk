@@ -9,18 +9,21 @@ class StripeWebView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WebView(
-        initialUrl: uri,
-        javascriptMode: JavascriptMode.unrestricted,
-        navigationDelegate: (navigation) {
-          final uri = Uri.parse(navigation.url);
-          if (uri.scheme == returnUri.scheme &&
-              uri.host == returnUri.host &&
-              uri.queryParameters['requestId'] == returnUri.queryParameters['requestId']) {
-            Navigator.pop(context, true);
-            return NavigationDecision.prevent;
-          }
-          return NavigationDecision.navigate;
-        });
+    final controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setNavigationDelegate(NavigationDelegate(
+      onNavigationRequest: (request) {
+        final uri = Uri.parse(request.url);
+        if (uri.scheme == returnUri.scheme &&
+            uri.host == returnUri.host &&
+            uri.queryParameters['requestId'] == returnUri.queryParameters['requestId']) {
+          Navigator.pop(context, true);
+          return NavigationDecision.prevent;
+        }
+        return NavigationDecision.navigate;
+      }
+    ))
+    ..loadRequest(Uri.parse(uri));
+    return WebViewWidget(controller: controller);
   }
 }
