@@ -27,7 +27,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -39,8 +39,8 @@ android {
 
     defaultConfig {
         applicationId "io.ezet.stripesdk.demo"
-        minSdkVersion 16
-        targetSdkVersion 30
+        minSdkVersion 19
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -52,6 +52,16 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+//    buildFeatures {
+//        buildConfig = true
+//    }
+//
+//    namespace 'com.example.namespace'
+
+//    if (project.android.hasProperty("namespace")) {
+//        namespace("io.ezet.stripesdk")
+//    }
 }
 
 flutter {
