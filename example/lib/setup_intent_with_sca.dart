@@ -56,7 +56,10 @@ class SetupIntentWithScaScreen extends StatelessWidget {
       return;
     }
     final setupIntent = await stripe.authenticateSetupIntent(createSetupIntentResponse.clientSecret,
-        webReturnPath: routeSettings?.name, context: context);
+        webReturnPath: routeSettings?.name, context: context).onError((error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+          return {"status": "failed"};
+        });
     hideProgressDialog(context);
     Navigator.pop(context, setupIntent['status'] == 'succeeded');
   }
