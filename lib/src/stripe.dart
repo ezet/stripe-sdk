@@ -79,6 +79,8 @@ class Stripe {
       clientSecret,
       data: {'return_url': getReturnUrlForSca(webReturnUrl: webReturnPath)},
     );
+    // ignore: use_build_context_synchronously
+    if (!context.mounted) return {};
     return _handleSetupIntent(intent, context);
   }
 
@@ -94,6 +96,8 @@ class Stripe {
         'payment_method': paymentMethod,
       },
     );
+    // ignore: use_build_context_synchronously
+    if (!context.mounted) return {};
     return _handleSetupIntent(intent, context);
   }
 
@@ -108,6 +112,8 @@ class Stripe {
       paymentIntentClientSecret,
       data: data,
     );
+    // ignore: use_build_context_synchronously
+    if (!context.mounted) return {};
     return _handlePaymentIntent(paymentIntent, context);
   }
 
@@ -128,11 +134,13 @@ class Stripe {
       paymentIntentClientSecret,
       data: data,
     );
+    // ignore: use_build_context_synchronously
+    if (!context.mounted) return {};
     return _handlePaymentIntent(paymentIntent, context);
   }
 
   /// Confirm and authenticate a payment with Apple Pay.
-  /// [paymentResult] must be the result of requesting a Apple Pay paymet with the `pay` library.
+  /// [paymentResult] must be the result of requesting a Apple Pay payment with the `pay` library.
   /// Returns the PaymentIntent.
   Future<Map<String, dynamic>> confirmPaymentWithApplePay(BuildContext context,
       {required String paymentIntentClientSecret, required Map<String, dynamic> paymentResult}) async {
@@ -161,6 +169,8 @@ class Stripe {
       paymentIntentClientSecret,
       data: data,
     );
+    // ignore: use_build_context_synchronously
+    if (!context.mounted) return {};
     return _handlePaymentIntent(paymentIntent, context);
   }
 
@@ -177,6 +187,8 @@ class Stripe {
   /// https://stripe.com/docs/payments/payment-intents/android-manual
   Future<Map<String, dynamic>> authenticatePayment(String paymentIntentClientSecret, BuildContext context) async {
     final Map<String, dynamic> paymentIntent = await api.retrievePaymentIntent(paymentIntentClientSecret);
+    // ignore: use_build_context_synchronously
+    if (!context.mounted) return {};
     return _handlePaymentIntent(paymentIntent, context);
   }
 
@@ -217,6 +229,8 @@ class Stripe {
     late StreamSubscription<html.Event> subscription;
     subscription = html.window.onFocus.listen((event) async {
       final intent = await getIntentFunction(clientSecret);
+      // ignore: use_build_context_synchronously
+      if (!context.mounted) return;
       if (intent['status'] != 'requires_action') {
         Navigator.of(context).pop();
         subscription.cancel();
